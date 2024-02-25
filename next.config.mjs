@@ -33,6 +33,5 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
 // -- Image optimization
 // https://github.com/Niels-IO/next-image-export-optimizer?tab=readme-ov-file#installation

@@ -9,7 +9,10 @@ type MenuItemProps = {
 
 const MenuItem = ({ item }: MenuItemProps) => {
   return (
-    <Link href={item.link} className="navigation-link">
+    <Link
+      href={item.link}
+      className="text-l uppercase text-white navigation-link"
+    >
       {item.title}
     </Link>
   );
