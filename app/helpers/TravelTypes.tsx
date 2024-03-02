@@ -11,29 +11,35 @@ type TravelTypesProps = {
   notAllowed: Array<keyof Icons>;
 };
 
+type IconInfo = {
+  img: StaticImageData;
+  alt: string;
+};
+
 type Icons = {
-  drink: StaticImageData;
-  music: StaticImageData;
-  pets: StaticImageData;
-  smoke: StaticImageData;
-  twoPersons: StaticImageData;
-  threePersons: StaticImageData;
+  drink: IconInfo;
+  music: IconInfo;
+  pets: IconInfo;
+  smoke: IconInfo;
+  twoPersons: IconInfo;
+  threePersons: IconInfo;
 };
 
 export const TravelTypes = ({ allowed, notAllowed }: TravelTypesProps) => {
   const allIcons: Icons = {
-    drink,
-    music,
-    pets,
-    smoke,
-    twoPersons,
-    threePersons,
+    drink: { img: drink, alt: "drink" },
+    music: { img: music, alt: "music" },
+    pets: { img: pets, alt: "pets" },
+    smoke: { img: smoke, alt: "smoking" },
+    twoPersons: { img: twoPersons, alt: "two persons" },
+    threePersons: { img: threePersons, alt: "three persons" },
   };
 
   const mapIcons = (types: Array<keyof Icons>) =>
-    types
-      .map((type) => allIcons[type])
-      .filter((icon): icon is StaticImageData => Boolean(icon));
+    types.map((type) => ({
+      ...allIcons[type],
+      key: type,
+    }));
 
   const allowedIcons = mapIcons(allowed);
   const notAllowedIcons = mapIcons(notAllowed);

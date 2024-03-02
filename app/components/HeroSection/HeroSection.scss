@@ -27,6 +27,12 @@
       opacity: 0.8;
       z-index: 1;
     }
+
+    img {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+    }
   }
 
   .hero_container {
@@ -44,7 +50,7 @@
 
       h1 {
         width: 75%;
-        font-size: 4.5rem;
+        font-size: 5rem;
         line-height: 1;
         color: #fff;
         font-weight: 800;
@@ -52,6 +58,36 @@
 
         span {
           color: slategray;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero_section {
+    .hero_container {
+      flex-direction: column;
+      height: auto;
+      gap: 2rem;
+
+      .hero_text_wrapper {
+        h1 {
+          text-align: center;
+          font-size: 4rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .hero_section {
+    .hero_container {
+      .hero_text_wrapper {
+        h1 {
+          text-align: center;
+          font-size: 2.8rem;
         }
       }
     }

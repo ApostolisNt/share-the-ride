@@ -21,15 +21,14 @@ const SearchForm = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col gap-8 justify-center items-center relative">
-      <h2 className="text-lg uppercase text-white">Find your destination</h2>
-      <form onSubmit={handleSubmit} className="flex gap-4">
+    <div className="ride_search_section">
+      <h2>Find your destination</h2>
+      <form onSubmit={handleSubmit} className="ride_search_form">
         <input
           type="text"
           value={from}
           onChange={(e) => setFrom(e.target.value)}
           placeholder="From"
-          className="border-b-2 border-slate-500 p-2"
           required
         />
         <input
@@ -37,7 +36,6 @@ const SearchForm = () => {
           value={to}
           onChange={(e) => setTo(e.target.value)}
           placeholder="To"
-          className="border-b-2 border-slate-500 p-2"
           required
         />
         <input
@@ -45,16 +43,10 @@ const SearchForm = () => {
           value={date}
           min={today}
           onChange={(e) => setDate(e.target.value)}
-          className="border-b-2 border-slate-500 p-2"
           required
         />
 
-        <button
-          type="submit"
-          className="bg-slate-500 text-white p-2 rounded-sm hover:bg-slate-600 transition-all duration-300 ease-in-out"
-        >
-          Search
-        </button>
+        <button type="submit">Search</button>
       </form>
     </div>
   );

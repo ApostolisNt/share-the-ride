@@ -23,12 +23,7 @@ const HeroSection = () => {
   return (
     <section className="hero_section">
       <div className="backgroundImage">
-        <Image
-          src={heroImage}
-          alt="Hero Image"
-          objectFit="cover"
-          objectPosition="top"
-        />
+        <Image src={heroImage} alt="Hero Image" />
       </div>
       <div className="hero_container">
         <div className="flex-1 flex justify-center hero_text_wrapper">

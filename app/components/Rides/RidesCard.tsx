@@ -57,12 +57,22 @@ const RidesCard = ({ ride }: any) => {
         {/* allowed */}
         <div className="ride_card_icons">
           {allowedIcons.map((icon, index) => (
-            <Image key={index} src={icon} alt="allowed" />
+            <Image
+              key={index}
+              src={icon.img}
+              alt={`${icon.alt} allowed`}
+              title={`${icon.alt} allowed`}
+            />
           ))}
           {/* notAllowed */}
           {notAllowedIcons.map((icon, index) => (
             <div key={index} className="notAllowed">
-              <Image key={index} src={icon} alt="allowed" />
+              <Image
+                key={index}
+                src={icon.img}
+                alt={`${icon.alt} not allowed`}
+                title={`${icon.alt} not allowed`}
+              />
             </div>
           ))}
         </div>
