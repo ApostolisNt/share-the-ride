@@ -21,7 +21,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative overflow-hidden h-screen mt-[-5rem] flex items-center justify-center">
+    <section className="hero_section">
       <div className="backgroundImage">
         <Image
           src={heroImage}
@@ -30,11 +30,10 @@ const HeroSection = () => {
           objectPosition="top"
         />
       </div>
-      <div className="relative flex h-full w-full justify-evenly items-center">
-        <div className="flex-1 flex justify-center">
-          <h1 className="w-3/4 text-7xl text-white font-extrabold uppercase">
-            Let&apos;s{" "}
-            <span className="text-slate-700">{words[currentWordIndex]}</span>
+      <div className="hero_container">
+        <div className="flex-1 flex justify-center hero_text_wrapper">
+          <h1>
+            Let&apos;s <span>{words[currentWordIndex]}</span>
             <br />
             the journey together
           </h1>

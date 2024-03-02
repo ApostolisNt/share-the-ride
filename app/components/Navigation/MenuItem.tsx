@@ -9,8 +9,10 @@ type MenuItemProps = {
 };
 
 const MenuItem = ({ item }: MenuItemProps) => {
+  const login = item.class ? ` ${item.class}` : "";
+
   return (
-    <Link href={item.link} className={`navigation_link ${item.class}`}>
+    <Link href={item.link} className={`navigation_link${login}`}>
       {item.title}
     </Link>
   );

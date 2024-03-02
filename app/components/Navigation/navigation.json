@@ -1,8 +1,8 @@
 {
   "links": [
     { "title": "Home", "link": "/" },
-    { "title": "About", "link": "#about" },
-    { "title": "Contact", "link": "#contact" },
+    { "title": "About", "link": "/#about" },
+    { "title": "Contact", "link": "/#contact" },
     { "title": "Rides", "link": "/rides" },
     { "title": "Login / Sign Up", "link": "/login", "class": "login" }
   ]
