@@ -15,7 +15,9 @@ const SearchForm = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     const formattedDate = formatDate(date);
-    router.push(`/rides?from=${from}&to=${to}&date=${formattedDate}`);
+    router.push(
+      `/rides?from=${from.toLowerCase()}&to=${to.toLowerCase()}&date=${formattedDate}`
+    );
   };
 
   return (
