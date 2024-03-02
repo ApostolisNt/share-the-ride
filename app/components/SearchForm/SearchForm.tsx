@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./SearchForm.scss";
 import { useRouter } from "next/navigation";
+import { formatDate } from "app/helpers/FomatDate";
 
 const SearchForm = () => {
   const router = useRouter();
@@ -13,7 +14,8 @@ const SearchForm = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    router.push(`/rides?from=${from}&to=${to}&date=${date}`);
+    const formattedDate = formatDate(date);
+    router.push(`/rides?from=${from}&to=${to}&date=${formattedDate}`);
   };
 
   return (

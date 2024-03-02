@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "name": "John Doe",
+    "from": "Athens",
+    "to": "Thessaloniki",
+    "date": "2024-03-10",
+    "time": "10:00",
+    "rating": 2.5,
+    "ridePrice": 20,
+    "vehicleBrand": "BMW 3 Series",
+    "availableSeats": 3,
+    "description": "No smoking in the car. Please be at the pickup point 10 minutes early.",
+    "allowed": ["smoke", "pets", "music", "threePersons"],
+    "notAllowed": ["drink"],
+    "driverInfo": {
+      "yearsOfExperience": 5,
+      "drivingLicense": "AB1234567",
+      "language": "Greek, English"
+    }
+  },
+  {
+    "id": "2",
+    "name": "Jane Smith",
+    "from": "Ioannina",
+    "to": "Trikala",
+    "date": "2024-03-12",
+    "time": "14:00",
+    "rating": 4.8,
+    "ridePrice": 15,
+    "vehicleBrand": "Toyota Corolla",
+    "availableSeats": 2,
+    "description": "Pets allowed. I have a small dog.",
+    "allowed": ["music", "twoPersons"],
+    "notAllowed": ["smoke", "pets"],
+    "driverInfo": {
+      "yearsOfExperience": 3,
+      "drivingLicense": "CD7890123",
+      "language": "Greek, English"
+    }
+  }
+]
