@@ -16,6 +16,7 @@ const RidesCard = ({ ride }: any) => {
     ridePrice,
     allowed,
     notAllowed,
+    vehicleBrand,
   } = ride;
   const fillPercentage = `${(rating / 5) * 100}%`;
   const timeSlice = time.slice(0, 2);
@@ -36,6 +37,7 @@ const RidesCard = ({ ride }: any) => {
             <div className="star-fill" style={{ width: fillPercentage }}></div>
           </div>
         </div>
+        <p className="ride_card_price">{ridePrice.toFixed(2)} €</p>
       </div>
       <div className="ride_card_details">
         <div className="ride_card_date">
@@ -51,7 +53,7 @@ const RidesCard = ({ ride }: any) => {
         </div>
       </div>
       <div className="ride_card_extra_details">
-        <p className="ride_card_price">{ridePrice.toFixed(2)} €</p>
+        <p className="ride_card_vehicle">{vehicleBrand}</p>
         {/* allowed */}
         <div className="ride_card_icons">
           {allowedIcons.map((icon, index) => (

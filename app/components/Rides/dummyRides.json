@@ -11,7 +11,7 @@
     "vehicleBrand": "BMW 3 Series",
     "availableSeats": 3,
     "description": "No smoking in the car. Please be at the pickup point 10 minutes early.",
-    "allowed": ["smoke", "pets", "music", "threePersons"],
+    "allowed": ["smoke", "pets", "threePersons"],
     "notAllowed": ["drink"],
     "driverInfo": {
       "yearsOfExperience": 5,

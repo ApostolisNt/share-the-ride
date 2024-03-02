@@ -31,6 +31,11 @@
       font-size: 1rem;
       font-weight: 500;
     }
+
+    .ride_card_price {
+      flex: 1;
+      text-align: right;
+    }
   }
 
   .ride_card_details {
@@ -68,10 +73,10 @@
   .ride_card_extra_details {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
 
-    .ride_card_price {
-      font-size: 1.1rem;
+    .ride_card_vehicle {
+      font-size: 1rem;
       font-weight: 500;
     }
 
