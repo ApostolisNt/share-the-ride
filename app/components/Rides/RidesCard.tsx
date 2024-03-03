@@ -1,8 +1,11 @@
+"use client";
+
 import profileDefault from "@assets/profile-default.png";
 import "./RidesCard.scss";
 import Image from "next/image";
 import { formatDate } from "app/helpers/FomatDate";
 import { TravelTypes } from "app/helpers/TravelTypes";
+import { useRouter } from "next/navigation";
 
 const RidesCard = ({ ride }: any) => {
   const {
@@ -18,6 +21,7 @@ const RidesCard = ({ ride }: any) => {
     notAllowed,
     vehicleBrand,
   } = ride;
+  const router = useRouter();
   const fillPercentage = `${(rating / 5) * 100}%`;
   const timeSlice = time.slice(0, 2);
   const timeType = timeSlice >= 0 && timeSlice < 12 ? "AM" : "PM";
@@ -26,8 +30,12 @@ const RidesCard = ({ ride }: any) => {
     notAllowed,
   });
 
+  const handleSubmit = () => {
+    router.push(`/rides/${id}`);
+  };
+
   return (
-    <div className="ride_card">
+    <div className="ride_card" onClick={handleSubmit}>
       <div className="ride_card_user">
         <Image src={profileDefault} alt="profile" />
         <h3>{name}</h3>

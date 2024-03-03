@@ -5,7 +5,7 @@ export type searchParamsProps = {
   searchParams: SearchParamsType;
 };
 
-export default function RidesPage({ searchParams }: searchParamsProps) {
+export default function AllRidesPage({ searchParams }: searchParamsProps) {
   return (
     <>
       <Rides results={searchParams} />
