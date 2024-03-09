@@ -10,9 +10,13 @@
     "ridePrice": 20,
     "vehicleBrand": "BMW 3 Series",
     "availableSeats": 3,
-    "description": "No smoking in the car. Please be at the pickup point 10 minutes early.",
+    "description": "No smoking in the car. Please be at the pickup point 10 minutes early. I will wait for 5 minutes only. I have a small dog. I can take 3 passengers. I can take 2 passengers and 1 child.",
     "allowed": ["smoke", "pets", "threePersons"],
     "notAllowed": ["drink"],
+    "contact": {
+      "phone": "1234567890",
+      "email": "johndoe@gmail.com"
+    },
     "driverInfo": {
       "yearsOfExperience": 5,
       "drivingLicense": "AB1234567",

@@ -30,6 +30,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts"
-, "app/lib/mongodb.js"  ],
+, "app/lib/mongodb.js", "app/components/LoaderLine"  ],
   "exclude": ["node_modules"]
 }

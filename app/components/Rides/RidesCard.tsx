@@ -6,6 +6,7 @@ import Image from "next/image";
 import { formatDate } from "app/helpers/FomatDate";
 import { TravelTypes } from "app/helpers/TravelTypes";
 import { useRouter } from "next/navigation";
+import LoaderLine from "@components/LoaderLine/LoaderLine";
 
 const RidesCard = ({ ride }: any) => {
   const {
@@ -56,7 +57,7 @@ const RidesCard = ({ ride }: any) => {
         </div>
         <div className="ride_card_destination">
           <p className="ride_card_from">{from}</p>
-          <div className="loader-line"></div>
+          <LoaderLine />
           <p className="ride_card_to">{to}</p>
         </div>
       </div>
