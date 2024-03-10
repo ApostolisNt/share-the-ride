@@ -35,7 +35,7 @@ const CreateRide = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof rideFormSchema>) => {
+  const onSubmit = (data: any) => {
     console.log(data);
   };
 
