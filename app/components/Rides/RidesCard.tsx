@@ -36,7 +36,10 @@ const RidesCard = ({ ride }: any) => {
   };
 
   return (
-    <div className="ride_card" onClick={handleSubmit}>
+    <div
+      className="ride_card shadow-card transition-shadow-transform duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover"
+      onClick={handleSubmit}
+    >
       <div className="ride_card_user">
         <Image src={profileDefault} alt="profile" />
         <h3>{name}</h3>

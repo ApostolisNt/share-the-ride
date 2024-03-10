@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
 import Link from "next/link";
 import clsx from "clsx";
+import { TravelTypes } from "app/helpers/TravelTypes";
 
 const SingleRideCard = ({ singleUserData }: any) => {
   const {
@@ -16,18 +17,25 @@ const SingleRideCard = ({ singleUserData }: any) => {
     time,
     seats,
     ridePrice,
-    luggage,
+    allowed,
+    notAllowed,
+    vehicleBrand,
     description,
     contact,
     driverInfo,
   } = singleUserData[0];
 
   const { yearsOfExperience, language } = driverInfo;
+  const { allowedIcons, notAllowedIcons } = TravelTypes({
+    allowed,
+    notAllowed,
+  });
+
   return (
     <div
       className={clsx(
         "single-ride-container mx-auto my-8 flex w-2/5 flex-col items-center rounded-lg p-4 lg:w-2/3 md:w-full",
-        "shadow-card transition-shadow-transform hover:shadow-cardHover duration-200 ease-out hover:-translate-y-2",
+        "shadow-card transition-shadow-transform duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover",
       )}
     >
       <div>
@@ -50,9 +58,12 @@ const SingleRideCard = ({ singleUserData }: any) => {
         <p>Driver Experience: {yearsOfExperience} years</p>
         <p>Languages: {language}</p>
       </div>
-      <div className="single-ride-driver-profile flex w-full items-center justify-between ">
+      <div className="single-ride-driver-profile flex w-full items-center justify-between">
         <Image src={profileDefault} alt="profile" />
-        <h3 className="ml-4 text-base font-medium">{name}</h3>
+        <div>
+          <h3 className="ml-4 text-base font-medium">{name}</h3>
+          <p className="ml-4 text-sm font-medium">{vehicleBrand}</p>
+        </div>
         <div className="single-ride-contact flex flex-1 justify-end gap-4">
           <a href={`tel:${contact.phone}`} target="_blank">
             <MdLocalPhone size={26} />
@@ -60,6 +71,32 @@ const SingleRideCard = ({ singleUserData }: any) => {
           <a href={`mailto:${contact.email}`} target="_blank">
             <MdOutlineMail size={26} />
           </a>
+        </div>
+      </div>
+      <div className="">
+        {/* allowed */}
+        <div className="flex flex-row gap-4">
+          {allowedIcons.map((icon, index) => (
+            <Image
+              className="w-8 object-contain"
+              key={index}
+              src={icon.img}
+              alt={`${icon.alt} allowed`}
+              title={`${icon.alt} allowed`}
+            />
+          ))}
+          {/* notAllowed */}
+          {notAllowedIcons.map((icon, index) => (
+            <div key={index} className="notAllowed relative inline-block">
+              <Image
+                className="w-8 object-contain opacity-50"
+                key={index}
+                src={icon.img}
+                alt={`${icon.alt} not allowed`}
+                title={`${icon.alt} not allowed`}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>
