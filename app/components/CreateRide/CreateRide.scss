@@ -1,0 +1,27 @@
+.input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+}
+
+.field-split {
+  display: flex;
+  gap: 1rem;
+
+  div {
+    flex: 1;
+  }
+}
+
+form {
+  label {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: red;
+  }
+}

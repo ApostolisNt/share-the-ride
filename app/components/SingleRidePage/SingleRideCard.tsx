@@ -62,7 +62,7 @@ const SingleRideCard = ({ singleUserData }: any) => {
         <Image src={profileDefault} alt="profile" />
         <div>
           <h3 className="ml-4 text-base font-medium">{name}</h3>
-          <p className="ml-4 text-sm font-medium">{vehicleBrand}</p>
+          <p className="ml-4 text-sm font-medium text-slate-500">{vehicleBrand}</p>
         </div>
         <div className="single-ride-contact flex flex-1 justify-end gap-4">
           <a href={`tel:${contact.phone}`} target="_blank">
@@ -73,7 +73,7 @@ const SingleRideCard = ({ singleUserData }: any) => {
           </a>
         </div>
       </div>
-      <div className="">
+      <div>
         {/* allowed */}
         <div className="flex flex-row gap-4">
           {allowedIcons.map((icon, index) => (
