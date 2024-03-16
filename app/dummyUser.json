@@ -1,16 +1,9 @@
 [
   {
     "id": "1",
-    "name": "John Doe",
-    "from": "athens",
-    "to": "thessaloniki",
-    "date": "10-03-2024",
-    "time": "10:00",
+    "name": "Jane Smith",
     "rating": 2.5,
-    "ridePrice": 20,
     "vehicleBrand": "BMW 3 Series",
-    "availableSeats": 3,
-    "description": "No smoking in the car. Please be at the pickup point 10 minutes early. I will wait for 5 minutes only. I have a small dog. I can take 3 passengers. I can take 2 passengers and 1 child.",
     "allowed": ["smoke", "pets", "threePersons"],
     "notAllowed": ["drink"],
     "contact": {
@@ -26,15 +19,8 @@
   {
     "id": "2",
     "name": "Jane Smith",
-    "from": "ioannina",
-    "to": "trikala",
-    "date": "10-03-2024",
-    "time": "14:00",
     "rating": 4.8,
-    "ridePrice": 15,
     "vehicleBrand": "Toyota Corolla",
-    "availableSeats": 2,
-    "description": "Pets allowed. I have a small dog.",
     "allowed": ["music", "twoPersons"],
     "notAllowed": ["smoke", "pets"],
     "driverInfo": {

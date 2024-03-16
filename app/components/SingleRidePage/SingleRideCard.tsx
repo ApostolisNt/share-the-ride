@@ -3,11 +3,10 @@ import "./SingleRideCard.scss";
 import profileDefault from "@assets/profile-default.png";
 import Image from "next/image";
 import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
-import Link from "next/link";
 import clsx from "clsx";
 import { TravelTypes } from "app/helpers/TravelTypes";
 
-const SingleRideCard = ({ singleUserData }: any) => {
+const SingleRideCard = ({ singleData }: any) => {
   const {
     id,
     from,
@@ -23,7 +22,7 @@ const SingleRideCard = ({ singleUserData }: any) => {
     description,
     contact,
     driverInfo,
-  } = singleUserData[0];
+  } = singleData[0];
 
   const { yearsOfExperience, language } = driverInfo;
   const { allowedIcons, notAllowedIcons } = TravelTypes({
@@ -62,7 +61,9 @@ const SingleRideCard = ({ singleUserData }: any) => {
         <Image src={profileDefault} alt="profile" />
         <div>
           <h3 className="ml-4 text-base font-medium">{name}</h3>
-          <p className="ml-4 text-sm font-medium text-slate-500">{vehicleBrand}</p>
+          <p className="ml-4 text-sm font-medium text-slate-500">
+            {vehicleBrand}
+          </p>
         </div>
         <div className="single-ride-contact flex flex-1 justify-end gap-4">
           <a href={`tel:${contact.phone}`} target="_blank">

@@ -1,19 +1,26 @@
 import SingleRideCard from "./SingleRideCard";
-import dummyData from "@components/Rides/dummyRides.json";
+import dummyRides from "../../dummyRides.json";
+import dummyUser from "../../dummyUser.json";
 
 type SingleRidePageProps = {
   id: string;
 };
 
 const SingleRidePage = ({ id }: SingleRidePageProps) => {
-  const userData = dummyData;
-  const singleUserData = userData
+  const ridesData = dummyRides;
+  const userData = dummyUser;
+  const single = ridesData.map((ride) => {
+    const user = userData.filter((user) => user.id === ride.id);
+    return { ...ride, ...user[0] };
+  });
+
+  const singleData = single
     .map((ride) => ride)
     .filter((item) => item.id === id);
 
   return (
     <section className="single_ride_section">
-      <SingleRideCard singleUserData={singleUserData} />
+      <SingleRideCard singleData={singleData} />
     </section>
   );
 };

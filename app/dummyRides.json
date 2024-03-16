@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "from": "athens",
+    "to": "thessaloniki",
+    "date": "19-03-2024",
+    "time": "10:00",
+    "ridePrice": 20,
+    "availableSeats": 3,
+    "description": "No smoking in the car. Please be at the pickup point 10 minutes early. I will wait for 5 minutes only. I have a small dog. I can take 3 passengers. I can take 2 passengers and 1 child."
+  },
+  {
+    "id": "2",
+    "from": "ioannina",
+    "to": "trikala",
+    "date": "10-03-2024",
+    "time": "14:00",
+    "ridePrice": 15,
+    "availableSeats": 2,
+    "description": "Pets allowed. I have a small dog."
+  }
+]

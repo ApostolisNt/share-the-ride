@@ -4,6 +4,7 @@ import "./CreateRide.scss";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import dummyRides from "../../dummyRides.json";
 
 const rideFormSchema = z.object({
   username: z.string().nonempty(),
@@ -11,8 +12,8 @@ const rideFormSchema = z.object({
   to: z.string().nonempty(),
   date: z.string().nonempty(),
   time: z.string().nonempty(),
-  seats: z.number().optional(),
-  price: z.number().optional(),
+  availableSeats: z.string().optional(),
+  price: z.string().optional(),
   description: z.string().nonempty(),
 });
 
@@ -29,19 +30,20 @@ const CreateRide = () => {
       to: "",
       date: "",
       time: "",
-      seats: 0,
+      availableSeats: 0,
       price: 0,
       description: "",
     },
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
+    dummyRides.push(data);
+    console.log(dummyRides);
   };
 
   return (
     <div className="mx-auto my-8 flex w-full flex-col items-center">
-      <h3>Create a ride</h3>
+      <h3 className="text-base font-semibold uppercase">Create a ride</h3>
       <form
         className="my-8 flex w-[45%] flex-col gap-4 lg:w-2/3 sm:w-[95%]"
         onSubmit={handleSubmit(onSubmit)}
@@ -94,12 +96,12 @@ const CreateRide = () => {
           <div>
             <label htmlFor="seats">Seats</label>
             <input
-              {...register("seats")}
+              {...register("availableSeats")}
               type="number"
               placeholder="Seats"
               className="input w-full"
             />
-            {errors.seats && <p>{errors.seats.message}</p>}
+            {errors.availableSeats && <p>{errors.availableSeats.message}</p>}
           </div>
           <div>
             <label htmlFor="price">Price</label>
@@ -113,17 +115,19 @@ const CreateRide = () => {
           </div>
         </div>
 
-        <label htmlFor="description">Description</label>
-        <textarea
-          {...register("description")}
-          placeholder="Description"
-          className="input"
-        />
+        <div className="flex flex-col">
+          <label htmlFor="description">Description</label>
+          <textarea
+            {...register("description")}
+            placeholder="Description"
+            className="input"
+          />
+        </div>
         {errors.description && <p>{errors.description.message}</p>}
 
         <button
           type="submit"
-          className="btn transition-colors mx-auto w-1/3 rounded-sm border-2 border-slate-400 px-4 py-2 text-slate-600 duration-300 ease-in-out hover:bg-slate-400 hover:text-white"
+          className="btn transition-colors mx-auto w-1/4 rounded-sm border-2 border-slate-400 px-4 py-2 text-slate-600 duration-300 ease-in-out hover:bg-slate-400 hover:text-white"
         >
           Share the ride
         </button>

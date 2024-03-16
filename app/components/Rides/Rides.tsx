@@ -1,5 +1,5 @@
 import { SearchParamsType } from "app/types/types";
-import dummyRides from "./dummyRides.json";
+import dummyRides from "../../dummyRides.json";
 import RidesCard from "./RidesCard";
 
 export type ResultsProps = {
