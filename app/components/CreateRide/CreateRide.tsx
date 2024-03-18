@@ -7,13 +7,13 @@ import { z } from "zod";
 import dummyRides from "../../dummyRides.json";
 
 const rideFormSchema = z.object({
-  username: z.string().nonempty(),
+  id: z.string().nonempty(),
   from: z.string().nonempty(),
   to: z.string().nonempty(),
   date: z.string().nonempty(),
   time: z.string().nonempty(),
-  availableSeats: z.string().optional(),
-  price: z.string().optional(),
+  availableSeats: z.number().optional(),
+  ridePrice: z.number().optional(),
   description: z.string().nonempty(),
 });
 
@@ -25,20 +25,23 @@ const CreateRide = () => {
   } = useForm({
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
-      username: "",
+      id: "",
       from: "",
       to: "",
       date: "",
       time: "",
       availableSeats: 0,
-      price: 0,
+      ridePrice: 0,
       description: "",
     },
   });
 
+  // Generate today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
+
   const onSubmit = (data: any) => {
-    dummyRides.push(data);
-    console.log(dummyRides);
+    localStorage.setItem("rides", JSON.stringify([...dummyRides, data]));
+    console.log(localStorage.getItem("rides"));
   };
 
   return (
@@ -49,13 +52,9 @@ const CreateRide = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="flex flex-col">
-          <label htmlFor="username">Username</label>
-          <input
-            {...register("username")}
-            placeholder="Username"
-            className="input"
-          />
-          {errors.username && <p>{errors.username.message}</p>}
+          <label htmlFor="username">Id</label>
+          <input {...register("id")} placeholder="id" className="input" />
+          {errors.id && <p>{errors.id.message}</p>}
         </div>
 
         <div className="field-split">
@@ -82,7 +81,12 @@ const CreateRide = () => {
         <div className="field-split">
           <div>
             <label htmlFor="date">Date</label>
-            <input {...register("date")} type="date" className="input w-full" />
+            <input
+              {...register("date")}
+              type="date"
+              min={today}
+              className="input w-full"
+            />
             {errors.date && <p>{errors.date.message}</p>}
           </div>
           <div>
@@ -94,24 +98,24 @@ const CreateRide = () => {
 
         <div className="field-split">
           <div>
-            <label htmlFor="seats">Seats</label>
+            <label htmlFor="availableSeats">Seats</label>
             <input
-              {...register("availableSeats")}
+              {...register("availableSeats", { valueAsNumber: true })}
               type="number"
-              placeholder="Seats"
+              placeholder="availableSeats"
               className="input w-full"
             />
             {errors.availableSeats && <p>{errors.availableSeats.message}</p>}
           </div>
           <div>
-            <label htmlFor="price">Price</label>
+            <label htmlFor="ridePrice">Price</label>
             <input
-              {...register("price")}
+              {...register("ridePrice", { valueAsNumber: true })}
               type="number"
               placeholder="Price"
               className="input w-full"
             />
-            {errors.price && <p>{errors.price.message}</p>}
+            {errors.ridePrice && <p>{errors.ridePrice.message}</p>}
           </div>
         </div>
 

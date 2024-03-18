@@ -1,21 +1,27 @@
+"use client";
 import { SearchParamsType } from "app/types/types";
 import dummyRides from "../../dummyRides.json";
 import RidesCard from "./RidesCard";
+import { formatDate } from "app/helpers/FomatDate";
 
 export type ResultsProps = {
   results: SearchParamsType;
 };
 
 const Rides = ({ results }: ResultsProps) => {
-  const rides = dummyRides;
+  // const rides = dummyRides;
+  const localStoredRides = localStorage.getItem("rides");
+  const ridesFromLocalStorage = localStoredRides
+    ? JSON.parse(localStoredRides)
+    : [];
 
   const { from, to, date } = results;
   const isEmptyResults = !from || !to || !date;
   const filteredRides = isEmptyResults
-    ? rides
-    : rides.filter(
+    ? ridesFromLocalStorage
+    : ridesFromLocalStorage.filter(
         (ride: any) =>
-          ride.from === from && ride.to === to && ride.date === date
+          ride.from === from && ride.to === to && formatDate(ride.date) === date,
       );
 
   return (
