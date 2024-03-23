@@ -24,6 +24,7 @@ const Rides = ({ results }: ResultsProps) => {
           ride.from === from && ride.to === to && formatDate(ride.date) === date,
       );
 
+  
   return (
     <section className="rides_section">
       {filteredRides.map((ride: any) => (

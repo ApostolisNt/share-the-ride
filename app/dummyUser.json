@@ -23,6 +23,10 @@
     "vehicleBrand": "Toyota Corolla",
     "allowed": ["music", "twoPersons"],
     "notAllowed": ["smoke", "pets"],
+    "contact": {
+      "phone": "1234567890",
+      "email": "johndoe@gmail.com"
+    },
     "driverInfo": {
       "yearsOfExperience": 3,
       "drivingLicense": "CD7890123",
