@@ -9,6 +9,15 @@ import { useRouter } from "next/navigation";
 import LoaderLine from "@components/LoaderLine/LoaderLine";
 import userData from "../../dummyUser.json";
 
+type Icons = {
+  drink: String;
+  music: String;
+  pets: String;
+  smoke: String;
+  twoPersons: String;
+  threePersons: String;
+};
+
 const RidesCard = ({ ride }: any) => {
   const { id, from, to, date, time, ridePrice } = ride;
   const filterByUser = userData.filter((user) => user.id === id);
@@ -19,8 +28,8 @@ const RidesCard = ({ ride }: any) => {
   const timeType = timeSlice >= 0 && timeSlice < 12 ? "AM" : "PM";
 
   const { allowedIcons, notAllowedIcons } = TravelTypes({
-    allowed,
-    notAllowed,
+    allowed: allowed as Array<keyof Icons>,
+    notAllowed: notAllowed as Array<keyof Icons>,
   });
 
   //TODO: Go to ride id
