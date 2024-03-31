@@ -2,12 +2,11 @@
 
 import "./CreateRide.scss";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import dummyRides from "../../dummyRides.json";
 
 const rideFormSchema = z.object({
-  id: z.string().nonempty(),
   from: z.string().nonempty(),
   to: z.string().nonempty(),
   date: z.string().nonempty(),
@@ -18,6 +17,7 @@ const rideFormSchema = z.object({
 });
 
 const CreateRide = () => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -25,7 +25,6 @@ const CreateRide = () => {
   } = useForm({
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
-      id: "",
       from: "",
       to: "",
       date: "",
@@ -39,9 +38,25 @@ const CreateRide = () => {
   // Generate today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
 
-  const onSubmit = (data: any) => {
-    localStorage.setItem("rides", JSON.stringify([...dummyRides, data]));
-    console.log(localStorage.getItem("rides"));
+  const onSubmit = async (data: any) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/rides", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        throw new Error("Something went wrong!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    //navigate
+    router.push("/rides");
   };
 
   return (
@@ -51,12 +66,6 @@ const CreateRide = () => {
         className="my-8 flex w-[45%] flex-col gap-4 lg:w-2/3 sm:w-[95%]"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col">
-          <label htmlFor="username">Id</label>
-          <input {...register("id")} placeholder="id" className="input" />
-          {errors.id && <p>{errors.id.message}</p>}
-        </div>
-
         <div className="field-split">
           <div>
             <label htmlFor="from">From</label>

@@ -1,10 +1,30 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "./../../lib/mongodb";
-import Topic from './../../models/topic';
+import Rides from "./../../models/rides";
 
 export async function POST(request) {
-  const { title, description } = await request.json();
+  const { id, from, to, date, time, ridePrice, availableSeats, description } =
+    await request.json();
   await connectMongoDB();
-  await Topic.create({ title, description });
-  return NextResponse.json({ message: "Topic created" }, { status: 201 });
+  await Rides.create({
+    id,
+    from,
+    to,
+    date,
+    time,
+    ridePrice,
+    availableSeats,
+    description,
+  });
+  return NextResponse.json({ message: "Rides created" }, { status: 201 });
+}
+
+export async function GET() {
+  try {
+    await connectMongoDB();
+    const rides = await Rides.find();
+    return NextResponse.json({ rides }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ Message: error }, { status: 500 });
+  }
 }

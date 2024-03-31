@@ -7,7 +7,7 @@ import { formatDate } from "app/helpers/FomatDate";
 import { TravelTypes } from "app/helpers/TravelTypes";
 import { useRouter } from "next/navigation";
 import LoaderLine from "@components/LoaderLine/LoaderLine";
-import userData from "../../dummyUser.json";
+import { Ride, User } from "./Rides";
 
 type Icons = {
   drink: String;
@@ -18,14 +18,26 @@ type Icons = {
   threePersons: String;
 };
 
-const RidesCard = ({ ride }: any) => {
-  const { id, from, to, date, time, ridePrice } = ride;
-  const filterByUser = userData.filter((user) => user.id === id);
-  const { allowed, notAllowed, rating, vehicleBrand, name } = filterByUser[0];
+const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   const router = useRouter();
+  const { id, from, to, date, time, ridePrice } = ride;
+
+  const user = users.find(
+    (user: User) => user._id === "6607d863f3a807a516b397d8",
+  );
+
+  const {
+    allowed = [],
+    notAllowed = [],
+    rating = 0,
+    vehicleBrand = "",
+    name = "",
+  } = user ?? {};
+
   const fillPercentage = `${(rating / 5) * 100}%`;
   const timeSlice = time.slice(0, 2);
-  const timeType = timeSlice >= 0 && timeSlice < 12 ? "AM" : "PM";
+  const timeType =
+    parseInt(timeSlice, 10) >= 0 && parseInt(timeSlice, 10) < 12 ? "AM" : "PM";
 
   const { allowedIcons, notAllowedIcons } = TravelTypes({
     allowed: allowed as Array<keyof Icons>,
