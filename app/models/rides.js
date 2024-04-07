@@ -2,6 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const ridesSchema = new Schema(
   {
+    userId: String,
     from: String,
     to: String,
     date: String,

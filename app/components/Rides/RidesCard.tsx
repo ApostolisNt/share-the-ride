@@ -20,10 +20,11 @@ type Icons = {
 
 const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   const router = useRouter();
-  const { id, from, to, date, time, ridePrice } = ride;
+  const { _id, userId, from, to, date, time, ridePrice } = ride;
 
+  
   const user = users.find(
-    (user: User) => user._id === "6607d863f3a807a516b397d8",
+    (user: User) => user._id === userId,
   );
 
   const {
@@ -46,7 +47,7 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
 
   //TODO: Go to ride id
   const handleSubmit = () => {
-    router.push(`/rides/${id}`);
+    router.push(`/rides/${userId}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);

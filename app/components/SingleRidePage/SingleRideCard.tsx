@@ -8,7 +8,7 @@ import { TravelTypes } from "app/helpers/TravelTypes";
 
 const SingleRideCard = ({ singleData }: any) => {
   const {
-    id,
+    _id,
     from,
     to,
     date,
@@ -22,7 +22,7 @@ const SingleRideCard = ({ singleData }: any) => {
     description,
     contact,
     driverInfo,
-  } = singleData[0];
+  } = singleData;
 
   const { yearsOfExperience, language } = driverInfo;
   const { allowedIcons, notAllowedIcons } = TravelTypes({

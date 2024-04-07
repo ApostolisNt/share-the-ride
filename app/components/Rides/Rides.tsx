@@ -9,7 +9,8 @@ export type ResultsProps = {
 };
 
 export type Ride = {
-  id: string;
+  _id: string;
+  userId: string;
   from: string;
   to: string;
   date: string;

@@ -8,6 +8,7 @@ export async function POST(request) {
   await connectMongoDB();
   await Rides.create({
     id,
+    userId,
     from,
     to,
     date,
