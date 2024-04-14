@@ -1,10 +1,10 @@
 import LoaderLine from "@components/LoaderLine/LoaderLine";
 import "./SingleRideCard.scss";
 import profileDefault from "@assets/profile-default.png";
-import Image from "next/image";
 import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
 import clsx from "clsx";
 import { TravelTypes } from "app/helpers/TravelTypes";
+import { Image } from './../Global/Image';
 
 const SingleRideCard = ({ singleData }: any) => {
   const {

@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import heroImage from "@assets/hero-bg.jpg";
 import "./HeroSection.scss";
 import SearchForm from "@components/SearchForm/SearchForm";
+import { Image } from './../Global/Image';
 
 const words = ["Share", "Connect"];
 

@@ -14,6 +14,9 @@ const config: Config = {
       md: { max: "768px" },
       sm: { max: "640px" },
     },
+    fontFamily: {
+      serif: ["var(--font-mavenPro)", "serif"],
+    },
     boxShadow: {
       card: "0px 1px 8px 0px hsla(0, 0%, 0%, 0.2)",
       cardHover: "0px 4px 16px 0px hsla(0, 0%, 0%, 0.2)",

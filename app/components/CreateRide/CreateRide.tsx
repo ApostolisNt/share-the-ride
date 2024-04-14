@@ -1,10 +1,12 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import "./CreateRide.scss";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { SupportedLangCodes } from "data/translations/translations";
 
 const rideFormSchema = z.object({
   from: z.string().nonempty(),
@@ -18,6 +20,7 @@ const rideFormSchema = z.object({
 
 const CreateRide = () => {
   const router = useRouter();
+  const locale = useLocale() as SupportedLangCodes;
   const {
     register,
     handleSubmit,
@@ -56,7 +59,7 @@ const CreateRide = () => {
     }
 
     //navigate
-    router.push("/rides");
+    router.push(`/${locale}/rides`);
   };
 
   return (

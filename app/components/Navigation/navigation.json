@@ -1,10 +1,10 @@
 {
   "links": [
-    { "title": "Home", "link": "/" },
-    { "title": "About", "link": "/#about" },
-    { "title": "Dashboard", "link": "/dashboard/1" },
-    { "title": "Rides", "link": "/rides" },
-    { "title": "Create Ride", "link": "/create-ride" },
-    { "title": "Login / Sign Up", "link": "/login", "class": "login" }
+    { "title": "Home", "link": "" },
+    { "title": "About", "link": "#about" },
+    { "title": "Dashboard", "link": "dashboard/1" },
+    { "title": "Rides", "link": "rides" },
+    { "title": "Create Ride", "link": "create-ride" },
+    { "title": "Login / Sign Up", "link": "login", "class": "login" }
   ]
 }
