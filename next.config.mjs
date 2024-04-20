@@ -11,7 +11,7 @@ export const outDir = "build";
 
 /** @type {import('next').NextConfig} */
 let nextConfig = {
-    output: "export",
+    // output: "export",
     distDir: outDir,
     generateEtags: true,
 };
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "development") {
             return [
                 {
                     source: "/",
-                    destination: "/en",
+                    destination: "/gr",
                     permanent: true,
                 },
             ];

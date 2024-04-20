@@ -16,7 +16,10 @@ const MenuItem = ({ item }: MenuItemProps) => {
   const login = item.class ? ` ${item.class}` : "";
 
   return (
-    <Link href={cleanUrlSlash(`${locale}/${item.link}`)} className={`navigation_link${login}`}>
+    <Link
+      href={cleanUrlSlash(`/${locale}/${item.link}`)}
+      className={`navigation_link${login}`}
+    >
       {item.title}
     </Link>
   );

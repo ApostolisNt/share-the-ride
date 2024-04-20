@@ -3,8 +3,17 @@ import connectMongoDB from "./../../lib/mongodb";
 import Rides from "./../../models/rides";
 
 export async function POST(request) {
-  const { id, from, to, date, time, ridePrice, availableSeats, description } =
-    await request.json();
+  const {
+    id,
+    from,
+    to,
+    date,
+    time,
+    ridePrice,
+    availableSeats,
+    description,
+    userId,
+  } = await request.json();
   await connectMongoDB();
   await Rides.create({
     id,

@@ -9,6 +9,7 @@ import { z } from "zod";
 import { SupportedLangCodes } from "data/translations/translations";
 
 const rideFormSchema = z.object({
+  userId: z.string().nonempty(),
   from: z.string().nonempty(),
   to: z.string().nonempty(),
   date: z.string().nonempty(),
@@ -28,6 +29,7 @@ const CreateRide = () => {
   } = useForm({
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
+      userId: "6607d863f3a807a516b397d8",
       from: "",
       to: "",
       date: "",
@@ -54,12 +56,11 @@ const CreateRide = () => {
       if (!res.ok) {
         throw new Error("Something went wrong!");
       }
+
+      router.push(`/${locale}/rides`);
     } catch (error) {
       console.log(error);
     }
-
-    //navigate
-    router.push(`/${locale}/rides`);
   };
 
   return (
