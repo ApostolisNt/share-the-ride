@@ -4,17 +4,14 @@ import profileDefault from "@assets/profile-default.png";
 import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
 import clsx from "clsx";
 import { TravelTypes } from "app/helpers/TravelTypes";
-import { Image } from './../Global/Image';
+import { Image } from "./../Global/Image";
 
 const SingleRideCard = ({ singleData }: any) => {
   const {
-    _id,
     from,
     to,
     date,
     name,
-    time,
-    seats,
     ridePrice,
     allowed,
     notAllowed,

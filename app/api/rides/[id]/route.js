@@ -1,16 +1,23 @@
-import connectMongoDB from "app/lib/mongodb";
 import { NextResponse } from "next/server";
-import Rides from './../../../models/rides';
-const { ObjectId } = require("mongodb");
+import { ObjectId } from "mongodb";
+import connectMongoDB from "../../../lib/mongodb";
+import Rides from "../../../models/rides";
 
-export async function POST(Request) {
+export async function GET(req, context) {
   try {
-    const { id } = Request.query;
-    const objectId = new ObjectId(id);
+    const { params } = context;
+    const { id } = params;
     await connectMongoDB();
-    const ride = await Rides.findOne(id);
-    return NextResponse.json({ ride }, { status: 200 });
+    const ride = await Rides.findOne({ _id: new ObjectId(id) });
+    if (ride) {
+      return NextResponse.json({ ride }, { status: 200 });
+    }
+    return NextResponse.json({ message: "Ride not found" }, { status: 404 });
   } catch (error) {
-    return NextResponse.json({ Message: error }, { status: 500 });
+    console.error("Error accessing the database:", error);
+    return NextResponse.json(
+      { message: "Server error", error: error.message },
+      { status: 500 },
+    );
   }
 }

@@ -8,7 +8,7 @@ type SingleRidePageProps = {
 };
 
 const SingleRidePage = ({ id }: SingleRidePageProps) => {
-  const [rides, setRides] = useState<Ride[]>([]);
+  const [ride, setRide] = useState<Ride>();
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
       try {
         const res = await fetch(`http://localhost:3000/api/rides/${id}`);
         const data = await res.json();
-        setRides(data.rides);
+        setRide(data.ride);
       } catch (error) {
         console.log(error);
       }
@@ -36,14 +36,19 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
     getRide();
   }, [id]);
 
-  // const singleData = rides.map((ride) => {
-  //   const user = users.filter((user) => user._id === ride.userId);
-  //   return { ...ride, ...user };
-  // });
+  const user = users.find((u) => u._id === ride?.userId);
+
+  const singleData = ride && user ? { ...ride, ...user } : null;
+
+  console.log(singleData);
 
   return (
     <section className="single_ride_section">
-      {/* <SingleRideCard singleData={singleData} /> */}
+      {singleData ? (
+        <SingleRideCard singleData={singleData} />
+      ) : (
+        <p>Loading ride details...</p>
+      )}
     </section>
   );
 };

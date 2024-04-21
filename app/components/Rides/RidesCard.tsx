@@ -7,7 +7,8 @@ import { TravelTypes } from "app/helpers/TravelTypes";
 import { useRouter } from "next/navigation";
 import LoaderLine from "@components/LoaderLine/LoaderLine";
 import { Ride, User } from "./Rides";
-import { Image } from './../Global/Image';
+import { Image } from "./../Global/Image";
+import { useLocale } from "next-intl";
 
 type Icons = {
   drink: String;
@@ -21,11 +22,9 @@ type Icons = {
 const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   const router = useRouter();
   const { _id, userId, from, to, date, time, ridePrice } = ride;
+  const locale = useLocale();
 
-  
-  const user = users.find(
-    (user: User) => user._id === userId,
-  );
+  const user = users.find((user: User) => user._id === userId);
 
   const {
     allowed = [],
@@ -45,9 +44,8 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
     notAllowed: notAllowed as Array<keyof Icons>,
   });
 
-  //TODO: Go to ride id
   const handleSubmit = () => {
-    router.push(`/rides/${userId}`);
+    router.push(`/${locale}/rides/${_id}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);
