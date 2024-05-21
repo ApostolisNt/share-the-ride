@@ -21,10 +21,12 @@ type Icons = {
 
 const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   const router = useRouter();
-  const { _id, userId, from, to, date, time, ridePrice } = ride;
+  // const { _id, userId, from, to, date, time, ridePrice } = ride;
+  const { id, userId, from, to, date, time, ridePrice } = ride;
   const locale = useLocale();
 
-  const user = users.find((user: User) => user._id === userId);
+  const user = users.find((user: User) => user.id === userId);
+  // const user = users.find((user: User) => user._id === userId);
 
   const {
     allowed = [],
@@ -45,7 +47,8 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   });
 
   const handleSubmit = () => {
-    router.push(`/${locale}/rides/${_id}`);
+    // router.push(`/${locale}/rides/${_id}`);
+    router.push(`/${locale}/rides/${id}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);

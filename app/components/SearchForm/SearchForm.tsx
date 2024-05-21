@@ -2,9 +2,11 @@ import { useState } from "react";
 import "./SearchForm.scss";
 import { useRouter } from "next/navigation";
 import { formatDate } from "app/helpers/FomatDate";
+import { useLocale } from "next-intl";
 
 const SearchForm = () => {
   const router = useRouter();
+  const locale = useLocale();
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
@@ -16,7 +18,7 @@ const SearchForm = () => {
     e.preventDefault();
     const formattedDate = formatDate(date);
     router.push(
-      `/rides?from=${from.toLowerCase()}&to=${to.toLowerCase()}&date=${formattedDate}`
+      `${locale}/rides?from=${from.toLowerCase()}&to=${to.toLowerCase()}&date=${formattedDate}`,
     );
   };
 
