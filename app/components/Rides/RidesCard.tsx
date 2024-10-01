@@ -46,7 +46,6 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
 
   const handleSubmit = () => {
     router.push(`/${locale}/rides/${_id}`);
-    // router.push(`/${locale}/rides/${id}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);

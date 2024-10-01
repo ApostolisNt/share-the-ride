@@ -1,5 +1,7 @@
+import { greekCitiesKeys } from "app/constants/cities";
+
 export type SearchParamsType = {
-  from: string;
-  to: string;
+  from: greekCitiesKeys;
+  to: greekCitiesKeys;
   date: string;
 };

@@ -3,6 +3,7 @@ import { SearchParamsType } from "app/types/types";
 import RidesCard from "./RidesCard";
 import { formatDate } from "app/helpers/FomatDate";
 import { useEffect, useState } from "react";
+import FilterRides from "./FilterRides";
 
 export type ResultsProps = {
   results: SearchParamsType;
@@ -30,6 +31,7 @@ export type User = {
 const Rides = ({ results }: ResultsProps) => {
   const [rides, setRides] = useState<Array<Ride>>([]);
   const [users, setUsers] = useState<Array<User>>([]);
+  const [filteredRides, setFilteredRides] = useState<Array<Ride>>([]);
 
   useEffect(() => {
     const getRides = async () => {
@@ -58,19 +60,27 @@ const Rides = ({ results }: ResultsProps) => {
 
   const { from, to, date } = results;
   const isEmptyResults = !from || !to || !date;
-  const filteredRides = isEmptyResults
+  const initialFilteredRides = isEmptyResults
     ? rides
-    : rides?.filter(
-        (ride: any) =>
+    : rides.filter(
+        (ride: Ride) =>
           ride.from === from &&
           ride.to === to &&
           formatDate(ride.date) === date,
       );
 
+  useEffect(() => {
+    setFilteredRides(initialFilteredRides);
+  }, [initialFilteredRides]);
+
   return (
     <section className="rides_section">
-      {filteredRides.map((ride: any) => (
-        <RidesCard key={ride.id} ride={ride} users={users} />
+      <FilterRides
+        rides={initialFilteredRides}
+        setFilteredRides={setFilteredRides}
+      />
+      {filteredRides.map((ride: Ride) => (
+        <RidesCard key={ride._id} ride={ride} users={users} />
       ))}
     </section>
   );
