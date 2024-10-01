@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
+import Profile from "./Profile";
 
 type DashboardProps = {
   id: string;
 };
 
 const Dashboard = ({ id }: DashboardProps) => {
-  const ProfileComponent = () => <div>Profile View</div>;
   const RidesComponent = () => <div>Rides Completed View</div>;
   const RideRequestsComponent = () => <div>Ride Requests View</div>;
   const ChangePasswordComponent = () => <div>Change Password View</div>;
@@ -20,7 +20,7 @@ const Dashboard = ({ id }: DashboardProps) => {
   const renderComponent = () => {
     switch (currentView) {
       case "profile":
-        return <ProfileComponent />;
+        return <Profile id={id} />;
       case "rides-completed":
         return <RidesComponent />;
       case "rides-requests":
@@ -28,7 +28,7 @@ const Dashboard = ({ id }: DashboardProps) => {
       case "change-password":
         return <ChangePasswordComponent />;
       default:
-        return <ProfileComponent />;
+        return <Profile id={id} />;
     }
   };
 

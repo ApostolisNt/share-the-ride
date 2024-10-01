@@ -26,6 +26,15 @@ export type User = {
   rating: number;
   vehicleBrand: string;
   name: string;
+  contact: {
+    phone: string;
+    email: string;
+  };
+  driverInfo: {
+    yearsOfExperience: number;
+    drivingLicense: string;
+    language: string;
+  };
 };
 
 const Rides = ({ results }: ResultsProps) => {
