@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import heroImage from "@assets/hero-bg.jpg";
 import "./HeroSection.scss";
 import SearchForm from "@components/SearchForm/SearchForm";
-import { Image } from './../Global/Image';
+import { Image } from "./../Global/Image";
 
 const words = ["Share", "Connect"];
 
@@ -13,7 +13,7 @@ const HeroSection = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentWordIndex(
-        (currentWordIndex) => (currentWordIndex + 1) % words.length
+        (currentWordIndex) => (currentWordIndex + 1) % words.length,
       );
     }, 3000);
 
@@ -26,11 +26,11 @@ const HeroSection = () => {
         <Image src={heroImage} alt="Hero Image" />
       </div>
       <div className="hero_container">
-        <div className="flex-1 flex justify-center hero_text_wrapper">
+        <div className="hero_text_wrapper flex justify-center">
           <h1>
-            Let&apos;s <span>{words[currentWordIndex]}</span>
+            Let&apos;s <span>{words[currentWordIndex]}</span> the
             <br />
-            the journey together
+            journey together
           </h1>
         </div>
         <SearchForm />

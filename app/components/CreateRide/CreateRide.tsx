@@ -5,8 +5,8 @@ import "./CreateRide.scss";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { SupportedLangCodes } from "data/translations/translations";
+import { z } from "zod";
 
 const rideFormSchema = z.object({
   userId: z.string().nonempty(),

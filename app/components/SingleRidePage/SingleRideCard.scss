@@ -1,5 +1,7 @@
 .single-ride-container > div {
   margin: 1rem auto;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .notAllowed {

@@ -17,7 +17,7 @@ export const signUpSchema = z
       message: "Confirm Password must be at least 6 characters long",
     }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data: any) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });

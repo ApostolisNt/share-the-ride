@@ -2,49 +2,49 @@
 import { Ride, User } from "@components/Rides/Rides";
 import SingleRideCard from "./SingleRideCard";
 import { useEffect, useState } from "react";
-import dummyRides from "../../dummyRides.json";
-import dummyUsers from "../../dummyUser.json";
 
 type SingleRidePageProps = {
   id: string;
 };
 
 const SingleRidePage = ({ id }: SingleRidePageProps) => {
-  const [ride, setRide] = useState<Array<Ride>>(dummyRides);
-  const [users, setUsers] = useState<Array<User>>(dummyUsers);
+  const [ride, setRide] = useState<Array<Ride>>();
+  const [userId, setUserId] = useState<string>("");
+  const [user, setUser] = useState<Array<User>>();
+  const [singleData, setSingleData] = useState<any>(null);
 
-  // useEffect(() => {
-  //   const getRide = async () => {
-  //     try {
-  //       const res = await fetch(`http://localhost:3000/api/rides/${id}`);
-  //       const data = await res.json();
-  //       setRide(data.ride);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  useEffect(() => {
+    const getRide = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/rides/${id}`);
+        const data = await res.json();
+        setRide(data.ride);
+        setUserId(data.ride.userId);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  //   const getUsers = async () => {
-  //     try {
-  //       const res = await fetch("http://localhost:3000/api/users");
-  //       const data = await res.json();
-  //       setUsers(data.users);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+    getRide();
 
-  //   getUsers();
-  //   getRide();
-  // }, [id]);
+    const getUsers = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/users/${userId}`);
+        const data = await res.json();
+        setUser(data.user);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
-  // const user = users.find((u) => u._id === ride?.userId);
-  const singleRide = ride.find((r) => r.id === id);
-  const user = users.find((u) => u.id === singleRide?.userId);
+    getUsers();
+  }, [id, userId]);
 
-  const singleData = singleRide && user ? { ...singleRide, ...user } : null;
-
-  console.log(singleData);
+  useEffect(() => {
+    if (ride && user) {
+      setSingleData({ ...ride, ...user });
+    }
+  }, [ride, user]);
 
   return (
     <section className="single_ride_section">

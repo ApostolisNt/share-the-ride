@@ -21,12 +21,10 @@ type Icons = {
 
 const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   const router = useRouter();
-  // const { _id, userId, from, to, date, time, ridePrice } = ride;
-  const { id, userId, from, to, date, time, ridePrice } = ride;
   const locale = useLocale();
+  const { _id, userId, from, to, date, time, ridePrice } = ride;
 
-  const user = users.find((user: User) => user.id === userId);
-  // const user = users.find((user: User) => user._id === userId);
+  const user = users.find((user: User) => user._id === userId);
 
   const {
     allowed = [],
@@ -47,8 +45,8 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   });
 
   const handleSubmit = () => {
-    // router.push(`/${locale}/rides/${_id}`);
-    router.push(`/${locale}/rides/${id}`);
+    router.push(`/${locale}/rides/${_id}`);
+    // router.push(`/${locale}/rides/${id}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);
@@ -61,7 +59,7 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
         onClick={handleSubmit}
       >
         {rideExpired && (
-          <div className="ride_card_expired absolute left-1/2 top-1/2 rounded-md border-2 border-solid border-red-600 p-2 font-semibold uppercase text-red-600">
+          <div className="ride_card_expired absolute left-1/2 top-1/2 z-10 rounded-md border-2 border-solid border-red-600 bg-white p-2 font-semibold uppercase text-red-600">
             This ride has expire
           </div>
         )}

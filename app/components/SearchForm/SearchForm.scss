@@ -20,9 +20,10 @@
 
   .ride_search_form {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 600px;
 
     input[type="date"]::-webkit-datetime-edit-year-field,
     input[type="date"]::-webkit-datetime-edit-month-field,
@@ -34,9 +35,11 @@
     input {
       background-color: transparent;
       border-bottom: 2px solid slategray;
-      padding: 0.5rem;
+      padding: 0.75rem;
       color: white;
+      width: 100%;
       transition: all 0.3s ease-in-out;
+      border-radius: 0.2rem;
 
       &:focus {
         outline: none;
@@ -51,14 +54,42 @@
     button {
       background-color: transparent;
       color: white;
-      padding: 0.5rem 2rem;
+      padding: 0.75rem 2rem;
       border-radius: 0.2rem;
       border: 2px solid white;
+      width: 100%;
+      text-align: center;
+
       &:hover {
         background-color: white;
         color: black;
       }
       transition: all 0.3s ease-in-out;
+    }
+  }
+
+  .autocomplete_list {
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 0.3rem;
+    box-shadow: 0px 2px 8px hsla(0, 0%, 0%, 0.2);
+    margin-top: 0.5rem;
+    list-style-type: none;
+    padding: 0;
+    color: #333;
+
+    li {
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover {
+        background-color: #e0e0e0;
+      }
     }
   }
 }
@@ -67,6 +98,12 @@
   .ride_search_section {
     h2 {
       font-size: 1rem;
+    }
+
+    .ride_search_form {
+      button {
+        padding: 0.5rem 1.5rem;
+      }
     }
   }
 }
