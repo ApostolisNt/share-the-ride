@@ -38,15 +38,11 @@ const BookNowButton = ({
         body: JSON.stringify(bookingInfo),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to book the ride.");
-      }
-
       const resData = await res.json();
 
-      if (resData.message === "Ride already booked") {
+      if (resData.message === "Client already booked this ride") {
         setModalType("error");
-        setModalMessage("Ride already booked!");
+        setModalMessage("You have already booked this ride!");
         setShowModal(true);
         return;
       }

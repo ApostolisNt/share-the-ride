@@ -37,7 +37,7 @@ const PopupModal = ({ message, type, onClose }: PopupModalProps) => {
         >
           <MdClose />
         </button>
-        <div className="text-6xl">{getEmoji()}</div>
+        <div className="text-3xl">{getEmoji()}</div>
         <p className="mt-4 text-lg font-semibold">{message}</p>
       </section>
     </section>
