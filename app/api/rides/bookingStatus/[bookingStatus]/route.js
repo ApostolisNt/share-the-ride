@@ -46,7 +46,7 @@ export async function PATCH(request, { params }) {
       }
     }
 
-    const updatedRide = await ride.save();
+    await ride.save();
     return NextResponse.json(
       { message: `Booking ${bookingStatus} and seat count updated` },
       { status: 200 },

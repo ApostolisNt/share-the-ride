@@ -5,9 +5,11 @@ import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
 import clsx from "clsx";
 import { TravelTypes } from "app/helpers/TravelTypes";
 import { Image } from "./../Global/Image";
+import BookNowButton from "./BookNowButton";
 
-const SingleRideCard = ({ singleData }: any) => {
+const SingleRideCard = ({ singleData, rideId }: any) => {
   const {
+    _id,
     from,
     to,
     date,
@@ -26,6 +28,10 @@ const SingleRideCard = ({ singleData }: any) => {
     allowed,
     notAllowed,
   });
+
+  const handleBookingSuccess = () => {
+    alert("Booking was successful!");
+  };
 
   return (
     <div
@@ -97,6 +103,11 @@ const SingleRideCard = ({ singleData }: any) => {
           ))}
         </div>
       </div>
+      <BookNowButton
+        rideId={rideId}
+        clientId={_id}
+        onBookingSuccess={handleBookingSuccess}
+      />
     </div>
   );
 };

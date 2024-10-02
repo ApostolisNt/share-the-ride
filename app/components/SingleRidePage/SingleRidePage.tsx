@@ -49,10 +49,12 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
     }
   }, [ride, user]);
 
+  console.log(singleData);
+
   return (
     <section className="single_ride_section">
       {singleData ? (
-        <SingleRideCard singleData={singleData} />
+        <SingleRideCard rideId={id} singleData={singleData} />
       ) : (
         <p>Loading ride details...</p>
       )}

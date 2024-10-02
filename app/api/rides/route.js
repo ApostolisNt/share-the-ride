@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 import connectMongoDB from "./../../lib/mongodb";
 import Rides from "./../../models/rides";
 
+// Create a new ride
 export async function POST(request) {
   try {
     const {
