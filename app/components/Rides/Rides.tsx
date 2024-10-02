@@ -1,11 +1,12 @@
 "use client";
+
 import { SearchParamsType } from "app/types/types";
 import RidesCard from "./RidesCard";
-import { formatDate } from "app/helpers/FomatDate";
 import { useEffect, useState } from "react";
 import FilterRides from "./FilterRides";
 import { Ride } from "data/schemas/rides";
 import { User } from "data/schemas/users";
+import { formatDate } from "app/helpers/FormatDate";
 
 export type ResultsProps = {
   results: SearchParamsType;
@@ -14,7 +15,7 @@ export type ResultsProps = {
 const Rides = ({ results }: ResultsProps) => {
   const [rides, setRides] = useState<Ride[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredRides, setFilteredRides] = useState<Array<Ride>>([]);
+  const [filteredRides, setFilteredRides] = useState<Ride[]>([]);
 
   useEffect(() => {
     const getRides = async () => {
@@ -41,30 +42,35 @@ const Rides = ({ results }: ResultsProps) => {
     getRides();
   }, []);
 
-  const { from, to, date } = results;
-  const isEmptyResults = !from || !to || !date;
-  const initialFilteredRides = isEmptyResults
-    ? rides
-    : rides.filter(
-        (ride: Ride) =>
-          ride.from === from &&
-          ride.to === to &&
-          formatDate(ride.date) === date,
-      );
-
   useEffect(() => {
+    const { from, to, date } = results;
+
+    const formattedDate = date ? formatDate(date) : null;
+
+    const isEmptyResults = !from || !to || !date;
+
+    const initialFilteredRides = isEmptyResults
+      ? rides
+      : rides.filter(
+          (ride: Ride) =>
+            ride.from.toLowerCase() === from.toLowerCase() &&
+            ride.to.toLowerCase() === to.toLowerCase() &&
+            ride.date === formattedDate,
+        );
+
     setFilteredRides(initialFilteredRides);
-  }, [initialFilteredRides]);
+  }, [rides, results]);
 
   return (
     <section className="rides_section">
-      <FilterRides
-        rides={initialFilteredRides}
-        setFilteredRides={setFilteredRides}
-      />
-      {filteredRides.map((ride: Ride) => (
-        <RidesCard key={ride._id} ride={ride} users={users} />
-      ))}
+      <FilterRides rides={rides} setFilteredRides={setFilteredRides} />
+      {filteredRides.length > 0 ? (
+        filteredRides.map((ride: Ride) => (
+          <RidesCard key={ride._id} ride={ride} users={users} />
+        ))
+      ) : (
+        <p>No rides found</p>
+      )}
     </section>
   );
 };

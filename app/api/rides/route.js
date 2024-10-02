@@ -3,30 +3,47 @@ import connectMongoDB from "./../../lib/mongodb";
 import Rides from "./../../models/rides";
 
 export async function POST(request) {
-  const {
-    id,
-    from,
-    to,
-    date,
-    time,
-    ridePrice,
-    availableSeats,
-    description,
-    userId,
-  } = await request.json();
-  await connectMongoDB();
-  await Rides.create({
-    id,
-    userId,
-    from,
-    to,
-    date,
-    time,
-    ridePrice,
-    availableSeats,
-    description,
-  });
-  return NextResponse.json({ message: "Rides created" }, { status: 201 });
+  try {
+    const {
+      rideOwnerId,
+      from,
+      to,
+      date,
+      time,
+      ridePrice,
+      rideStatus,
+      availableSeats,
+      description,
+    } = await request.json();
+
+    // Ensure MongoDB connection
+    await connectMongoDB();
+
+    // Create new ride entry
+    const newRide = await Rides.create({
+      rideOwnerId,
+      from,
+      to,
+      date,
+      time,
+      ridePrice,
+      rideStatus,
+      availableSeats,
+      description,
+    });
+
+    // Send success response
+    return NextResponse.json(
+      { message: "Ride created", ride: newRide },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Error creating ride:", error);
+    return NextResponse.json(
+      { message: "Server error", error: error.message },
+      { status: 500 },
+    );
+  }
 }
 
 // Fetch all rides

@@ -6,18 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { SupportedLangCodes } from "data/translations/translations";
-import { z } from "zod";
-
-const rideFormSchema = z.object({
-  rideOwnerId: z.string().nonempty(),
-  from: z.string().nonempty(),
-  to: z.string().nonempty(),
-  date: z.string().nonempty(),
-  time: z.string().nonempty(),
-  availableSeats: z.number().optional(),
-  ridePrice: z.number().optional(),
-  description: z.string().nonempty(),
-});
+import { rideFormSchema } from "data/schemas/rides";
 
 const CreateRide = () => {
   const router = useRouter();
@@ -37,6 +26,7 @@ const CreateRide = () => {
       availableSeats: 0,
       ridePrice: 0,
       description: "",
+      rideStatus: "active",
     },
   });
 
@@ -54,7 +44,8 @@ const CreateRide = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Something went wrong!");
+        const errorData = await res.json();
+        console.log(errorData.message || "Something went wrong!");
       }
 
       router.push(`/${locale}/rides`);

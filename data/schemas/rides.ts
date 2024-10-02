@@ -12,6 +12,7 @@ export const rideFormSchema = z.object({
   time: z.string().nonempty(),
   availableSeats: z.number().optional(),
   ridePrice: z.number().optional(),
+  rideStatus: rideStatusEnum,
   description: z.string().nonempty(),
 });
 

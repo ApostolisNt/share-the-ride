@@ -2,13 +2,14 @@
 
 import profileDefault from "@assets/profile-default.png";
 import "./RidesCard.scss";
-import { formatDate } from "app/helpers/FomatDate";
+import { formatDate } from "app/helpers/FormatDate";
 import { TravelTypes } from "app/helpers/TravelTypes";
 import { useRouter } from "next/navigation";
 import LoaderLine from "@components/LoaderLine/LoaderLine";
-import { Ride, User } from "./Rides";
 import { Image } from "./../Global/Image";
 import { useLocale } from "next-intl";
+import { Ride } from "data/schemas/rides";
+import { User } from "data/schemas/users";
 
 type Icons = {
   drink: String;

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { rideSchema } from "../../data/schemas/rides";
+import { rideFormSchema } from "../../data/schemas/rides";
 
 // Define mongoose schema
 const ridesSchema = new Schema(
@@ -34,7 +34,7 @@ const ridesSchema = new Schema(
 
 // Apply Zod validation before saving
 ridesSchema.pre("save", function (next) {
-  const validation = rideSchema.safeParse(this);
+  const validation = rideFormSchema.safeParse(this);
   if (!validation.success) {
     return next(new Error("Validation failed: " + validation.error.message));
   }

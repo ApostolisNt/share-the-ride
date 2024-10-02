@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./SearchForm.scss";
 import { useRouter } from "next/navigation";
-import { formatDate } from "app/helpers/FomatDate";
+import { formatDate } from "app/helpers/FormatDate";
 import { useLocale } from "next-intl";
 import { z } from "zod";
 import { greekCitiesEnum } from "app/constants/cities";

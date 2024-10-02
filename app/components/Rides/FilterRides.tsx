@@ -27,7 +27,7 @@ const FilterRides = ({ rides, setFilteredRides }: FilterRidesProps) => {
     });
 
     setFilteredRides(filteredAndSortedRides);
-  }, [filter, rides, setFilteredRides, currentDate]);
+  }, [filter, rides, currentDate, setFilteredRides]);
 
   const activeButtonClass = "bg-blue-600 text-white";
   const inactiveButtonClass = "bg-white text-blue-600";
