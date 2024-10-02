@@ -29,6 +29,7 @@ export async function POST(request) {
   return NextResponse.json({ message: "Rides created" }, { status: 201 });
 }
 
+// Fetch all rides
 export async function GET() {
   try {
     await connectMongoDB();

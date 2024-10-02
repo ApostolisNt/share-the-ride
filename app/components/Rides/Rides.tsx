@@ -4,42 +4,16 @@ import RidesCard from "./RidesCard";
 import { formatDate } from "app/helpers/FomatDate";
 import { useEffect, useState } from "react";
 import FilterRides from "./FilterRides";
+import { Ride } from "data/schemas/rides";
+import { User } from "data/schemas/users";
 
 export type ResultsProps = {
   results: SearchParamsType;
 };
 
-export type Ride = {
-  _id: string;
-  userId: string;
-  from: string;
-  to: string;
-  date: string;
-  time: string;
-  ridePrice: number;
-};
-
-export type User = {
-  _id: string;
-  allowed: string[];
-  notAllowed: string[];
-  rating: number;
-  vehicleBrand: string;
-  name: string;
-  contact: {
-    phone: string;
-    email: string;
-  };
-  driverInfo: {
-    yearsOfExperience: number;
-    drivingLicense: string;
-    language: string;
-  };
-};
-
 const Rides = ({ results }: ResultsProps) => {
-  const [rides, setRides] = useState<Array<Ride>>([]);
-  const [users, setUsers] = useState<Array<User>>([]);
+  const [rides, setRides] = useState<Ride[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [filteredRides, setFilteredRides] = useState<Array<Ride>>([]);
 
   useEffect(() => {

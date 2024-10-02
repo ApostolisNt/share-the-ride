@@ -9,7 +9,7 @@ import { SupportedLangCodes } from "data/translations/translations";
 import { z } from "zod";
 
 const rideFormSchema = z.object({
-  userId: z.string().nonempty(),
+  rideOwnerId: z.string().nonempty(),
   from: z.string().nonempty(),
   to: z.string().nonempty(),
   date: z.string().nonempty(),
@@ -29,7 +29,7 @@ const CreateRide = () => {
   } = useForm({
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
-      userId: "6607d863f3a807a516b397d8",
+      rideOwnerId: "6607d863f3a807a516b397d8",
       from: "",
       to: "",
       date: "",

@@ -22,9 +22,9 @@ type Icons = {
 const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
   const router = useRouter();
   const locale = useLocale();
-  const { _id, userId, from, to, date, time, ridePrice } = ride;
+  const { _id, rideOwnerId, from, to, date, time, ridePrice } = ride;
 
-  const user = users.find((user: User) => user._id === userId);
+  const user = users.find((user: User) => user._id === rideOwnerId);
 
   const {
     allowed = [],

@@ -1,5 +1,5 @@
+import { Ride } from "data/schemas/rides";
 import { useState, useEffect } from "react";
-import { Ride } from "./Rides";
 
 type FilterRidesProps = {
   rides: Ride[];

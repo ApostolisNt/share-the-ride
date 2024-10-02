@@ -1,6 +1,8 @@
+import { userSchema } from "data/schemas/users";
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+// Define mongoose schema
+const userSchemaDef = new mongoose.Schema(
   {
     name: String,
     rating: Number,
@@ -16,12 +18,20 @@ const userSchema = new mongoose.Schema(
       drivingLicense: String,
       language: String,
     },
+    userStatus: String,
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
-const Users = mongoose.models.Users || mongoose.model("Users", userSchema);
+// Apply Zod validation before saving
+userSchemaDef.pre("save", function (next) {
+  const validation = userSchema.safeParse(this);
+  if (!validation.success) {
+    return next(new Error("Validation failed: " + validation.error.message));
+  }
+  next();
+});
+
+const Users = mongoose.models.Users || mongoose.model("Users", userSchemaDef);
 
 export default Users;
