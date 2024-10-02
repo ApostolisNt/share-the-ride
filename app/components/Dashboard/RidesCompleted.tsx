@@ -1,4 +1,4 @@
-import { Ride } from "@components/Rides/Rides";
+import { Ride } from "data/schemas/rides";
 import React, { useEffect, useState } from "react";
 
 const RidesCompleted = () => {
@@ -49,6 +49,11 @@ const RidesCompleted = () => {
               <h3 className="text-xl font-bold text-gray-700">
                 <span className="uppercase">{ride.from}</span> -{" "}
                 <span className="uppercase">{ride.to}</span>
+                <div>
+                  <span className="text-base uppercase text-gray-600">
+                    {ride.date}
+                  </span>
+                </div>
               </h3>
               <span
                 className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${

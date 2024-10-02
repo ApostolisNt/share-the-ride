@@ -1,3 +1,4 @@
+import PopupModal from "@components/PopupModal/PopupModal";
 import { Ride } from "data/schemas/rides";
 import { useEffect, useState } from "react";
 import { z } from "zod";
@@ -9,6 +10,11 @@ export type rideStatusEnum = z.infer<typeof rideStatusEnum>;
 
 const RidesRequests = () => {
   const [pendingRides, setPendingRides] = useState<Ride[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<"success" | "error" | "info">(
+    "info",
+  );
 
   useEffect(() => {
     const fetchActiveRides = async () => {
@@ -19,6 +25,12 @@ const RidesRequests = () => {
 
     fetchActiveRides();
   }, []);
+
+  const showPopup = (message: string, type: "success" | "error" | "info") => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+  };
 
   const acceptBooking = async (
     rideId: string,
@@ -35,12 +47,12 @@ const RidesRequests = () => {
 
     const data = await res.json();
     if (res.status === 200) {
-      alert(`Booking ${bookStatus}!`);
+      showPopup(`Booking ${bookStatus}!`, "success");
       const updatedRes = await fetch(`/api/rides/rideStatus/active`);
       const updatedData = await updatedRes.json();
       setPendingRides(updatedData.rides || []);
     } else {
-      alert(`Error: ${data.message}`);
+      showPopup(`Error: ${data.message}`, "error");
     }
   };
 
@@ -57,13 +69,13 @@ const RidesRequests = () => {
     });
 
     if (res.status === 200) {
-      alert(`Ride status updated to ${newStatus}`);
+      showPopup(`Ride status updated to ${newStatus}`, "success");
       const updatedRes = await fetch(`/api/rides/rideStatus/active`);
       const updatedData = await updatedRes.json();
       setPendingRides(updatedData.rides || []);
     } else {
       const data = await res.json();
-      alert(`Error: ${data.message}`);
+      showPopup(`Error: ${data.message}`, "error");
     }
   };
 
@@ -72,9 +84,16 @@ const RidesRequests = () => {
       ? "text-yellow-500"
       : "text-green-500";
   };
-
   return (
     <>
+      {showModal && (
+        <PopupModal
+          message={modalMessage}
+          type={modalType}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+
       <h2 className="mb-6 text-2xl font-semibold text-gray-800">
         Ride Requests
       </h2>

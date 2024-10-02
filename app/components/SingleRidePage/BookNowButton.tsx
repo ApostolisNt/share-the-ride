@@ -1,3 +1,4 @@
+import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
 
 type BookNowButtonProps = {
@@ -13,6 +14,11 @@ const BookNowButton = ({
 }: BookNowButtonProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<"success" | "error" | "info">(
+    "info",
+  );
 
   const handleBooking = async () => {
     setLoading(true);
@@ -39,33 +45,52 @@ const BookNowButton = ({
       const resData = await res.json();
 
       if (resData.message === "Ride already booked") {
-        setError("Ride already booked");
+        setModalType("error");
+        setModalMessage("Ride already booked!");
+        setShowModal(true);
+        return;
       }
 
       if (resData.message === "Ride fully booked") {
-        setError("Ride fully booked");
+        setModalType("error");
+        setModalMessage("Ride fully booked!");
+        setShowModal(true);
+        return;
       }
 
+      setModalType("success");
+      setModalMessage("Booking successful!");
+      setShowModal(true);
       onBookingSuccess();
     } catch (error: any) {
-      setError("Failed to book the ride.");
-      console.log(error);
+      setModalType("error");
+      setModalMessage("Failed to book the ride.");
+      setShowModal(true);
+      console.error(error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex w-full flex-col items-center justify-center gap-1">
-      <button
-        onClick={handleBooking}
-        className="mt-4 rounded bg-blue-600 px-4 py-2 text-white"
-        disabled={loading}
-      >
-        {loading ? "Booking..." : "Book Now"}
-      </button>
-      {error && <p className="text-red-500">{error}</p>}
-    </div>
+    <>
+      {showModal && (
+        <PopupModal
+          message={modalMessage}
+          type={modalType}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+      <div className="flex w-full flex-col items-center justify-center gap-1">
+        <button
+          onClick={handleBooking}
+          className="mt-4 rounded bg-blue-600 px-4 py-2 text-white"
+          disabled={loading}
+        >
+          {loading ? "Booking..." : "Book Now"}
+        </button>
+      </div>
+    </>
   );
 };
 
