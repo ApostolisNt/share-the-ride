@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string(),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
@@ -10,6 +11,8 @@ export const loginSchema = z.object({
 export const signUpSchema = z
   .object({
     email: z.string().email({ message: "Invalid email address" }),
+    name: z.string().nonempty(),
+    phone: z.string(),
     password: z
       .string()
       .min(6, { message: "Password must be at least 6 characters long" }),
@@ -17,7 +20,7 @@ export const signUpSchema = z
       message: "Confirm Password must be at least 6 characters long",
     }),
   })
-  .refine((data: any) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
   });
