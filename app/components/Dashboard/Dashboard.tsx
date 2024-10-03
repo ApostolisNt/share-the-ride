@@ -1,23 +1,14 @@
-"use client";
-import { useState } from "react";
 import Profile from "./Profile";
 import RidesRequests from "./RidesRequests";
 import RidesCompleted from "./RidesCompleted";
+import Link from "next/link";
 
 type DashboardProps = {
   id: string;
+  currentView: string;
 };
 
-// Ride Request check id to match rideOwnerId
-const Dashboard = ({ id }: DashboardProps) => {
-  const ChangePasswordComponent = () => <div>Change Password View</div>;
-
-  const [currentView, setCurrentView] = useState("profile");
-
-  const navigateTo = (view: string) => {
-    setCurrentView(view);
-  };
-
+const Dashboard = ({ id, currentView }: DashboardProps) => {
   const renderComponent = () => {
     switch (currentView) {
       case "profile":
@@ -27,7 +18,7 @@ const Dashboard = ({ id }: DashboardProps) => {
       case "rides-requests":
         return <RidesRequests />;
       case "change-password":
-        return <ChangePasswordComponent />;
+        return <div>Change Password View</div>;
       default:
         return <Profile id={id} />;
     }
@@ -41,30 +32,30 @@ const Dashboard = ({ id }: DashboardProps) => {
     <div className="my-12 flex w-full flex-col items-center">
       Dashboard {id}
       <div className="dashboard-list mx-auto my-8 flex w-3/5 flex-wrap justify-evenly gap-4">
-        <button
-          onClick={() => navigateTo("profile")}
+        <Link
+          href="?view=profile"
           className={`px-8 py-4 ${isActive("profile")}`}
         >
           Profile
-        </button>
-        <button
-          onClick={() => navigateTo("rides-completed")}
+        </Link>
+        <Link
+          href="?view=rides-completed"
           className={`px-8 py-4 ${isActive("rides-completed")}`}
         >
           Rides Completed
-        </button>
-        <button
-          onClick={() => navigateTo("rides-requests")}
+        </Link>
+        <Link
+          href="?view=rides-requests"
           className={`px-8 py-4 ${isActive("rides-requests")}`}
         >
           Rides Requests
-        </button>
-        <button
-          onClick={() => navigateTo("change-password")}
+        </Link>
+        <Link
+          href="?view=change-password"
           className={`px-8 py-4 ${isActive("change-password")}`}
         >
           Change Password
-        </button>
+        </Link>
       </div>
       <div className="shadow-md mx-auto w-full max-w-[60rem] rounded-lg bg-white p-6 md:w-[95%]">
         {renderComponent()}

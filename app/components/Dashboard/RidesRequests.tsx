@@ -1,3 +1,5 @@
+"use client";
+
 import PopupModal from "@components/PopupModal/PopupModal";
 import { Ride } from "data/schemas/rides";
 import { useEffect, useState } from "react";
@@ -18,7 +20,9 @@ const RidesRequests = () => {
 
   useEffect(() => {
     const fetchActiveRides = async () => {
-      const res = await fetch(`/api/rides/rideStatus/active`);
+      const res = await fetch(
+        `http://localhost:3000/api/rides/rideStatus/active`,
+      );
       const data = await res.json();
       setPendingRides(data.rides || []);
     };

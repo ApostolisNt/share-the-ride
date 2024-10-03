@@ -1,31 +1,7 @@
-import { Ride } from "data/schemas/rides";
-import React, { useEffect, useState } from "react";
+import { getCompletedRides } from "app/hooks/getCompletedRides";
 
-const RidesCompleted = () => {
-  const [completedRides, setCompletedRides] = useState<Ride[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchCompletedRides = async () => {
-      try {
-        const res = await fetch(`/api/rides/rideStatus/completed`);
-        const data = await res.json();
-        setCompletedRides(data.rides || []);
-      } catch (error) {
-        console.error("Error fetching completed rides:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCompletedRides();
-  }, []);
-
-  if (loading) {
-    return (
-      <p className="text-center text-gray-600">Loading completed rides...</p>
-    );
-  }
+const RidesCompleted = async () => {
+  const completedRides = await getCompletedRides();
 
   if (completedRides.length === 0) {
     return (
