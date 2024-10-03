@@ -32,7 +32,7 @@
     "build/types/**/*.ts",
     "app/lib/mongodb.js",
     "app/components/LoaderLine",
-    "app/api/rides/[id]/route.js",
+    "app/api/[...rides]/[id]/route.js",
     "app/api/users/[id]/route.js"
   ],
   "exclude": ["node_modules"]

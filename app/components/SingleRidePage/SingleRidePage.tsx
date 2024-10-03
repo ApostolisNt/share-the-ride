@@ -1,16 +1,17 @@
 "use client";
-import { Ride, User } from "@components/Rides/Rides";
+import { Ride } from "data/schemas/rides";
 import SingleRideCard from "./SingleRideCard";
 import { useEffect, useState } from "react";
+import { User } from "data/schemas/users";
 
 type SingleRidePageProps = {
   id: string;
 };
 
 const SingleRidePage = ({ id }: SingleRidePageProps) => {
-  const [ride, setRide] = useState<Array<Ride>>();
-  const [userId, setUserId] = useState<string>("");
-  const [user, setUser] = useState<Array<User>>();
+  const [ride, setRide] = useState<Ride[]>();
+  const [rideOwnerId, setRideOwnerId] = useState<string>("");
+  const [user, setUser] = useState<User[]>();
   const [singleData, setSingleData] = useState<any>(null);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
         const res = await fetch(`http://localhost:3000/api/rides/${id}`);
         const data = await res.json();
         setRide(data.ride);
-        setUserId(data.ride.userId);
+        setRideOwnerId(data.ride.rideOwnerId);
       } catch (error) {
         console.log(error);
       }
@@ -29,7 +30,9 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
 
     const getUsers = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/users/${userId}`);
+        const res = await fetch(
+          `http://localhost:3000/api/users/${rideOwnerId}`,
+        );
         const data = await res.json();
         setUser(data.user);
       } catch (error) {
@@ -38,7 +41,7 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
     };
 
     getUsers();
-  }, [id, userId]);
+  }, [id, rideOwnerId]);
 
   useEffect(() => {
     if (ride && user) {
@@ -46,10 +49,12 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
     }
   }, [ride, user]);
 
+  console.log(singleData);
+
   return (
     <section className="single_ride_section">
       {singleData ? (
-        <SingleRideCard singleData={singleData} />
+        <SingleRideCard rideId={id} singleData={singleData} />
       ) : (
         <p>Loading ride details...</p>
       )}

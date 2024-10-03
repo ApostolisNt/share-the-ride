@@ -1,5 +1,5 @@
+import { Ride } from "data/schemas/rides";
 import { useState, useEffect } from "react";
-import { Ride } from "./Rides";
 
 type FilterRidesProps = {
   rides: Ride[];
@@ -27,7 +27,7 @@ const FilterRides = ({ rides, setFilteredRides }: FilterRidesProps) => {
     });
 
     setFilteredRides(filteredAndSortedRides);
-  }, [filter, rides, setFilteredRides, currentDate]);
+  }, [filter, rides, currentDate, setFilteredRides]);
 
   const activeButtonClass = "bg-blue-600 text-white";
   const inactiveButtonClass = "bg-white text-blue-600";

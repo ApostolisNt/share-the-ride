@@ -1,14 +1,15 @@
 "use client";
 import { useState } from "react";
 import Profile from "./Profile";
+import RidesRequests from "./RidesRequests";
+import RidesCompleted from "./RidesCompleted";
 
 type DashboardProps = {
   id: string;
 };
 
+// Ride Request check id to match rideOwnerId
 const Dashboard = ({ id }: DashboardProps) => {
-  const RidesComponent = () => <div>Rides Completed View</div>;
-  const RideRequestsComponent = () => <div>Ride Requests View</div>;
   const ChangePasswordComponent = () => <div>Change Password View</div>;
 
   const [currentView, setCurrentView] = useState("profile");
@@ -22,9 +23,9 @@ const Dashboard = ({ id }: DashboardProps) => {
       case "profile":
         return <Profile id={id} />;
       case "rides-completed":
-        return <RidesComponent />;
+        return <RidesCompleted />;
       case "rides-requests":
-        return <RideRequestsComponent />;
+        return <RidesRequests />;
       case "change-password":
         return <ChangePasswordComponent />;
       default:
@@ -65,7 +66,9 @@ const Dashboard = ({ id }: DashboardProps) => {
           Change Password
         </button>
       </div>
-      {renderComponent()}
+      <div className="shadow-md mx-auto w-full max-w-[60rem] rounded-lg bg-white p-6 md:w-[95%]">
+        {renderComponent()}
+      </div>
     </div>
   );
 };
