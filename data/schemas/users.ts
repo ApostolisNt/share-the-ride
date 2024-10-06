@@ -23,15 +23,14 @@ export const userSchema = z.object({
   userStatus: z.string().optional(),
 });
 
-export const loginSchema = z.object({
+export const loginFormSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
-  phone: z.string(),
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
 });
 
-export const signUpSchema = z
+export const signUpFormSchema = z
   .object({
     email: z.string().email({ message: "Invalid email address" }),
     name: z.string().nonempty(),
@@ -57,8 +56,8 @@ export const signUpUserSchema = z.object({
     .min(6, { message: "Password must be at least 6 characters long" }),
 });
 
-export type SignUpFormInputs = z.infer<typeof signUpSchema>;
-export type LoginFormInputs = z.infer<typeof loginSchema>;
+export type SignUpFormInputs = z.infer<typeof signUpFormSchema>;
+export type LoginFormInputs = z.infer<typeof loginFormSchema>;
 
 // User schema inference type
 export type User = z.infer<typeof userSchema>;

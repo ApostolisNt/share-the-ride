@@ -1,8 +1,6 @@
-import { fetchUser } from "app/hooks/getUser";
+import { User } from "data/schemas/users";
 
-const Profile = async ({ id }: { id: string }) => {
-  const user = await fetchUser(id);
-
+const Profile = async ({ user }: { user: User }) => {
   return (
     <>
       <h1 className="mb-6 text-2xl font-semibold text-gray-800">Profile</h1>
@@ -22,7 +20,8 @@ const Profile = async ({ id }: { id: string }) => {
               <span className="font-bold">Email:</span> {user.contact.email}
             </p>
             <p className="text-gray-700">
-              <span className="font-bold">Rating:</span> {user.rating} / 5
+              <span className="font-bold">Rating:</span>{" "}
+              {user.rating ? user.rating / 5 : "No rating yet"}
             </p>
             <p className="text-gray-700">
               <span className="font-bold">Languages:</span>{" "}

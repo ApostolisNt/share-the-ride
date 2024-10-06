@@ -3,8 +3,14 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormInputs, loginSchema } from "data/schemas/authentication";
+import { useState } from "react";
+import { SupportedLangCodes } from "data/translations/translations";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
+  const locale = useLocale() as SupportedLangCodes;
   const {
     register,
     handleSubmit,
@@ -12,9 +18,30 @@ export default function Login() {
   } = useForm<LoginFormInputs>({
     resolver: zodResolver(loginSchema),
   });
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
+    try {
+      const res = await fetch("/api/auth/sign-in", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const response = await res.json();
+
+      if (response.message && !res.ok) {
+        setSubmitError(response.message);
+        return;
+      }
+
+      const userId = response.user.id;
+      router.push(`/${locale}/dashboard/${userId}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -66,6 +93,9 @@ export default function Login() {
               </p>
             )}
           </div>
+          {submitError && (
+            <p className="text-center text-red-500">{submitError}</p>
+          )}
           <button
             type="submit"
             className="shadow-sm w-full rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

@@ -1,5 +1,4 @@
-// app/api/auth/register/route.ts
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { NextResponse } from "next/server";
 import connectMongoDB from "app/lib/mongodb";
 import Users from "app/models/users";
@@ -27,15 +26,17 @@ export async function POST(request) {
       );
     }
 
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     // Create a new user
     const newUser = new Users({
       name,
       contact: { email, phone },
-      password: hashedPassword,
+      password,
       userStatus: "client",
+      driverInfo: {
+        yearsOfExperience: 0,
+        drivingLicense: "",
+        language: "",
+      },
     });
 
     await newUser.save();
@@ -45,7 +46,7 @@ export async function POST(request) {
       { status: 201 },
     );
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error("Error during user registration:", error);
     return NextResponse.json(
       { message: "Server error", error: error.message },
       { status: 500 },

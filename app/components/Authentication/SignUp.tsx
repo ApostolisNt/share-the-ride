@@ -4,8 +4,13 @@ import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpFormInputs, signUpSchema } from "data/schemas/authentication";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
+import { SupportedLangCodes } from "data/translations/translations";
 
 export default function SignUp() {
+  const router = useRouter();
+  const locale = useLocale() as SupportedLangCodes;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -23,8 +28,6 @@ export default function SignUp() {
     setSubmitError(null);
 
     try {
-      console.log(data);
-
       const response = await fetch("/api/auth/register", {
         method: "POST",
         body: JSON.stringify(data),
@@ -33,11 +36,18 @@ export default function SignUp() {
         },
       });
 
-      if (!response.ok) {
-        throw new Error("Something went wrong during registration");
+      const responseData = await response.json();
+
+      if (responseData.message && !response.ok) {
+        setSubmitError(responseData.message);
+        return;
       }
 
+      const userId = responseData.user._id;
       setIsSubmitted(true);
+      setTimeout(() => {
+        router.push(`/${locale}/dashboard/${userId}`);
+      }, 1000);
     } catch (error: any) {
       setSubmitError(error.message || "Registration failed");
     } finally {

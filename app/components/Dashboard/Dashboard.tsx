@@ -2,17 +2,21 @@ import Profile from "./Profile";
 import RidesRequests from "./RidesRequests";
 import RidesCompleted from "./RidesCompleted";
 import Link from "next/link";
+import { fetchUser } from "app/hooks/getUser";
+import { User } from "data/schemas/users";
 
 type DashboardProps = {
   id: string;
   currentView: string;
 };
 
-const Dashboard = ({ id, currentView }: DashboardProps) => {
+const Dashboard = async ({ id, currentView }: DashboardProps) => {
+  const user: User = await fetchUser(id);
+
   const renderComponent = () => {
     switch (currentView) {
       case "profile":
-        return <Profile id={id} />;
+        return <Profile user={user} />;
       case "rides-completed":
         return <RidesCompleted />;
       case "rides-requests":
@@ -20,7 +24,7 @@ const Dashboard = ({ id, currentView }: DashboardProps) => {
       case "change-password":
         return <div>Change Password View</div>;
       default:
-        return <Profile id={id} />;
+        return <Profile user={user} />;
     }
   };
 
@@ -30,7 +34,9 @@ const Dashboard = ({ id, currentView }: DashboardProps) => {
 
   return (
     <div className="my-12 flex w-full flex-col items-center">
-      Dashboard {id}
+      <h1 className="mb-8 text-2xl font-semibold">
+        Welcome <span className="text-blue-400">{user?.name}!</span>
+      </h1>
       <div className="dashboard-list mx-auto my-8 flex w-3/5 flex-wrap justify-evenly gap-4">
         <Link
           href="?view=profile"
