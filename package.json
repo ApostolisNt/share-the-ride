@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "3.3.4",
+    "bcryptjs": "^2.4.3",
     "class-variance-authority": "0.7.0",
     "clsx": "2.1.0",
     "mongoose": "8.2.1",
     "next": "14.2.1",
+    "next-auth": "^4.24.8",
     "next-intl": "3.11.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -33,12 +35,12 @@
     "autoprefixer": "10.0.1",
     "eslint": "8",
     "eslint-config-next": "14.1.0",
+    "next-export-optimize-images": "4.0.0",
     "postcss": "8",
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "0.5.12",
+    "sharp": "0.33.3",
     "tailwindcss": "3.3.0",
-    "typescript": "5",
-    "next-export-optimize-images": "4.0.0",
-    "sharp": "0.33.3"
+    "typescript": "5"
   }
 }

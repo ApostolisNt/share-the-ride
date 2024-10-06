@@ -1,23 +1,7 @@
-import { User } from "@components/Rides/Rides";
-import { useEffect, useState } from "react";
+import { fetchUser } from "app/hooks/getUser";
 
-const Profile = ({ id }: { id: string }) => {
-  const [user, setUser] = useState<User>();
-
-  // TODO: OPTIMIZE THIS
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/users/${id}`);
-        const data = await response.json();
-        setUser(data.user);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchUser();
-  }, [id]);
+const Profile = async ({ id }: { id: string }) => {
+  const user = await fetchUser(id);
 
   return (
     <>
@@ -42,7 +26,7 @@ const Profile = ({ id }: { id: string }) => {
             </p>
             <p className="text-gray-700">
               <span className="font-bold">Languages:</span>{" "}
-              {user.driverInfo.language}
+              {user.driverInfo?.language}
             </p>
           </div>
 
@@ -54,11 +38,11 @@ const Profile = ({ id }: { id: string }) => {
             </p>
             <p className="text-gray-700">
               <span className="font-bold">Years of Experience:</span>{" "}
-              {user.driverInfo.yearsOfExperience} years
+              {user.driverInfo?.yearsOfExperience} years
             </p>
             <p className="text-gray-700">
               <span className="font-bold">Driving License:</span>{" "}
-              {user.driverInfo.drivingLicense}
+              {user.driverInfo?.drivingLicense}
             </p>
           </div>
 
@@ -66,7 +50,7 @@ const Profile = ({ id }: { id: string }) => {
           <div className="shadow-md rounded-lg bg-gray-100 p-4">
             <h2 className="mb-3 text-xl font-semibold">Allowed Preferences</h2>
             <ul className="list-inside list-disc text-gray-700">
-              {user.allowed.map((preference, index) => (
+              {user.allowed?.map((preference, index) => (
                 <li key={index}>{preference}</li>
               ))}
             </ul>
@@ -78,7 +62,7 @@ const Profile = ({ id }: { id: string }) => {
               Not Allowed Preferences
             </h2>
             <ul className="list-inside list-disc text-gray-700">
-              {user.notAllowed.map((preference, index) => (
+              {user.notAllowed?.map((preference, index) => (
                 <li key={index}>{preference}</li>
               ))}
             </ul>

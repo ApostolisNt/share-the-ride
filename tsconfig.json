@@ -33,7 +33,8 @@
     "app/lib/mongodb.js",
     "app/components/LoaderLine",
     "app/api/[...rides]/[id]/route.js",
-    "app/api/users/[id]/route.js"
+    "app/api/users/[id]/route.js",
+    "app/api/auth/register/route.js"
   ],
   "exclude": ["node_modules"]
 }
