@@ -1,6 +1,6 @@
 import { User } from "data/schemas/users";
 
-export const fetchUser = async (id: string): Promise<User | null> => {
+export const fetchUser = async (id: string): Promise<User> => {
   const response = await fetch(`http://localhost:3000/api/users/${id}`);
 
   if (!response.ok) {
@@ -8,5 +8,5 @@ export const fetchUser = async (id: string): Promise<User | null> => {
   }
 
   const data = await response.json();
-  return data.user || null;
+  return data.user;
 };
