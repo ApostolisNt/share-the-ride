@@ -2,7 +2,7 @@ import Profile from "./Profile";
 import RidesRequests from "./RidesRequests";
 import RidesCompleted from "./RidesCompleted";
 import Link from "next/link";
-import { fetchUser } from "app/hooks/getUser";
+import { getUser } from "app/hooks/getUser";
 import { User } from "data/schemas/users";
 
 type DashboardProps = {
@@ -11,7 +11,7 @@ type DashboardProps = {
 };
 
 const Dashboard = async ({ id, currentView }: DashboardProps) => {
-  const user: User = await fetchUser(id);
+  const user: User = await getUser(id);
 
   const renderComponent = () => {
     switch (currentView) {
