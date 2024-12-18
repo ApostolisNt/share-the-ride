@@ -1,0 +1,42 @@
+default_language_version:
+  python: python3
+  node: 17.9.1
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace # trims trailing whitespace.
+      - id: end-of-file-fixer # ensures that a file is either empty, or ends with one newline.
+      - id: fix-byte-order-marker # removes utf-8 byte order marker.
+      - id: mixed-line-ending # replaces or checks mixed line ending.
+      - id: check-merge-conflict # checks for files that contain merge conflict strings.
+      - id: check-case-conflict # checks for files that would conflict in case-insensitive file systems.
+      - id: check-executables-have-shebangs # ensures that (non-binary) executables have a shebang.
+      - id: check-shebang-scripts-are-executable # ensures that (non-binary) files with a shebang are executable.
+      - id: check-yaml # checks yaml files for parse-able syntax.
+      - id: check-json # checks json files for parse-able syntax.
+      - id: detect-private-key # detects the presence of private keys.
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.30.0
+    hooks:
+      - id: check-github-workflows # Validate GitHub Workflows against the schema provided by SchemaStore
+      - id: check-github-actions # Validate GitHub Actions against the schema provided by SchemaStore
+      - id: check-renovate # Validate Renovate config against the schema provided by Renovate
+        additional_dependencies: ["json5"]
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.43.0
+    hooks:
+      - id: markdownlint
+
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v8.56.0
+    hooks:
+      - id: eslint # Checks files against eslint
+
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.13.1-beta
+    hooks:
+      - id: hadolint # Validates dockerfiles
