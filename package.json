@@ -7,7 +7,8 @@
     "opt": "next-export-optimize-images",
     "build": "next build && next-export-optimize-images",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "3.3.4",
@@ -36,6 +37,7 @@
     "autoprefixer": "10.0.1",
     "eslint": "8",
     "eslint-config-next": "14.1.0",
+    "husky": "^9.1.7",
     "next-export-optimize-images": "4.0.0",
     "postcss": "8",
     "prettier": "3.2.5",
