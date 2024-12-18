@@ -5,8 +5,6 @@ type ConstructionProps = {
   params: { locale: SupportedLangCodes };
 };
 
-export default function createRide({
-  params: { locale },
-}: ConstructionProps) {
+export default function createRide({ params: { locale } }: ConstructionProps) {
   return <CreateRide />;
 }
