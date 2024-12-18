@@ -9,18 +9,14 @@ export default NextAuth({
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "email@example.com",
-        },
+        email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         // Connect to MongoDB
         await connectMongoDB();
 
-        // Find user by email
+        // Find the user by email
         const user = await Users.findOne({
           "contact.email": credentials.email,
         });
@@ -37,7 +33,7 @@ export default NextAuth({
           throw new Error("Invalid password");
         }
 
-        // Return the user object without the password for the session
+        // Return user object without the password
         return {
           id: user._id,
           name: user.name,
@@ -51,8 +47,8 @@ export default NextAuth({
     strategy: "jwt",
   },
   pages: {
-    signIn: "/auth/signin",
-    error: "/auth/error",
+    signIn: "/login",
+    error: "/error",
   },
   callbacks: {
     async jwt({ token, user }) {
