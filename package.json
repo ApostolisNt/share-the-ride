@@ -7,7 +7,23 @@
     "opt": "next-export-optimize-images",
     "build": "next build && next-export-optimize-images",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-fmt": "prettier --check .",
+    "fmt": "prettier --write .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.css|*.scss": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "!(*.css|*.scss|*.ts|*.tsx)": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@hookform/resolvers": "3.3.4",
@@ -33,12 +49,17 @@
     "@types/node": "20",
     "@types/react": "18",
     "@types/react-dom": "18",
+    "@typescript-eslint/eslint-plugin": "^8.18.1",
+    "@typescript-eslint/parser": "^8.18.1",
     "autoprefixer": "10.0.1",
-    "eslint": "8",
-    "eslint-config-next": "14.1.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.11",
+    "markdownlint-cli": "^0.43.0",
     "next-export-optimize-images": "4.0.0",
     "postcss": "8",
-    "prettier": "3.2.5",
+    "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "0.5.12",
     "sharp": "0.33.3",
     "tailwindcss": "3.3.0",

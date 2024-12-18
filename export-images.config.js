@@ -2,7 +2,7 @@
  * @type {import('next-export-optimize-images').Config}
  */
 const config = {
-    outDir: "build",
+  outDir: "build",
 };
 
 module.exports = config;
