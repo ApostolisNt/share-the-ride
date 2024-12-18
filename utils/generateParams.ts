@@ -3,6 +3,6 @@ import { SupportedLangCodes } from "data/translations/translations";
 
 export const generateLanguageSlugs = () => {
   return general.languages.map((loc: string) => ({
-    locale: lo as SupportedLangCode,
+    locale: lo as SupportedLangCod,
   }));
 };
