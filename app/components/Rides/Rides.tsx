@@ -7,6 +7,7 @@ import FilterRides from "./FilterRides";
 import { Ride } from "data/schemas/rides";
 import { User } from "data/schemas/users";
 import { formatDate } from "app/helpers/FormatDate";
+import Loading from "app/[locale]/(pages)/rides/loading";
 
 export type ResultsProps = {
   results: SearchParamsType;
@@ -69,7 +70,7 @@ const Rides = ({ results }: ResultsProps) => {
           <RidesCard key={ride._id} ride={ride} users={users} />
         ))
       ) : (
-        <p>No rides found</p>
+        <Loading height={44} items={4} />
       )}
     </section>
   );

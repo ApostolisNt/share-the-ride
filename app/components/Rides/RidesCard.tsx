@@ -12,12 +12,12 @@ import { Ride } from "data/schemas/rides";
 import { User } from "data/schemas/users";
 
 type Icons = {
-  drink: String;
-  music: String;
-  pets: String;
-  smoke: String;
-  twoPersons: String;
-  threePersons: String;
+  drink: string;
+  music: string;
+  pets: string;
+  smoke: string;
+  twoPersons: string;
+  threePersons: string;
 };
 
 const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {

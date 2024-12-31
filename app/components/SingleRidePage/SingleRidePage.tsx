@@ -3,6 +3,7 @@ import { Ride } from "data/schemas/rides";
 import SingleRideCard from "./SingleRideCard";
 import { useEffect, useState } from "react";
 import { User } from "data/schemas/users";
+import Loading from "app/[locale]/(pages)/rides/loading";
 
 type SingleRidePageProps = {
   id: string;
@@ -12,7 +13,7 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
   const [ride, setRide] = useState<Ride[]>();
   const [rideOwnerId, setRideOwnerId] = useState<string>("");
   const [user, setUser] = useState<User[]>();
-  const [singleData, setSingleData] = useState<any>(null);
+  const [singleData, setSingleData] = useState<(Ride & User) | null>(null);
 
   useEffect(() => {
     const getRide = async () => {
@@ -56,7 +57,7 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
       {singleData ? (
         <SingleRideCard rideId={id} singleData={singleData} />
       ) : (
-        <p>Loading ride details...</p>
+        <Loading height={96} items={1} />
       )}
     </section>
   );

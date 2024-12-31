@@ -13,6 +13,8 @@ export const greekCitiesEnum = z.enum([
   "Agrinio",
   "Karditsa",
   "Trikala",
+  "Thiva",
+  "Igoumenitsa",
 ]);
 
 export type greekCitiesKeys = z.infer<typeof greekCitiesEnum>;
