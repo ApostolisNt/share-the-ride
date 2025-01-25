@@ -10,7 +10,7 @@ export type searchParamsProps = {
 export default function AllRidesPage({ searchParams }: searchParamsProps) {
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading height={96} items={4} />}>
         <Rides results={searchParams} />
       </Suspense>
     </>

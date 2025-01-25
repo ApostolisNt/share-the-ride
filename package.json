@@ -13,15 +13,14 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.css|*.scss": [
-      "stylelint --fix",
+    "*.{css,scss}": [
       "prettier --write"
     ],
     "*.{ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ],
-    "!(*.css|*.scss|*.ts|*.tsx)": [
+    "*.{md,json}": [
       "prettier --write"
     ]
   },

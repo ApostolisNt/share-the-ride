@@ -1,9 +1,15 @@
-import { useState } from "react";
+"use client";
+import { useState, FormEvent } from "react";
 import "./SearchForm.scss";
 import { useRouter } from "next/navigation";
 import { formatDate } from "app/helpers/FormatDate";
 import { useLocale } from "next-intl";
 import { z } from "zod";
+
+// Components
+import AutocompleteInput from "app/components/AutoCompleteInput/AutoCompleteInput";
+
+// Enums and data
 import { greekCitiesEnum } from "app/constants/cities";
 
 const searchFormSchema = z.object({
@@ -18,14 +24,15 @@ const SearchForm = () => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");
-  const [filteredFromCities, setFilteredFromCities] = useState<string[]>([]);
-  const [filteredToCities, setFilteredToCities] = useState<string[]>([]);
   const [error, setError] = useState("");
 
   // Generate today's date in YYYY-MM-DD format
   const today = new Date().toISOString().split("T")[0];
 
-  const handleSubmit = (e: any) => {
+  /**
+   * Handle form submission + validation
+   */
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const formattedDate = formatDate(date);
 
@@ -46,83 +53,38 @@ const SearchForm = () => {
     );
   };
 
-  const handleFromChange = (e: any) => {
-    const value = e.target.value;
-    setFrom(value);
-    if (value.length >= 2) {
-      const filtered = greekCitiesEnum.options.filter((city) =>
-        city.toLowerCase().startsWith(value.toLowerCase()),
-      );
-      setFilteredFromCities(filtered);
-    } else {
-      setFilteredFromCities([]);
-    }
-  };
-
-  const handleToChange = (e: any) => {
-    const value = e.target.value;
-    setTo(value);
-    if (value.length >= 2) {
-      const filtered = greekCitiesEnum.options.filter((city) =>
-        city.toLowerCase().startsWith(value.toLowerCase()),
-      );
-      setFilteredToCities(filtered);
-    } else {
-      setFilteredToCities([]);
-    }
-  };
-
-  const selectFromCity = (city: string) => {
-    setFrom(city);
-    setFilteredFromCities([]);
-  };
-
-  const selectToCity = (city: string) => {
-    setTo(city);
-    setFilteredToCities([]);
-  };
+  console.log(from, to, date);
 
   return (
     <div className="ride_search_section">
       <h2>Find your destination</h2>
-      <form onSubmit={handleSubmit} className="ride_search_form">
-        <div>
-          <input
-            type="text"
-            value={from}
-            onChange={handleFromChange}
-            placeholder="From"
-            required
-          />
-          {filteredFromCities.length > 0 && (
-            <ul className="autocomplete_list">
-              {filteredFromCities.map((city) => (
-                <li key={city} onClick={() => selectFromCity(city)}>
-                  {city}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
 
-        <div>
-          <input
-            type="text"
-            value={to}
-            onChange={handleToChange}
-            placeholder="To"
-            required
-          />
-          {filteredToCities.length > 0 && (
-            <ul className="autocomplete_list">
-              {filteredToCities.map((city) => (
-                <li key={city} onClick={() => selectToCity(city)}>
-                  {city}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+      <form
+        onSubmit={handleSubmit}
+        className="ride_search_form"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
+      >
+        <AutocompleteInput
+          label="From"
+          placeholder="From"
+          value={from}
+          onChange={setFrom}
+          cityList={greekCitiesEnum.options}
+          required
+        />
+
+        <AutocompleteInput
+          label="To"
+          placeholder="To"
+          value={to}
+          onChange={setTo}
+          cityList={greekCitiesEnum.options}
+          required
+        />
 
         <input
           type="date"
@@ -133,6 +95,7 @@ const SearchForm = () => {
         />
 
         <button type="submit">Search</button>
+
         {error && (
           <p className="error_message text-center text-red-600">{error}</p>
         )}

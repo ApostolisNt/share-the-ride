@@ -1,25 +1,9 @@
-"use client";
-import { useState, useEffect } from "react";
 import heroImage from "@assets/hero-bg.jpg";
 import "./HeroSection.scss";
 import SearchForm from "@components/SearchForm/SearchForm";
 import { Image } from "./../Global/Image";
 
-const words = ["Share", "Connect"];
-
 const HeroSection = () => {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentWordIndex(
-        (currentWordIndex) => (currentWordIndex + 1) % words.length,
-      );
-    }, 3000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   return (
     <section className="hero_section">
       <div className="backgroundImage">
@@ -28,9 +12,7 @@ const HeroSection = () => {
       <div className="hero_container">
         <div className="hero_text_wrapper flex justify-center">
           <h1>
-            Let&apos;s <span>{words[currentWordIndex]}</span> the
-            <br />
-            journey together
+            Let&apos;s <span>Share</span> the journey together
           </h1>
         </div>
         <SearchForm />

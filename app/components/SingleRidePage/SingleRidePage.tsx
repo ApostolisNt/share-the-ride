@@ -46,11 +46,9 @@ const SingleRidePage = ({ id }: SingleRidePageProps) => {
 
   useEffect(() => {
     if (ride && user) {
-      setSingleData({ ...ride, ...user });
+      setSingleData({ ...ride[0], ...user[0] });
     }
   }, [ride, user]);
-
-  console.log(singleData);
 
   return (
     <section className="single_ride_section">
