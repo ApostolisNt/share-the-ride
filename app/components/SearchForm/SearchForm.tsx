@@ -53,8 +53,6 @@ const SearchForm = () => {
     );
   };
 
-  console.log(from, to, date);
-
   return (
     <div className="ride_search_section">
       <h2>Find your destination</h2>

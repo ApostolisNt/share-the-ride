@@ -1,16 +1,11 @@
 "use client";
 
-import { useLocale } from "next-intl";
 import "./CreateRide.scss";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { SupportedLangCodes } from "data/translations/translations";
 import { rideFormSchema } from "data/schemas/rides";
 
 const CreateRide = () => {
-  const router = useRouter();
-  const locale = useLocale() as SupportedLangCodes;
   const {
     register,
     handleSubmit,
@@ -18,7 +13,7 @@ const CreateRide = () => {
   } = useForm({
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
-      rideOwnerId: "6607d863f3a807a516b397d8",
+      rideOwnerId: "",
       from: "",
       to: "",
       date: "",
@@ -34,24 +29,26 @@ const CreateRide = () => {
   const today = new Date().toISOString().split("T")[0];
 
   const onSubmit = async (data: any) => {
-    try {
-      const res = await fetch("http://localhost:3000/api/rides", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    console.log(data);
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.log(errorData.message || "Something went wrong!");
-      }
+    // try {
+    //   const res = await fetch("http://localhost:3000/api/rides", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   });
 
-      router.push(`/${locale}/rides`);
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (!res.ok) {
+    //     const errorData = await res.json();
+    //     console.log(errorData.message || "Something went wrong!");
+    //   }
+
+    //   router.push(`/${locale}/rides`);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (

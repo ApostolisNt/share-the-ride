@@ -1,21 +1,21 @@
-import Dashboard from "@components/Dashboard/Dashboard";
+// import Dashboard from "@components/Dashboard/Dashboard";
 
 type ParamProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     view?: string;
-  };
+  }>;
 };
 
-export default function DashboardPage({ params, searchParams }: ParamProps) {
-  const id = params.id;
-  const currentView = searchParams.view || "?view=profile";
+export default async function DashboardPage(props: ParamProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  console.log(params, searchParams);
 
-  return (
-    <div>
-      <Dashboard id={id} currentView={currentView} />
-    </div>
-  );
+  // const id = params.id;
+  // const currentView = searchParams.view || "?view=profile";
+
+  return <div>{/* <Dashboard id={id} currentView={currentView} /> */}</div>;
 }

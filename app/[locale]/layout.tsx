@@ -27,13 +27,20 @@ export function generateStaticParams() {
 
 type RootLayoutProps = {
   children: ReactNode;
-  params: { locale: SupportedLangCodes };
+  params: Promise<{ locale: SupportedLangCodes }>;
 };
 
-export default function RootLayout({
-  children,
-  params: { locale },
-}: RootLayoutProps) {
+export default async function RootLayout(props: RootLayoutProps) {
+  const params = await props.params;
+
+  const {
+    locale
+  } = params;
+
+  const {
+    children
+  } = props;
+
   unstable_setRequestLocale(locale);
 
   return (
