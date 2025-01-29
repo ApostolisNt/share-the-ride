@@ -1,0 +1,159 @@
+[
+  {
+    "id": "660983d112bb55e97b3cf6dc",
+    "from": "igoumenitsa",
+    "to": "thiva",
+    "date": "2024-10-06",
+    "time": "06:39",
+    "ridePrice": 25,
+    "availableSeats": -1,
+    "rideStatus": "completed",
+    "description": "Mongo redirect",
+    "rideOwnerId": "6607d863f3a807a516b397d8"
+  },
+  {
+    "id": "6609844a12bb55e97b3cf6de",
+    "from": "thiva",
+    "to": "Ioannina",
+    "date": "2024-12-01",
+    "time": "19:45",
+    "ridePrice": 25,
+    "availableSeats": 1,
+    "rideStatus": "completed",
+    "description": "Mongo redirect new",
+
+    "rideOwnerId": "6607d863f3a807a516b397d8"
+  },
+  {
+    "id": "660995ce04978e0197c4d08c",
+    "from": "Trikala",
+    "to": "Ioannina",
+    "date": "2024-04-24",
+    "time": "07:56",
+    "ridePrice": 30,
+    "rideStatus": "completed",
+    "availableSeats": 4,
+    "description": "I love music and pets!",
+
+    "rideOwnerId": "6607d863f3a807a516b397d8"
+  },
+  {
+    "id": "66111b53864a4e6d1fbe0f21",
+    "from": "Karditsa",
+    "to": "Igoumenitsa",
+    "date": "2024-04-16",
+    "time": "05:52",
+    "ridePrice": 35,
+    "availableSeats": 2,
+    "description": "No smoke and pets"
+  },
+  {
+    "id": "66fbc82d49390fb5662b25e3",
+    "from": "athens",
+    "to": "karditsa",
+    "date": "2024-10-12",
+    "time": "15:00",
+    "ridePrice": 30,
+    "availableSeats": 1,
+    "rideStatus": "completed",
+    "description": "Apo tin plateia estauromenou. Aigaleo",
+
+    "rideOwnerId": "6607d863f3a807a516b397d8"
+  },
+  {
+    "id": "66fd3b14fb921c1f79d02f7e",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "inactive",
+    "from": "Athens",
+    "to": "Volos",
+    "date": "2024-10-03",
+    "time": "16:22",
+    "ridePrice": 25,
+    "availableSeats": 1,
+    "description": "verveerveverv"
+  },
+  {
+    "id": "67277027980acab2b56f1457",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "completed",
+    "from": "igoumenitsa",
+    "to": "Athens",
+    "date": "2024-11-05",
+    "time": "14:46",
+    "ridePrice": 25,
+    "availableSeats": 1,
+    "description": "Apo tin plateia"
+  },
+  {
+    "id": "6727716c980acab2b56f14fc",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "inactive",
+    "from": "Trikala",
+    "to": "Volos",
+    "date": "2024-11-04",
+    "time": "15:49",
+    "ridePrice": 20,
+    "availableSeats": 2,
+    "description": "ewfewfwefwfewfwe"
+  },
+  {
+    "id": "672e232b9c3c6c170e043362",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "completed",
+    "from": "igoumenitsa",
+    "to": "Trikaka",
+    "date": "2024-11-09",
+    "time": "16:42",
+    "ridePrice": 25,
+    "availableSeats": 1,
+    "description": "cdsdcsdcsdcsdcds"
+  },
+  {
+    "id": "67498719d276e9643a05db2f",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "completed",
+    "from": "Trikala",
+    "to": "Thessaloniki",
+    "date": "2024-11-30",
+    "time": "11:20",
+    "ridePrice": 25,
+    "availableSeats": 1,
+    "description": "cewcewcewcwecwecew"
+  },
+  {
+    "id": "67743a5be56d2933f5648c32",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "inactive",
+    "from": "igoumenitsa",
+    "to": "thiva",
+    "date": "2024-12-31",
+    "time": "20:39",
+    "ridePrice": 40,
+    "availableSeats": 2,
+    "description": "Testtttttttttt"
+  },
+  {
+    "id": "6794c2ddb8a0002c29a87344",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "completed",
+    "from": "Athens",
+    "to": "Igoumenitsa",
+    "date": "2025-01-26",
+    "time": "02:53",
+    "ridePrice": 25,
+    "availableSeats": 1,
+    "description": "Den thelw skulia"
+  },
+  {
+    "id": "6794c470b8a0002c29a873ce",
+    "rideOwnerId": "6607d863f3a807a516b397d8",
+    "rideStatus": "active",
+    "from": "Athens",
+    "to": "Thessaloniki",
+    "date": "2025-01-25",
+    "time": "14:00",
+    "ridePrice": 25,
+    "availableSeats": 0,
+    "description": "RGRGEREGRGEGERGE"
+  }
+]

@@ -13,12 +13,11 @@ type MenuItemProps = {
 
 const MenuItem = ({ item }: MenuItemProps) => {
   const locale = useLocale() as SupportedLangCodes;
-  const login = item.class ? ` ${item.class}` : "";
 
   return (
     <Link
       href={cleanUrlSlash(`/${locale}/${item.link}`)}
-      className={`navigation_link${login}`}
+      className={`navigation_link`}
     >
       {item.title}
     </Link>

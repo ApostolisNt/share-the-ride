@@ -5,6 +5,7 @@ import navigationLinks from "./navigation.json";
 import MenuItem from "./MenuItem";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -30,6 +31,19 @@ const Navigation = () => {
         {navigationLinks.links.map((item, index) => (
           <MenuItem key={index} item={item} />
         ))}
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button
+              className="transition-colors rounded-md border-2 px-4 py-2
+ hover:border-black"
+            >
+              Sign in
+            </button>
+          </SignInButton>
+        </SignedOut>
       </div>
     </section>
   );
