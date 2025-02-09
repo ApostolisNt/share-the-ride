@@ -1,13 +1,13 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-export const rideStatusEnum = v.union(
+export const RideStatusEnum = v.union(
   v.literal("active"),
   v.literal("inactive"),
   v.literal("completed"),
 );
 
-export const bookingStatusEnum = v.union(
+export const BookingStatusEnum = v.union(
   v.literal("pending"),
   v.literal("accepted"),
   v.literal("rejected"),
@@ -15,7 +15,7 @@ export const bookingStatusEnum = v.union(
 
 export default defineSchema({
   rides: defineTable({
-    rideOwnerId: v.string(),
+    rideOwnerId: v.id("users"),
     from: v.string(),
     to: v.string(),
     date: v.string(),
@@ -23,14 +23,18 @@ export default defineSchema({
     price: v.number(),
     availableSeats: v.number(),
     description: v.string(),
-    rideStatus: rideStatusEnum,
-  }),
+    status: RideStatusEnum,
+  })
+    .index("byRideOwner", ["rideOwnerId"])
+    .index("byFrom", ["from"])
+    .index("byTo", ["to"])
+    .index("byDate", ["date"]),
 
-  booking: defineTable({
-    id: v.string(),
+  bookings: defineTable({
     rideId: v.id("rides"),
-    userId: v.array(v.id("users")),
-    status: bookingStatusEnum,
+    userId: v.id("users"),
+    seatsRequested: v.number(),
+    status: BookingStatusEnum,
     bookingDate: v.string(),
     paymentIntentId: v.optional(v.string()),
     amount: v.optional(v.number()),
@@ -39,16 +43,15 @@ export default defineSchema({
     .index("byUser", ["userId"])
     .index("byUserRide", ["userId", "rideId"])
     .index("byStatus", ["status"])
-    .index("byPaymentIntentId", ["paymentIntentId"]),
+    .index("byPaymentIntentId", ["paymentIntentId"])
+    .index("byBookingDate", ["bookingDate"]),
 
   users: defineTable({
     userId: v.string(),
     name: v.string(),
-    userStatus: v.optional(v.string()),
-    stripeConnectedId: v.optional(v.string()),
     email: v.string(),
-    allowed: v.optional(v.array(v.string())),
-    notAllowed: v.optional(v.array(v.string())),
+    role: v.optional(v.union(v.literal("driver"), v.literal("passenger"))),
+    stripeConnectedId: v.optional(v.string()),
     rating: v.optional(v.number()),
     vehicleBrand: v.optional(v.string()),
     driverInfo: v.optional(
@@ -58,7 +61,9 @@ export default defineSchema({
         language: v.optional(v.string()),
       }),
     ),
+    allowed: v.optional(v.array(v.string())),
+    notAllowed: v.optional(v.array(v.string())),
   })
-    .index("byUserId", ["userId"])
-    .index("byEmail", ["email"]),
+    .index("byEmail", ["email"])
+    .index("byUserId", ["userId"]),
 });

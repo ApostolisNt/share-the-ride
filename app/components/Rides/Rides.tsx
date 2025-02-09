@@ -3,7 +3,6 @@
 import { SearchParamsType } from "app/types/types";
 // import RidesCard from "./RidesCard";
 // import FilterRides from "./FilterRides";
-import { Ride } from "data/schemas/rides";
 // import Loading from "app/[locale]/(pages)/rides/loading";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
@@ -26,9 +25,9 @@ const Rides = ({ results }: ResultsProps) => {
       ) : (
         <Loading height={44} items={4} />
       )} */}
-      {rides?.map((ride) => (
-        <RidesCard key={ride._id} ride={ride} />
-      ))}
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-4 md:grid-cols-1">
+        {rides?.map((ride) => <RidesCard key={ride._id} ride={ride} />)}
+      </div>
     </section>
   );
 };

@@ -38,7 +38,7 @@ export const updateUser = mutation({
       name,
       email,
       stripeConnectedId: undefined,
-      userStatus: "client",
+      role: "passenger",
     });
 
     return newUserId;

@@ -1,16 +1,25 @@
 "use client";
 
+// Assets
 import profileDefault from "@assets/profile-default.png";
+
+//Styles
 import "./RidesCard.scss";
+
+//Utils
 import { formatDate } from "app/helpers/FormatDate";
-import { TravelTypes } from "app/helpers/TravelTypes";
 import { useRouter } from "next/navigation";
-import LoaderLine from "@components/LoaderLine/LoaderLine";
-import { Image } from "./../Global/Image";
 import { useLocale } from "next-intl";
-import { Ride } from "data/schemas/rides";
-import { User } from "data/schemas/users";
-import { rideSchema } from "../../../data/schemas/rides";
+import { TravelTypes } from "app/helpers/TravelTypes";
+
+//Components
+import LoaderLine from "@components/LoaderLine/LoaderLine";
+import { Image } from "@components/Global/Image";
+
+//Types
+import { Doc } from "convex/_generated/dataModel";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 
 type Icons = {
   drink: string;
@@ -21,32 +30,32 @@ type Icons = {
   threePersons: string;
 };
 
-const RidesCard = ({ ride } : {ride: ride}) => {
+const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
   const locale = useLocale();
-  const {  from, to, date, time, price } = ride;
+  const { from, to, date, time, price } = ride;
+  const user = useQuery(api.users.getUserById, { userId: ride.rideOwnerId });
 
+  const {
+    allowed = [],
+    notAllowed = [],
+    rating = 0,
+    vehicleBrand = "",
+    name = "",
+  } = user ?? {};
 
-  // const {
-  //   allowed = [],
-  //   notAllowed = [],
-  //   rating = 0,
-  //   vehicleBrand = "",
-  //   name = "",
-  // } = user ?? {};
-
-  // const fillPercentage = `${(rating / 5) * 100}%`;
+  const fillPercentage = `${(rating / 5) * 100}%`;
   const timeSlice = time.slice(0, 2);
   const timeType =
     parseInt(timeSlice, 10) >= 0 && parseInt(timeSlice, 10) < 12 ? "AM" : "PM";
 
-  // const { allowedIcons, notAllowedIcons } = TravelTypes({
-  //   allowed: allowed as Array<keyof Icons>,
-  //   notAllowed: notAllowed as Array<keyof Icons>,
-  // });
+  const { allowedIcons, notAllowedIcons } = TravelTypes({
+    allowed: allowed as Array<keyof Icons>,
+    notAllowed: notAllowed as Array<keyof Icons>,
+  });
 
   const handleSubmit = () => {
-    router.push(`/${locale}/rides/${}`);
+    router.push(`/${locale}/rides/${ride._id}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);
