@@ -1,11 +1,12 @@
 {
   "links": [
     { "title": "Home", "link": "" },
+    { "title": "Rides", "link": "rides" },
+    { "title": "Create Ride", "link": "create-ride", "auth": true },
     {
       "title": "Dashboard",
-      "link": "dashboard/6607d863f3a807a516b397d8?view=profile"
-    },
-    { "title": "Rides", "link": "rides" },
-    { "title": "Create Ride", "link": "create-ride" }
+      "link": "dashboard/6607d863f3a807a516b397d8?view=profile",
+      "auth": true
+    }
   ]
 }

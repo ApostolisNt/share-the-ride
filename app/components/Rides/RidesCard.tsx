@@ -10,6 +10,7 @@ import { Image } from "./../Global/Image";
 import { useLocale } from "next-intl";
 import { Ride } from "data/schemas/rides";
 import { User } from "data/schemas/users";
+import { rideSchema } from "../../../data/schemas/rides";
 
 type Icons = {
   drink: string;
@@ -20,33 +21,32 @@ type Icons = {
   threePersons: string;
 };
 
-const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
+const RidesCard = ({ ride } : {ride: ride}) => {
   const router = useRouter();
   const locale = useLocale();
-  const { _id, rideOwnerId, from, to, date, time, ridePrice } = ride;
+  const {  from, to, date, time, price } = ride;
 
-  const user = users.find((user: User) => user._id === rideOwnerId);
 
-  const {
-    allowed = [],
-    notAllowed = [],
-    rating = 0,
-    vehicleBrand = "",
-    name = "",
-  } = user ?? {};
+  // const {
+  //   allowed = [],
+  //   notAllowed = [],
+  //   rating = 0,
+  //   vehicleBrand = "",
+  //   name = "",
+  // } = user ?? {};
 
-  const fillPercentage = `${(rating / 5) * 100}%`;
+  // const fillPercentage = `${(rating / 5) * 100}%`;
   const timeSlice = time.slice(0, 2);
   const timeType =
     parseInt(timeSlice, 10) >= 0 && parseInt(timeSlice, 10) < 12 ? "AM" : "PM";
 
-  const { allowedIcons, notAllowedIcons } = TravelTypes({
-    allowed: allowed as Array<keyof Icons>,
-    notAllowed: notAllowed as Array<keyof Icons>,
-  });
+  // const { allowedIcons, notAllowedIcons } = TravelTypes({
+  //   allowed: allowed as Array<keyof Icons>,
+  //   notAllowed: notAllowed as Array<keyof Icons>,
+  // });
 
   const handleSubmit = () => {
-    router.push(`/${locale}/rides/${_id}`);
+    router.push(`/${locale}/rides/${}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);
@@ -76,7 +76,7 @@ const RidesCard = ({ ride, users }: { ride: Ride; users: User[] }) => {
                 ></div>
               </div>
             </div>
-            <p className="ride_card_price">{ridePrice.toFixed(2)} €</p>
+            <p className="ride_card_price">{price.toFixed(2)} €</p>
           </div>
           <div className="ride_card_details">
             <div className="ride_card_date">

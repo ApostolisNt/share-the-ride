@@ -9,6 +9,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Maven_Pro } from "next/font/google";
 import { SupportedLangCodes } from "data/translations/translations";
 import { ConvexClientProvider } from "@components/ConvexClientProvider";
+import { SyncUserWithConvex } from "@components/SyncUserWithConvex";
 const mavenPro = Maven_Pro({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -45,8 +46,9 @@ export default async function RootLayout(props: RootLayoutProps) {
     <html lang={locale}>
       <body className={mavenPro.variable}>
         <ConvexClientProvider>
-          <ClerkProvider>
+          <ClerkProvider dynamic>
             <Navigation />
+            <SyncUserWithConvex />
             {children}
           </ClerkProvider>
         </ConvexClientProvider>

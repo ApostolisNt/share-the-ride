@@ -7,7 +7,7 @@ type MenuItemProps = {
   item: {
     link: string;
     title: string;
-    class?: string;
+    auth?: boolean;
   };
 };
 
