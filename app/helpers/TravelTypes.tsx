@@ -6,9 +6,9 @@ import twoPersons from "@assets/travelIcons/two-people.png";
 import threePersons from "@assets/travelIcons/three-people.png";
 import { StaticImageData } from "next/image";
 
-type TravelTypesProps = {
-  allowed: Array<keyof Icons>;
-  notAllowed: Array<keyof Icons>;
+export type TravelTypesProps = {
+  allowed?: Array<keyof Icons>;
+  notAllowed?: Array<keyof Icons>;
 };
 
 type IconInfo = {
@@ -16,7 +16,7 @@ type IconInfo = {
   alt: string;
 };
 
-type Icons = {
+export type Icons = {
   drink: IconInfo;
   music: IconInfo;
   pets: IconInfo;
@@ -41,8 +41,12 @@ export const TravelTypes = ({ allowed, notAllowed }: TravelTypesProps) => {
       key: type,
     }));
 
-  const allowedIcons = mapIcons(allowed);
-  const notAllowedIcons = mapIcons(notAllowed);
+  if (!allowed && !notAllowed) {
+    return { allowedIcons: [], notAllowedIcons: [] };
+  }
+
+  const allowedIcons = mapIcons(allowed ?? []);
+  const notAllowedIcons = mapIcons(notAllowed ?? []);
 
   return { allowedIcons, notAllowedIcons };
 };

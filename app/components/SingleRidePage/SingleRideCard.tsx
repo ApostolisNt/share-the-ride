@@ -5,32 +5,40 @@ import "./SingleRideCard.scss";
 import profileDefault from "@assets/profile-default.png";
 import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
 import clsx from "clsx";
-import { TravelTypes } from "app/helpers/TravelTypes";
+import { Icons, TravelTypes } from "app/helpers/TravelTypes";
 import { Image } from "./../Global/Image";
 import BookNowButton from "./BookNowButton";
 import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
+import { Doc } from "convex/_generated/dataModel";
 
-const SingleRideCard = ({ singleData, rideId }: any) => {
+type SingleRideCardProps = {
+  singleData: { ride: Doc<"rides">; user: Doc<"users"> };
+};
+
+const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
   const {
-    _id,
+    _id: RideUniqueId,
+    date,
     from,
     to,
-    date,
-    name,
-    ridePrice,
-    allowed,
-    notAllowed,
-    vehicleBrand,
     description,
-    contact,
-    driverInfo,
-  } = singleData;
+    price,
+  } = singleData.ride;
 
-  const { yearsOfExperience, language } = driverInfo;
-  const { allowedIcons, notAllowedIcons } = TravelTypes({
+  const {
+    vehicleBrand,
+    driverInfo,
+    _id: UserUniqueId,
     allowed,
     notAllowed,
+    name,
+  } = singleData.user;
+
+  const { yearsOfExperience, language } = driverInfo ?? {};
+  const { allowedIcons, notAllowedIcons } = TravelTypes({
+    allowed: allowed as (keyof Icons)[] | undefined,
+    notAllowed: notAllowed as (keyof Icons)[] | undefined,
   });
 
   const [showModal, setShowModal] = useState(false);
@@ -58,9 +66,7 @@ const SingleRideCard = ({ singleData, rideId }: any) => {
           <p>{description}</p>
         </div>
         <div>
-          <p className="single-ride-price">
-            Per person: {ridePrice.toFixed(2)} €
-          </p>
+          <p className="single-ride-price">Per person: {price?.toFixed(2)} €</p>
         </div>
         <div className="single-ride-driver-info flex gap-8">
           <p>Driver Experience: {yearsOfExperience} years</p>
@@ -74,14 +80,14 @@ const SingleRideCard = ({ singleData, rideId }: any) => {
               {vehicleBrand}
             </p>
           </div>
-          <div className="single-ride-contact flex flex-1 justify-end gap-4">
+          {/* <div className="single-ride-contact flex flex-1 justify-end gap-4">
             <a href={`tel:${contact.phone}`} target="_blank">
               <MdLocalPhone size={26} />
             </a>
             <a href={`mailto:${contact.email}`} target="_blank">
               <MdOutlineMail size={26} />
             </a>
-          </div>
+          </div> */}
         </div>
         <div>
           {/* allowed */}
@@ -110,8 +116,8 @@ const SingleRideCard = ({ singleData, rideId }: any) => {
           </div>
         </div>
         <BookNowButton
-          rideId={rideId}
-          clientId={_id}
+          rideId={RideUniqueId}
+          clientId={UserUniqueId}
           onBookingSuccess={handleBookingSuccess}
         />
       </div>

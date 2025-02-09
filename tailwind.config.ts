@@ -8,10 +8,10 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      xl: { max: "1280px" },
-      lg: { max: "1024px" },
-      md: { max: "768px" },
-      sm: { max: "640px" },
+      xl: "1280px",
+      lg: "1024px",
+      md: "768px",
+      sm: "640px",
     },
     fontFamily: {
       serif: ["var(--font-mavenPro)", "serif"],
