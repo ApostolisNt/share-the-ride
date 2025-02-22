@@ -11,7 +11,7 @@ type RideProps = {
 const RideWithBookings = ({ ride }: RideProps) => {
   // Fetch enriched bookings for the ride.
   const bookings = useQuery(api.bookings.getBookingByRide, {
-    rideId: ride._id,
+    rideId: ride.rideId,
   });
 
   if (!bookings) {
@@ -76,7 +76,7 @@ const RidesCompleted = () => {
       </h2>
       <div className="grid grid-cols-1 gap-6">
         {completedRides.map((ride: Ride) => (
-          <RideWithBookings key={ride._id} ride={ride} />
+          <RideWithBookings key={ride.rideId} ride={ride} />
         ))}
       </div>
     </>

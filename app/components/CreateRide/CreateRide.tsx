@@ -13,7 +13,7 @@ const CreateRide = () => {
   } = useForm({
     resolver: zodResolver(rideFormSchema),
     defaultValues: {
-      rideOwnerId: "",
+      ownerUserId: "",
       from: "",
       to: "",
       date: "",

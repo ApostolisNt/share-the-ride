@@ -10,15 +10,15 @@ import { Image } from "./../Global/Image";
 import BookNowButton from "./BookNowButton";
 import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
-import { Doc } from "convex/_generated/dataModel";
+import { Ride, User } from "app/types/types";
 
 type SingleRideCardProps = {
-  singleData: { ride: Doc<"rides">; user: Doc<"users"> };
+  singleData: { ride: Ride; user: User };
 };
 
 const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
   const {
-    _id: RideUniqueId,
+    rideId: RideUniqueId,
     date,
     from,
     to,
@@ -29,7 +29,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
   const {
     vehicleBrand,
     driverInfo,
-    _id: UserUniqueId,
+    userId: UserUniqueId,
     allowed,
     notAllowed,
     name,
@@ -50,7 +50,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     <>
       <div
         className={clsx(
-          "single-ride-container mx-auto my-8 flex w-2/5 flex-col items-center rounded-lg p-4 lg:w-2/3 md:w-full",
+          "single-ride-container mx-auto my-8 flex w-2/5 flex-col items-center rounded-lg p-4 md:w-full lg:w-2/3",
           "shadow-card transition-shadow-transform duration-200 ease-out hover:shadow-cardHover",
         )}
       >

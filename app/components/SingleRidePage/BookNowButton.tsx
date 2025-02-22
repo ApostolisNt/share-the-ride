@@ -28,7 +28,7 @@ const BookNowButton = ({
     setLoading(true);
 
     try {
-      await bookRideMutation({ rideId, clientId });
+      await bookRideMutation({ rideId, clientUserId: clientId });
 
       setModalType("success");
       setModalMessage("Booking successful!");

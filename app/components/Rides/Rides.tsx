@@ -22,7 +22,7 @@ const Rides = ({ results }: ResultsProps) => {
     <section className="rides_section">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2">
         {rides && rides.length > 0 ? (
-          rides?.map((ride) => <RidesCard key={ride._id} ride={ride} />)
+          rides?.map((ride) => <RidesCard key={ride.rideId} ride={ride} />)
         ) : (
           <Loading height={44} items={4} />
         )}

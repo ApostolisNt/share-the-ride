@@ -4,16 +4,85 @@ import { v } from "convex/values";
 export const get = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("rides").collect();
+    const activeRides = await ctx.db
+      .query("rides")
+      .withIndex("byStatus", (q) => q.eq("status", "active"))
+      .collect();
+
+    const sortActiveRidesBasedOnDate = activeRides.sort((a, b) => {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    });
+
+    // const expiredRidesAtTheEnd = sortActiveRidesBasedOnDate.filter((ride) => {
+    //   return new Date(ride.date).getTime() < new Date().getTime();
+    // });
+
+    // const activeRidesAtTheTop = sortActiveRidesBasedOnDate.filter((ride) => {
+    //   return new Date(ride.date).getTime() >= new Date().getTime();
+    // });
+
+    // const sortActiveRidesBasedOnDated =
+    //   activeRidesAtTheTop.concat(expiredRidesAtTheEnd);
+
+    return sortActiveRidesBasedOnDate;
+  },
+});
+
+export const createRide = mutation({
+  args: {
+    rideId: v.string(), // Business key for the ride (e.g., a UUID)
+    ownerUserId: v.string(),
+    from: v.string(),
+    to: v.string(),
+    date: v.string(),
+    time: v.string(),
+    price: v.number(),
+    availableSeats: v.number(),
+    description: v.string(),
+    status: v.union(
+      v.literal("active"),
+      v.literal("inactive"),
+      v.literal("completed"),
+    ),
+  },
+  handler: async (
+    ctx,
+    {
+      rideId,
+      ownerUserId,
+      from,
+      to,
+      date,
+      time,
+      price,
+      availableSeats,
+      description,
+      status,
+    },
+  ) => {
+    // Insert a new ride record into the rides table using business keys.
+    await ctx.db.insert("rides", {
+      rideId,
+      ownerUserId,
+      from,
+      to,
+      date,
+      time,
+      price,
+      availableSeats,
+      description,
+      status,
+    });
+    return { success: true };
   },
 });
 
 export const getUserSingleRide = query({
-  args: { rideId: v.id("rides") },
+  args: { rideId: v.string() },
   handler: async (ctx, { rideId }) => {
     const ride = await ctx.db
       .query("rides")
-      .filter((q) => q.eq(q.field("_id"), rideId))
+      .filter((q) => q.eq(q.field("rideId"), rideId))
       .first();
 
     if (!ride) {
@@ -21,9 +90,10 @@ export const getUserSingleRide = query({
       return null;
     }
 
+    // Use the business key from the ride record to get its owner.
     const rideOwner = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("_id"), ride.rideOwnerId))
+      .filter((q) => q.eq(q.field("userId"), ride.ownerUserId))
       .first();
 
     if (!rideOwner) {
@@ -31,7 +101,7 @@ export const getUserSingleRide = query({
       return null;
     }
 
-    return { ride: ride, user: rideOwner };
+    return { ride, user: rideOwner };
   },
 });
 
@@ -51,7 +121,7 @@ export const getCompletedRides = query({
     // Merge the two result sets (avoid duplicates if any)
     const ridesMap = new Map();
     completedRides.concat(inactiveRides).forEach((ride) => {
-      ridesMap.set(ride._id, ride);
+      ridesMap.set(ride.rideId, ride);
     });
     return Array.from(ridesMap.values());
   },
@@ -82,25 +152,21 @@ export const getActiveRidesWithBookings = query({
     if (rides.length === 0) return [];
 
     // Get all bookings for these rides.
-    const rideIds = rides.map((ride) => ride._id);
+    const rideIds = rides.map((ride) => ride.rideId);
     const bookings = await ctx.db
       .query("bookings")
-      .filter((q) =>
-        q.or(...rideIds.map((rideId) => q.eq(q.field("rideId"), rideId))),
-      )
+      .filter((q) => q.or(...rideIds.map((id) => q.eq(q.field("rideId"), id))))
       .collect();
 
     // Enrich each booking with the corresponding user’s data.
     const userIds = Array.from(new Set(bookings.map((b) => b.userId)));
     const users = await ctx.db
       .query("users")
-      .filter((q) =>
-        q.or(...userIds.map((userId) => q.eq(q.field("_id"), userId))),
-      )
+      .filter((q) => q.or(...userIds.map((id) => q.eq(q.field("userId"), id))))
       .collect();
     const userMap = new Map();
     for (const user of users) {
-      userMap.set(user._id, user);
+      userMap.set(user.userId, user);
     }
     const enrichedBookings = bookings.map((booking) => ({
       ...booking,
@@ -119,7 +185,7 @@ export const getActiveRidesWithBookings = query({
     // Attach bookings to each ride.
     const ridesWithBookings = rides.map((ride) => ({
       ...ride,
-      bookings: bookingsByRide.get(ride._id) || [],
+      bookings: bookingsByRide.get(ride.rideId) || [],
     }));
     return ridesWithBookings;
   },
@@ -128,7 +194,7 @@ export const getActiveRidesWithBookings = query({
 /** Mutation to update a ride’s status. */
 export const updateRideStatus = mutation({
   args: {
-    rideId: v.id("rides"),
+    rideId: v.string(),
     status: v.union(
       v.literal("active"),
       v.literal("inactive"),
@@ -136,7 +202,15 @@ export const updateRideStatus = mutation({
     ),
   },
   handler: async (ctx, { rideId, status }) => {
-    await ctx.db.patch(rideId, { status });
+    // Query for the ride using the business key.
+    const ride = await ctx.db
+      .query("rides")
+      .filter((q) => q.eq(q.field("rideId"), rideId))
+      .first();
+    if (!ride) {
+      throw new Error("Ride not found");
+    }
+    await ctx.db.patch(ride._id, { status });
     return { success: true };
   },
 });

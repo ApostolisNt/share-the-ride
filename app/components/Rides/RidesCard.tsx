@@ -34,7 +34,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
   const locale = useLocale();
   const { from, to, date, time, price } = ride;
-  const user = useQuery(api.users.getUserById, { userId: ride.rideOwnerId });
+  const user = useQuery(api.users.getUserById, { userId: ride.ownerUserId });
 
   // Dummy lookup
   // const user = UsersDummy.find((user) => user._id === ride.rideOwnerId);
@@ -57,7 +57,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   });
 
   const handleSubmit = () => {
-    router.push(`/${locale}/rides/${ride._id}`);
+    router.push(`/${locale}/rides/${ride.rideId}`);
   };
 
   const currentDate = new Date().toISOString().slice(0, 10);
@@ -91,7 +91,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
           <div className="flex items-center gap-[0.3rem]">
             <p className="text-base font-medium">{rating}</p>
             {/* Render a single star with fill based on the rating */}
-            <RatingStar rating={rating} starId={ride.rideOwnerId} />
+            <RatingStar rating={rating} starId={ride.ownerUserId} />
           </div>
           <p className="flex-1 text-right text-base font-medium">
             {price.toFixed(2)} €

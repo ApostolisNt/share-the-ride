@@ -15,7 +15,8 @@ export const BookingStatusEnum = v.union(
 
 export default defineSchema({
   rides: defineTable({
-    rideOwnerId: v.id("users"),
+    rideId: v.string(),
+    ownerUserId: v.string(),
     from: v.string(),
     to: v.string(),
     date: v.string(),
@@ -25,15 +26,15 @@ export default defineSchema({
     description: v.string(),
     status: RideStatusEnum,
   })
-    .index("byRideOwner", ["rideOwnerId"])
     .index("byFrom", ["from"])
     .index("byTo", ["to"])
     .index("byDate", ["date"])
     .index("byStatus", ["status"]),
 
   bookings: defineTable({
-    rideId: v.id("rides"),
-    userId: v.id("users"),
+    bookingId: v.string(),
+    rideId: v.string(),
+    userId: v.string(),
     seatsRequested: v.number(),
     status: BookingStatusEnum,
     bookingDate: v.string(),
@@ -44,7 +45,6 @@ export default defineSchema({
     .index("byUser", ["userId"])
     .index("byUserRide", ["userId", "rideId"])
     .index("byStatus", ["status"])
-    .index("byPaymentIntentId", ["paymentIntentId"])
     .index("byBookingDate", ["bookingDate"]),
 
   users: defineTable({

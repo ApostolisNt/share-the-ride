@@ -43,7 +43,7 @@ export default function SignUp() {
         return;
       }
 
-      const userId = responseData.user._id;
+      const userId = responseData.user.userId;
       setIsSubmitted(true);
       setTimeout(() => {
         router.push(`/${locale}/dashboard/${userId}`);

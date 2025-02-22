@@ -85,7 +85,7 @@ const RidesRequests = () => {
       </h2>
       {activeRides.length > 0 ? (
         activeRides.map((ride: Ride) => (
-          <div key={ride._id} className="shadow-md mb-6 rounded-lg border p-4">
+          <div key={ride.rideId} className="shadow-md mb-6 rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold">
@@ -109,13 +109,13 @@ const RidesRequests = () => {
               </div>
               <div className="flex items-center justify-center gap-2">
                 <button
-                  onClick={() => handleUpdateRideStatus(ride._id, "completed")}
+                  onClick={() => handleUpdateRideStatus(ride.rideId, "completed")}
                   className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
                 >
                   Complete Ride
                 </button>
                 <button
-                  onClick={() => handleUpdateRideStatus(ride._id, "inactive")}
+                  onClick={() => handleUpdateRideStatus(ride.rideId, "inactive")}
                   className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
                 >
                   Close Ride
@@ -157,7 +157,7 @@ const RidesRequests = () => {
                           <button
                             onClick={() =>
                               handleBooking(
-                                ride._id,
+                                ride.rideId,
                                 booking.clientId,
                                 "accepted",
                               )
@@ -169,7 +169,7 @@ const RidesRequests = () => {
                           <button
                             onClick={() =>
                               handleBooking(
-                                ride._id,
+                                ride.rideId,
                                 booking.clientId,
                                 "rejected",
                               )
