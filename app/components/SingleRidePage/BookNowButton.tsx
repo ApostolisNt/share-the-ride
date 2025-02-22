@@ -1,9 +1,12 @@
 import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { RideId, UserId } from "app/types/types";
 
 type BookNowButtonProps = {
-  rideId: string;
-  clientId: string;
+  rideId: RideId;
+  clientId: UserId;
   onBookingSuccess: () => void;
 };
 
@@ -13,54 +16,35 @@ const BookNowButton = ({
   onBookingSuccess,
 }: BookNowButtonProps) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState<"success" | "error" | "info">(
     "info",
   );
 
+  const bookRideMutation = useMutation(api.bookings.bookRide);
+
   const handleBooking = async () => {
     setLoading(true);
-    setError(null);
-
-    const bookingInfo = {
-      rideId,
-      clientId,
-    };
 
     try {
-      const res = await fetch(`/api/rides/bookRide`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bookingInfo),
-      });
-
-      const resData = await res.json();
-
-      if (resData.message === "Client already booked this ride") {
-        setModalType("error");
-        setModalMessage("You have already booked this ride!");
-        setShowModal(true);
-        return;
-      }
-
-      if (resData.message === "Ride fully booked") {
-        setModalType("error");
-        setModalMessage("Ride fully booked!");
-        setShowModal(true);
-        return;
-      }
+      await bookRideMutation({ rideId, clientId });
 
       setModalType("success");
       setModalMessage("Booking successful!");
       setShowModal(true);
       onBookingSuccess();
     } catch (error: any) {
-      setModalType("error");
-      setModalMessage("Failed to book the ride.");
+      if (error.message === "Client already booked this ride") {
+        setModalType("error");
+        setModalMessage("You have already booked this ride!");
+      } else if (error.message === "Ride fully booked") {
+        setModalType("error");
+        setModalMessage("Ride fully booked!");
+      } else {
+        setModalType("error");
+        setModalMessage("Failed to book the ride.");
+      }
       setShowModal(true);
       console.error(error);
     } finally {

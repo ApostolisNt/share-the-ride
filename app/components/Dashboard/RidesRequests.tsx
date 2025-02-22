@@ -1,93 +1,75 @@
+// RidesRequests.tsx
 "use client";
 
 import PopupModal from "@components/PopupModal/PopupModal";
-import { Ride } from "data/schemas/rides";
-import { useEffect, useState } from "react";
-import { z } from "zod";
-
-export const bookingStatusEnum = z.enum(["pending", "accepted", "rejected"]);
-export const rideStatusEnum = z.enum(["active", "inactive", "completed"]);
-export type bookingStatusEnum = z.infer<typeof bookingStatusEnum>;
-export type rideStatusEnum = z.infer<typeof rideStatusEnum>;
+import {
+  BookingStatusEnum,
+  ModalType,
+  Ride,
+  RideId,
+  RideStatusEnum,
+  UserId,
+} from "app/types/types";
+import { useState } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
 
 const RidesRequests = () => {
-  const [pendingRides, setPendingRides] = useState<Ride[]>([]);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState<"success" | "error" | "info">(
-    "info",
+  // Use the query that returns active rides with their bookings.
+  const activeRides = useQuery(api.rides.getActiveRidesWithBookings);
+  const updateRideStatusMutation = useMutation(api.rides.updateRideStatus);
+  const updateBookingStatusMutation = useMutation(
+    api.bookings.updateBookingStatus,
   );
 
-  useEffect(() => {
-    const fetchActiveRides = async () => {
-      const res = await fetch(
-        `http://localhost:3000/api/rides/rideStatus/active`,
-      );
-      const data = await res.json();
-      setPendingRides(data.rides || []);
-    };
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<ModalType>("info");
 
-    fetchActiveRides();
-  }, []);
-
-  const showPopup = (message: string, type: "success" | "error" | "info") => {
+  const showPopup = (message: string, type: ModalType) => {
     setModalMessage(message);
     setModalType(type);
     setShowModal(true);
   };
 
-  const acceptBooking = async (
-    rideId: string,
-    clientId: string,
-    bookStatus: bookingStatusEnum,
-  ): Promise<void> => {
-    const res = await fetch(`/api/rides/bookingStatus/${bookStatus}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ rideId, clientId }),
-    });
-
-    const data = await res.json();
-    if (res.status === 200) {
-      showPopup(`Booking ${bookStatus}!`, "success");
-      const updatedRes = await fetch(`/api/rides/rideStatus/active`);
-      const updatedData = await updatedRes.json();
-      setPendingRides(updatedData.rides || []);
-    } else {
-      showPopup(`Error: ${data.message}`, "error");
-    }
-  };
-
-  const updateRideStatus = async (
-    rideId: string,
-    newStatus: rideStatusEnum,
+  const handleBooking = async (
+    rideId: RideId,
+    clientId: UserId,
+    bookStatus: BookingStatusEnum,
   ) => {
-    const res = await fetch(`/api/rides/rideStatus/${newStatus}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ rideId }),
-    });
-
-    if (res.status === 200) {
-      showPopup(`Ride status updated to ${newStatus}`, "success");
-      const updatedRes = await fetch(`/api/rides/rideStatus/active`);
-      const updatedData = await updatedRes.json();
-      setPendingRides(updatedData.rides || []);
-    } else {
-      const data = await res.json();
-      showPopup(`Error: ${data.message}`, "error");
+    try {
+      await updateBookingStatusMutation({
+        rideId,
+        clientId,
+        status: bookStatus,
+      });
+      showPopup(`Booking ${bookStatus}!`, "success");
+    } catch (e: any) {
+      showPopup(`Error: ${e.message}`, "error");
     }
   };
 
-  const availableSeatsClass = (availableSeats: number) => {
-    return availableSeats >= 1 && availableSeats <= 2
+  const handleUpdateRideStatus = async (
+    rideId: RideId,
+    newStatus: RideStatusEnum,
+  ) => {
+    try {
+      await updateRideStatusMutation({ rideId, status: newStatus });
+      showPopup(`Ride status updated to ${newStatus}`, "success");
+    } catch (e: any) {
+      showPopup(`Error: ${e.message}`, "error");
+    }
+  };
+
+  const availableSeatsClass = (availableSeats: number) =>
+    availableSeats >= 1 && availableSeats <= 2
       ? "text-yellow-500"
       : "text-green-500";
-  };
+
+  if (activeRides === undefined) {
+    return <p>Loading ride requests...</p>;
+  }
+
   return (
     <>
       {showModal && (
@@ -101,8 +83,8 @@ const RidesRequests = () => {
       <h2 className="mb-6 text-2xl font-semibold text-gray-800">
         Ride Requests
       </h2>
-      {pendingRides.length > 0 ? (
-        pendingRides.map((ride) => (
+      {activeRides.length > 0 ? (
+        activeRides.map((ride: Ride) => (
           <div key={ride._id} className="shadow-md mb-6 rounded-lg border p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -115,26 +97,25 @@ const RidesRequests = () => {
                   <span className={availableSeatsClass(ride.availableSeats)}>
                     {ride.availableSeats > 0
                       ? ride.availableSeats
-                      : "Gongrats! No seats available"}
+                      : "Congrats! No seats available"}
                   </span>
                 </p>
                 <p className="font-semibold">
-                  Ride Status: {""}
+                  Ride Status:{" "}
                   <span className="uppercase text-green-500">
-                    {ride.rideStatus}
+                    {ride.status}
                   </span>
                 </p>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <button
-                  onClick={() => updateRideStatus(ride._id, "completed")}
+                  onClick={() => handleUpdateRideStatus(ride._id, "completed")}
                   className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
                 >
                   Complete Ride
                 </button>
-
                 <button
-                  onClick={() => updateRideStatus(ride._id, "inactive")}
+                  onClick={() => handleUpdateRideStatus(ride._id, "inactive")}
                   className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
                 >
                   Close Ride
@@ -159,7 +140,13 @@ const RidesRequests = () => {
                       <p>Client Name: {booking.userName}</p>
                       <p>Email: {booking.userEmail}</p>
                       <p
-                        className={`text-${booking.status === "accepted" ? "green" : booking.status === "rejected" ? "red" : "yellow"}-500`}
+                        className={`text-${
+                          booking.status === "accepted"
+                            ? "green"
+                            : booking.status === "rejected"
+                              ? "red"
+                              : "yellow"
+                        }-500`}
                       >
                         Status: {booking.status}
                       </p>
@@ -169,7 +156,7 @@ const RidesRequests = () => {
                         <>
                           <button
                             onClick={() =>
-                              acceptBooking(
+                              handleBooking(
                                 ride._id,
                                 booking.clientId,
                                 "accepted",
@@ -181,7 +168,7 @@ const RidesRequests = () => {
                           </button>
                           <button
                             onClick={() =>
-                              acceptBooking(
+                              handleBooking(
                                 ride._id,
                                 booking.clientId,
                                 "rejected",

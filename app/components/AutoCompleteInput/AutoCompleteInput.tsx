@@ -1,5 +1,5 @@
 "use client";
-import { GreekCitiesKeys } from "app/constants/cities";
+import { GreekCitiesKeys } from "app/consts/cities";
 import React, { useState, KeyboardEvent, useEffect, useRef } from "react";
 
 interface AutocompleteInputProps {

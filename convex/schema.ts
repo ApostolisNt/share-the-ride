@@ -28,7 +28,8 @@ export default defineSchema({
     .index("byRideOwner", ["rideOwnerId"])
     .index("byFrom", ["from"])
     .index("byTo", ["to"])
-    .index("byDate", ["date"]),
+    .index("byDate", ["date"])
+    .index("byStatus", ["status"]),
 
   bookings: defineTable({
     rideId: v.id("rides"),

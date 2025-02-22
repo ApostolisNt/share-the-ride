@@ -70,7 +70,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
         transition-transform hover:shadow-lg relative mx-auto my-8 cursor-pointer rounded-2xl bg-white 
         px-8 py-4 shadow-card duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover
         ${rideExpired ? "pointer-events-none" : ""}
-        w-[98%] lg:w-full md:w-4/5
+        w-[98%] md:w-4/5 lg:w-full
       `}
     >
       {rideExpired && (

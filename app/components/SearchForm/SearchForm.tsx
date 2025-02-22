@@ -10,7 +10,7 @@ import { z } from "zod";
 import AutocompleteInput from "app/components/AutoCompleteInput/AutoCompleteInput";
 
 // Enums and data
-import { greekCitiesEnum } from "app/constants/cities";
+import { greekCitiesEnum } from "app/consts/cities";
 
 const searchFormSchema = z.object({
   from: greekCitiesEnum,

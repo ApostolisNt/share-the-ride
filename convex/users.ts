@@ -6,7 +6,7 @@ export const getUserById = query({
   handler: async (ctx, { userId }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("byUserId", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("_id"), userId))
       .first();
 
     return user;
