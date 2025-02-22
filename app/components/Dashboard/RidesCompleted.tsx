@@ -1,50 +1,57 @@
 // RidesCompleted.tsx
 import { RIDE_STATUS } from "app/consts/general";
-import { Booking, Ride } from "app/types/types";
+import { RideWithBookingsAndPoints } from "app/types/types";
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 
 type RideProps = {
-  ride: Ride;
+  data: RideWithBookingsAndPoints;
 };
 
-const RideWithBookings = ({ ride }: RideProps) => {
-  // Fetch enriched bookings for the ride.
-  const bookings = useQuery(api.bookings.getBookingByRide, {
-    rideId: ride.rideId,
-  });
+const RideWithBookings = ({ data }: RideProps) => {
+  const { ride, pointsEarned, bookings } = data;
 
-  if (!bookings) {
-    return <p>Loading bookings...</p>;
+  if (!data) {
+    return <p>Loading completed rides...</p>;
   }
 
   return (
-    <div className="shadow-lg rounded-lg border border-gray-200 bg-white p-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-xl font-bold text-gray-700">
+    <div
+      className="shadow-lg rounded-lg border border-gray-200 bg-white p-6"
+      key={ride.rideId}
+    >
+      <div className="mb-4 flex flex-wrap-reverse items-center justify-between gap-2">
+        <h3 className="text-base font-bold text-gray-700 md:text-lg">
           <span className="uppercase">{ride.from}</span> -{" "}
           <span className="uppercase">{ride.to}</span>
           <div>
-            <span className="text-base uppercase text-gray-600">
-              {ride.date}
-            </span>
+            <span className="text-sm uppercase text-gray-600">{ride.date}</span>
           </div>
         </h3>
-        <span
-          className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
-            ride.status === RIDE_STATUS.COMPLETED
-              ? "bg-green-100 text-green-600"
-              : "bg-red-100 text-red-600"
-          }`}
-        >
-          {ride.status}
-        </span>
+        <div className="flex flex-row gap-2 sm:flex-col">
+          <span
+            className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
+              ride.status === RIDE_STATUS.COMPLETED
+                ? "bg-green-100 text-green-600"
+                : "bg-red-100 text-red-600"
+            }`}
+          >
+            {ride.status}
+          </span>
+          {pointsEarned.points > 0 && (
+            <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-sm font-semibold text-blue-600">
+              {`+${pointsEarned.points} Points`}
+            </span>
+          )}
+        </div>
       </div>
-      <h4 className="mb-2 text-lg font-medium text-gray-700">Travel Buddies</h4>
-      {bookings.length > 0 ? (
+      <h4 className="mb-2 text-base font-medium text-gray-700">
+        Travel Buddies
+      </h4>
+      {bookings?.length > 0 ? (
         <ul className="pl-2 font-medium text-gray-600">
-          {bookings.map((booking: Booking) => (
-            <li key={booking.userId} className="text-base">
+          {bookings?.map((booking) => (
+            <li key={booking.userId} className="text-sm md:text-base">
               {booking.userName} - {booking.userEmail}
             </li>
           ))}
@@ -57,7 +64,7 @@ const RideWithBookings = ({ ride }: RideProps) => {
 };
 
 const RidesCompleted = () => {
-  const completedRides = useQuery(api.rides.getCompletedRides);
+  const completedRides = useQuery(api.rides.getCompletedRidesWithData);
 
   if (completedRides === undefined) {
     return <p>Loading completed rides...</p>;
@@ -75,8 +82,8 @@ const RidesCompleted = () => {
         Completed Rides
       </h2>
       <div className="grid grid-cols-1 gap-6">
-        {completedRides.map((ride: Ride) => (
-          <RideWithBookings key={ride.rideId} ride={ride} />
+        {completedRides.map((item: RideWithBookingsAndPoints) => (
+          <RideWithBookings key={item.ride.rideId} data={item} />
         ))}
       </div>
     </>

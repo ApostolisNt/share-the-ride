@@ -105,9 +105,10 @@ export const getUserSingleRide = query({
 });
 
 /** Get rides that are either completed or inactive. */
-export const getCompletedRides = query({
+export const getCompletedRidesWithData = query({
   args: {},
   handler: async (ctx) => {
+    // 1. Fetch rides with "completed" and "inactive" statuses.
     const completedRides = await ctx.db
       .query("rides")
       .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.COMPLETED))
@@ -117,25 +118,87 @@ export const getCompletedRides = query({
       .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.INACTIVE))
       .collect();
 
-    // Merge the two result sets (avoid duplicates if any)
+    // Merge the two result sets (keyed by rideId to avoid duplicates).
     const ridesMap = new Map();
     completedRides.concat(inactiveRides).forEach((ride) => {
       ridesMap.set(ride.rideId, ride);
     });
-    return Array.from(ridesMap.values());
+    const rides = Array.from(ridesMap.values());
+    if (rides.length === 0) return [];
+
+    // 2. Extract rideIds for batch queries.
+    const rideIds = rides.map((ride) => ride.rideId);
+
+    // 3. Fetch all bookings for these rides.
+    const bookings = await ctx.db
+      .query("bookings")
+      .filter((q) => q.or(...rideIds.map((id) => q.eq(q.field("rideId"), id))))
+      .collect();
+
+    // 4. Fetch points transactions for these rides.
+    const pointsTransactions = await ctx.db
+      .query("pointsTransactions")
+      .filter((q) => q.or(...rideIds.map((id) => q.eq(q.field("rideId"), id))))
+      .collect();
+
+    // 5. Enrich bookings with user info.
+    let enrichedBookings = [];
+    if (bookings.length > 0) {
+      const userIds = Array.from(new Set(bookings.map((b) => b.userId)));
+      const users = await ctx.db
+        .query("users")
+        .filter((q) =>
+          q.or(...userIds.map((id) => q.eq(q.field("userId"), id))),
+        )
+        .collect();
+      const userMap = new Map();
+      for (const user of users) {
+        userMap.set(user.userId, user);
+      }
+      enrichedBookings = bookings.map((booking) => ({
+        ...booking,
+        userName: userMap.get(booking.userId)?.name || "Unknown",
+        userEmail: userMap.get(booking.userId)?.email || "Unknown",
+      }));
+    }
+
+    // 6. Group enriched bookings by rideId.
+    const bookingsByRide = new Map();
+    for (const booking of enrichedBookings) {
+      if (!bookingsByRide.has(booking.rideId)) {
+        bookingsByRide.set(booking.rideId, []);
+      }
+      bookingsByRide.get(booking.rideId).push(booking);
+    }
+
+    // 7. Group points transactions by rideId.
+    // (Assuming one points transaction per ride; adjust if needed.)
+    const pointsByRide = new Map();
+    for (const pt of pointsTransactions) {
+      pointsByRide.set(pt.rideId, pt);
+    }
+
+    // 8. Combine data for each ride.
+    const ridesWithData = rides.map((ride) => ({
+      ride,
+      bookings: bookingsByRide.get(ride.rideId) || [],
+      pointsEarned: pointsByRide.get(ride.rideId) || { points: 0 },
+    }));
+
+    return ridesWithData;
   },
 });
 
 /** Get active rides (without bookings). */
-export const getActiveRides = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db
-      .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
-      .collect();
-  },
-});
+// export const getActiveRides = query({
+//   args: {},
+//   handler: async (ctx) => {
+//     return await ctx.db
+//       .query("rides")
+//       .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
+//       .collect();
+//   },
+// });
 
 /** Get active rides and attach enriched bookings to each ride.
  *  (Each ride will have a `bookings` field containing booking data enriched with user info.)
@@ -206,6 +269,49 @@ export const updateRideStatus = mutation({
     if (!ride) {
       throw new Error("Ride not found");
     }
+
+    // If setting the ride as completed, award points
+    if (status === RIDE_STATUS.COMPLETED) {
+      // Check that the ride has at least one booking
+      const bookings = await ctx.db
+        .query("bookings")
+        .filter((q) => q.eq(q.field("rideId"), rideId))
+        .collect();
+
+      if (bookings.length > 0) {
+        // TODO: Award points to the ride owner based on bookings and distance between 2 cities.
+        // Temporary points calculation based on bookings and ride price.
+        const numberOfBookingsAndPrice = bookings.length * ride.price;
+        const earnedPoints = numberOfBookingsAndPrice * 0.1;
+
+        // Update the ride owner's aggregated points in the users table.
+        const owner = await ctx.db
+          .query("users")
+          .withIndex("byUserId", (q) => q.eq("userId", ride.ownerUserId))
+          .first();
+
+        if (!owner) {
+          throw new Error("Ride owner not found");
+        }
+        const updatedPoints = (owner.points || 0) + earnedPoints;
+        await ctx.db.patch(owner._id, { points: updatedPoints });
+
+        // Record the points transaction.
+        await ctx.db.insert("pointsTransactions", {
+          transactionId: crypto.randomUUID(),
+          userId: ride.ownerUserId,
+          rideId: ride.rideId,
+          points: earnedPoints,
+          transactionDate: new Date().toISOString(),
+          description: `Awarded ${earnedPoints} points for ride ${ride.from} - ${ride.to} ( ${ride.rideId} )`,
+        });
+        console.log(
+          `Awarded ${earnedPoints} points to user ${ride.ownerUserId}`,
+        );
+      }
+    }
+
+    // Finally, update the ride status
     await ctx.db.patch(ride._id, { status });
     return { success: true };
   },

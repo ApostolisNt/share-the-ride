@@ -64,7 +64,17 @@ export default defineSchema({
     ),
     allowed: v.optional(v.array(v.string())),
     notAllowed: v.optional(v.array(v.string())),
+    points: v.optional(v.number()),
   })
     .index("byEmail", ["email"])
     .index("byUserId", ["userId"]),
+
+  pointsTransactions: defineTable({
+    transactionId: v.string(),
+    userId: v.string(),
+    rideId: v.string(),
+    points: v.number(),
+    transactionDate: v.string(),
+    description: v.string(),
+  }).index("byUser", ["userId"]),
 });

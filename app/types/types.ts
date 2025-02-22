@@ -30,3 +30,9 @@ export type RideWithBookings = {
   ride: Ride;
   bookings: Array<Booking & { userName: string; userEmail: string }>;
 };
+
+export type RideWithBookingsAndPoints = {
+  ride: Ride;
+  bookings: Array<Booking & { userName: string; userEmail: string }>;
+  pointsEarned: { points: number };
+};
