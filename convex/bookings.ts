@@ -2,6 +2,7 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 // You can import your booking status constants or use literals directly.
 import { BOOKING_STATUS } from "app/consts/general";
+import { BookingStatusEnum } from "./schema";
 
 export const bookRide = mutation({
   args: {
@@ -122,11 +123,7 @@ export const updateBookingStatus = mutation({
   args: {
     rideId: v.string(),
     clientUserId: v.string(),
-    status: v.union(
-      v.literal("pending"),
-      v.literal("accepted"),
-      v.literal("rejected"),
-    ),
+    status: BookingStatusEnum,
   },
   handler: async (ctx, { rideId, clientUserId, status }) => {
     const booking = await ctx.db

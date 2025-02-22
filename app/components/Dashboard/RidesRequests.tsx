@@ -5,14 +5,15 @@ import PopupModal from "@components/PopupModal/PopupModal";
 import {
   BookingStatusEnum,
   ModalType,
-  Ride,
   RideId,
   RideStatusEnum,
+  RideWithBookings,
   UserId,
 } from "app/types/types";
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
+import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
 
 const RidesRequests = () => {
   // Use the query that returns active rides with their bookings.
@@ -40,12 +41,16 @@ const RidesRequests = () => {
     try {
       await updateBookingStatusMutation({
         rideId,
-        clientId,
+        clientUserId: clientId,
         status: bookStatus,
       });
       showPopup(`Booking ${bookStatus}!`, "success");
-    } catch (e: any) {
-      showPopup(`Error: ${e.message}`, "error");
+    } catch (error) {
+      console.error("Error in handleBooking:", error);
+      showPopup(
+        "An error occurred while updating the booking status",
+        MODAL_TYPE.ERROR,
+      );
     }
   };
 
@@ -56,8 +61,12 @@ const RidesRequests = () => {
     try {
       await updateRideStatusMutation({ rideId, status: newStatus });
       showPopup(`Ride status updated to ${newStatus}`, "success");
-    } catch (e: any) {
-      showPopup(`Error: ${e.message}`, "error");
+    } catch (error) {
+      console.error("Error in handleUpdateRideStatus:", error);
+      showPopup(
+        "An error occurred while updating the ride status",
+        MODAL_TYPE.ERROR,
+      );
     }
   };
 
@@ -84,38 +93,53 @@ const RidesRequests = () => {
         Ride Requests
       </h2>
       {activeRides.length > 0 ? (
-        activeRides.map((ride: Ride) => (
-          <div key={ride.rideId} className="shadow-md mb-6 rounded-lg border p-4">
+        activeRides.map((item: RideWithBookings) => (
+          <div
+            key={item.ride.rideId}
+            className="shadow-md mb-6 rounded-lg border p-4"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold">
-                  <span className="uppercase">{ride.from}</span> -{" "}
-                  <span className="uppercase">{ride.to}</span>
+                  <span className="uppercase">{item.ride.from}</span> -{" "}
+                  <span className="uppercase">{item.ride.to}</span>
                 </h3>
                 <p className="font-semibold">
                   Available Seats:{" "}
-                  <span className={availableSeatsClass(ride.availableSeats)}>
-                    {ride.availableSeats > 0
-                      ? ride.availableSeats
+                  <span
+                    className={availableSeatsClass(item.ride.availableSeats)}
+                  >
+                    {item.ride.availableSeats > 0
+                      ? item.ride.availableSeats
                       : "Congrats! No seats available"}
                   </span>
                 </p>
                 <p className="font-semibold">
                   Ride Status:{" "}
                   <span className="uppercase text-green-500">
-                    {ride.status}
+                    {item.ride.status}
                   </span>
                 </p>
               </div>
               <div className="flex items-center justify-center gap-2">
                 <button
-                  onClick={() => handleUpdateRideStatus(ride.rideId, "completed")}
+                  onClick={() =>
+                    handleUpdateRideStatus(
+                      item.ride.rideId,
+                      RIDE_STATUS.COMPLETED,
+                    )
+                  }
                   className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
                 >
                   Complete Ride
                 </button>
                 <button
-                  onClick={() => handleUpdateRideStatus(ride.rideId, "inactive")}
+                  onClick={() =>
+                    handleUpdateRideStatus(
+                      item.ride.rideId,
+                      RIDE_STATUS.INACTIVE,
+                    )
+                  }
                   className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
                 >
                   Close Ride
@@ -124,14 +148,14 @@ const RidesRequests = () => {
             </div>
 
             <h4 className="mt-2 font-medium">Bookings:</h4>
-            {ride.bookings && ride.bookings.length > 0 ? (
+            {item.bookings && item.bookings.length > 0 ? (
               <ul className="space-y-4">
-                {ride.bookings.map((booking) => (
+                {item.bookings.map((booking) => (
                   <li
-                    key={booking.clientId}
+                    key={booking.userId}
                     className={`mb-2 flex items-center justify-between border-b pb-2 ${
-                      booking.status === "rejected" ||
-                      booking.status === "accepted"
+                      booking.status === BOOKING_STATUS.REJECTED ||
+                      booking.status === BOOKING_STATUS.ACCEPTED
                         ? "opacity-50"
                         : ""
                     }`}
@@ -141,9 +165,9 @@ const RidesRequests = () => {
                       <p>Email: {booking.userEmail}</p>
                       <p
                         className={`text-${
-                          booking.status === "accepted"
+                          booking.status === BOOKING_STATUS.ACCEPTED
                             ? "green"
-                            : booking.status === "rejected"
+                            : booking.status === BOOKING_STATUS.REJECTED
                               ? "red"
                               : "yellow"
                         }-500`}
@@ -152,14 +176,14 @@ const RidesRequests = () => {
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2">
-                      {booking.status === "pending" ? (
+                      {booking.status === BOOKING_STATUS.PENDING ? (
                         <>
                           <button
                             onClick={() =>
                               handleBooking(
-                                ride.rideId,
-                                booking.clientId,
-                                "accepted",
+                                item.ride.rideId,
+                                booking.userId,
+                                BOOKING_STATUS.ACCEPTED,
                               )
                             }
                             className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
@@ -169,9 +193,9 @@ const RidesRequests = () => {
                           <button
                             onClick={() =>
                               handleBooking(
-                                ride.rideId,
-                                booking.clientId,
-                                "rejected",
+                                item.ride.rideId,
+                                booking.userId,
+                                BOOKING_STATUS.REJECTED,
                               )
                             }
                             className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
@@ -184,9 +208,9 @@ const RidesRequests = () => {
                           disabled
                           className="cursor-not-allowed rounded border border-gray-500 bg-gray-300 px-4 py-1 text-gray-700"
                         >
-                          {booking.status === "accepted"
-                            ? "Accepted"
-                            : "Rejected"}
+                          {booking.status === BOOKING_STATUS.ACCEPTED
+                            ? BOOKING_STATUS.ACCEPTED
+                            : BOOKING_STATUS.REJECTED}
                         </button>
                       )}
                     </div>

@@ -2,7 +2,8 @@ import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
-import { RideId, UserId } from "app/types/types";
+import { ModalType, RideId, UserId } from "app/types/types";
+import { MODAL_TYPE } from "app/consts/general";
 
 type BookNowButtonProps = {
   rideId: RideId;
@@ -18,9 +19,7 @@ const BookNowButton = ({
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState<"success" | "error" | "info">(
-    "info",
-  );
+  const [modalType, setModalType] = useState<ModalType>(MODAL_TYPE.INFO);
 
   const bookRideMutation = useMutation(api.bookings.bookRide);
 
@@ -30,19 +29,20 @@ const BookNowButton = ({
     try {
       await bookRideMutation({ rideId, clientUserId: clientId });
 
-      setModalType("success");
+      setModalType(MODAL_TYPE.SUCCESS);
       setModalMessage("Booking successful!");
       setShowModal(true);
       onBookingSuccess();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.message === "Client already booked this ride") {
-        setModalType("error");
+        setModalType(MODAL_TYPE.ERROR);
         setModalMessage("You have already booked this ride!");
       } else if (error.message === "Ride fully booked") {
-        setModalType("error");
+        setModalType(MODAL_TYPE.ERROR);
         setModalMessage("Ride fully booked!");
       } else {
-        setModalType("error");
+        setModalType(MODAL_TYPE.ERROR);
         setModalMessage("Failed to book the ride.");
       }
       setShowModal(true);

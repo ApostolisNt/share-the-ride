@@ -1,12 +1,15 @@
+import { RideWithBookings } from "app/types/types";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { RIDE_STATUS } from "app/consts/general";
+import { RideStatusEnum } from "./schema";
 
 export const get = query({
   args: {},
   handler: async (ctx) => {
     const activeRides = await ctx.db
       .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", "active"))
+      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
       .collect();
 
     const sortActiveRidesBasedOnDate = activeRides.sort((a, b) => {
@@ -39,11 +42,7 @@ export const createRide = mutation({
     price: v.number(),
     availableSeats: v.number(),
     description: v.string(),
-    status: v.union(
-      v.literal("active"),
-      v.literal("inactive"),
-      v.literal("completed"),
-    ),
+    status: RideStatusEnum,
   },
   handler: async (
     ctx,
@@ -111,11 +110,11 @@ export const getCompletedRides = query({
   handler: async (ctx) => {
     const completedRides = await ctx.db
       .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", "completed"))
+      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.COMPLETED))
       .collect();
     const inactiveRides = await ctx.db
       .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", "inactive"))
+      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.INACTIVE))
       .collect();
 
     // Merge the two result sets (avoid duplicates if any)
@@ -133,7 +132,7 @@ export const getActiveRides = query({
   handler: async (ctx) => {
     return await ctx.db
       .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", "active"))
+      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
       .collect();
   },
 });
@@ -147,7 +146,7 @@ export const getActiveRidesWithBookings = query({
     // Get all active rides.
     const rides = await ctx.db
       .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", "active"))
+      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
       .collect();
     if (rides.length === 0) return [];
 
@@ -183,10 +182,11 @@ export const getActiveRidesWithBookings = query({
       bookingsByRide.get(booking.rideId).push(booking);
     }
     // Attach bookings to each ride.
-    const ridesWithBookings = rides.map((ride) => ({
-      ...ride,
+    const ridesWithBookings: RideWithBookings[] = rides.map((ride) => ({
+      ride,
       bookings: bookingsByRide.get(ride.rideId) || [],
     }));
+
     return ridesWithBookings;
   },
 });
@@ -195,11 +195,7 @@ export const getActiveRidesWithBookings = query({
 export const updateRideStatus = mutation({
   args: {
     rideId: v.string(),
-    status: v.union(
-      v.literal("active"),
-      v.literal("inactive"),
-      v.literal("completed"),
-    ),
+    status: RideStatusEnum,
   },
   handler: async (ctx, { rideId, status }) => {
     // Query for the ride using the business key.

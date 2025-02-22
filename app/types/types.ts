@@ -25,3 +25,8 @@ export type BookingId = Booking["bookingId"];
 // Booking Status
 export type BookingStatusEnum = "pending" | "accepted" | "rejected";
 export type ModalType = "success" | "error" | "info";
+
+export type RideWithBookings = {
+  ride: Ride;
+  bookings: Array<Booking & { userName: string; userEmail: string }>;
+};

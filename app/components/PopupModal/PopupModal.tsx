@@ -1,9 +1,11 @@
+import { MODAL_TYPE } from "app/consts/general";
+import { ModalType } from "app/types/types";
 import { useEffect } from "react";
 import { MdClose } from "react-icons/md";
 
 type PopupModalProps = {
   message: string;
-  type: "success" | "error" | "info";
+  type: ModalType;
   onClose: () => void;
 };
 
@@ -17,11 +19,11 @@ const PopupModal = ({ message, type, onClose }: PopupModalProps) => {
 
   const getEmoji = () => {
     switch (type) {
-      case "success":
+      case MODAL_TYPE.SUCCESS:
         return "🎉"; // Celebration emoji
-      case "error":
+      case MODAL_TYPE.ERROR:
         return "❌"; // Cross mark emoji
-      case "info":
+      case MODAL_TYPE.INFO:
         return "ℹ️"; // Information emoji
       default:
         return "";

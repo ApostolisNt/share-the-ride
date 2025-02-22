@@ -3,7 +3,7 @@
 import LoaderLine from "@components/LoaderLine/LoaderLine";
 import "./SingleRideCard.scss";
 import profileDefault from "@assets/profile-default.png";
-import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
+import { MdOutlineMail } from "react-icons/md";
 import clsx from "clsx";
 import { Icons, TravelTypes } from "app/helpers/TravelTypes";
 import { Image } from "./../Global/Image";
@@ -11,6 +11,7 @@ import BookNowButton from "./BookNowButton";
 import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
 import { Ride, User } from "app/types/types";
+import { MODAL_TYPE } from "app/consts/general";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -33,6 +34,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     allowed,
     notAllowed,
     name,
+    email,
   } = singleData.user;
 
   const { yearsOfExperience, language } = driverInfo ?? {};
@@ -80,14 +82,14 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
               {vehicleBrand}
             </p>
           </div>
-          {/* <div className="single-ride-contact flex flex-1 justify-end gap-4">
-            <a href={`tel:${contact.phone}`} target="_blank">
+          <div className="single-ride-contact flex flex-1 justify-end gap-4">
+            {/* <a href={`tel:${contact.phone}`} target="_blank">
               <MdLocalPhone size={26} />
-            </a>
-            <a href={`mailto:${contact.email}`} target="_blank">
+            </a> */}
+            <a href={`mailto:${email}`} target="_blank">
               <MdOutlineMail size={26} />
             </a>
-          </div> */}
+          </div>
         </div>
         <div>
           {/* allowed */}
@@ -124,7 +126,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
       {showModal && (
         <PopupModal
           message="Booking was successful!"
-          type="success"
+          type={MODAL_TYPE.SUCCESS}
           onClose={() => setShowModal(false)}
         />
       )}

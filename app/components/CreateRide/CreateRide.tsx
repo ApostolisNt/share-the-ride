@@ -3,7 +3,7 @@
 import "./CreateRide.scss";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { rideFormSchema } from "data/schemas/rides";
+import { RIDE_STATUS } from "app/consts/general";
 
 const CreateRide = () => {
   const {
@@ -21,7 +21,7 @@ const CreateRide = () => {
       availableSeats: 0,
       ridePrice: 0,
       description: "",
-      rideStatus: "active",
+      rideStatus: RIDE_STATUS.ACTIVE,
     },
   });
 
