@@ -5,11 +5,10 @@ import "./SingleRideCard.scss";
 import profileDefault from "@assets/profile-default.png";
 import { MdOutlineMail } from "react-icons/md";
 import clsx from "clsx";
-import { Icons, TravelTypes } from "app/helpers/TravelTypes";
+import { TravelTypes } from "app/helpers/TravelTypes";
 import { Image } from "./../Global/Image";
 import BookNowButton from "./BookNowButton";
 import { Ride, User } from "app/types/types";
-
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -37,8 +36,8 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
 
   const { yearsOfExperience, language } = driverInfo ?? {};
   const { allowedIcons, notAllowedIcons } = TravelTypes({
-    allowed: allowed as (keyof Icons)[] | undefined,
-    notAllowed: notAllowed as (keyof Icons)[] | undefined,
+    allowed,
+    notAllowed,
   });
 
   return (

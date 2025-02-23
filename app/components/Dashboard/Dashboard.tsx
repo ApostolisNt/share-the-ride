@@ -36,33 +36,33 @@ const Dashboard = ({ id, currentView }: DashboardProps) => {
       <h1 className="mb-8 text-2xl font-semibold">
         Welcome <span className="text-blue-400">{user?.name}!</span>
       </h1>
-      <div className="dashboard-list mx-auto my-8 flex w-3/5 flex-wrap justify-evenly gap-4">
+      <div className="dashboard-list mx-auto my-4 flex w-full flex-wrap justify-evenly gap-4 md:w-3/5">
         <Link
           href="?view=profile"
-          className={`px-8 py-4 ${isActive("profile")}`}
+          className={`px-2 py-4 text-sm md:text-base ${isActive("profile")}`}
         >
           Profile
         </Link>
         <Link
           href="?view=rides-completed"
-          className={`px-8 py-4 ${isActive("rides-completed")}`}
+          className={`px-2 py-4 text-sm md:text-base ${isActive("rides-completed")}`}
         >
           Rides Completed
         </Link>
         <Link
           href="?view=rides-requests"
-          className={`px-8 py-4 ${isActive("rides-requests")}`}
+          className={`px-2 py-4 text-sm md:text-base ${isActive("rides-requests")}`}
         >
           Rides Requests
         </Link>
         <Link
           href="?view=change-password"
-          className={`px-8 py-4 ${isActive("change-password")}`}
+          className={`px-2 py-4 text-sm md:text-base ${isActive("change-password")}`}
         >
           Change Password
         </Link>
       </div>
-      <div className="shadow-md mx-auto w-full max-w-[60rem] rounded-lg bg-white p-6 md:w-[95%]">
+      <div className="shadow-md mx-auto w-full max-w-[60rem] rounded-lg bg-white p-6">
         {renderComponent()}
       </div>
     </div>

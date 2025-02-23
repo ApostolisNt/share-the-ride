@@ -4,6 +4,35 @@ import { RideWithBookingsAndPoints } from "app/types/types";
 import { api } from "convex/_generated/api";
 import { useQuery } from "convex/react";
 
+const RidesCompleted = () => {
+  const completedRides = useQuery(api.rides.getCompletedRidesWithData);
+
+  if (completedRides === undefined) {
+    return <p>Loading completed rides...</p>;
+  }
+
+  if (completedRides.length === 0) {
+    return (
+      <p className="text-center text-gray-600">No completed rides found.</p>
+    );
+  }
+
+  return (
+    <>
+      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
+        Completed Rides
+      </h2>
+      <div className="grid auto-rows-fr grid-cols-1 justify-items-center gap-2 lg:grid-cols-2">
+        {completedRides.map((item: RideWithBookingsAndPoints) => (
+          <RideWithBookings key={item.ride.rideId} data={item} />
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default RidesCompleted;
+
 type RideProps = {
   data: RideWithBookingsAndPoints;
 };
@@ -17,7 +46,7 @@ const RideWithBookings = ({ data }: RideProps) => {
 
   return (
     <div
-      className="shadow-lg rounded-lg border border-gray-200 bg-white p-6"
+      className="shadow-lg w-full rounded-lg border border-gray-200 bg-white p-6"
       key={ride.rideId}
     >
       <div className="mb-4 flex flex-wrap-reverse items-center justify-between gap-2">
@@ -62,32 +91,3 @@ const RideWithBookings = ({ data }: RideProps) => {
     </div>
   );
 };
-
-const RidesCompleted = () => {
-  const completedRides = useQuery(api.rides.getCompletedRidesWithData);
-
-  if (completedRides === undefined) {
-    return <p>Loading completed rides...</p>;
-  }
-
-  if (completedRides.length === 0) {
-    return (
-      <p className="text-center text-gray-600">No completed rides found.</p>
-    );
-  }
-
-  return (
-    <>
-      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
-        Completed Rides
-      </h2>
-      <div className="grid grid-cols-1 gap-6">
-        {completedRides.map((item: RideWithBookingsAndPoints) => (
-          <RideWithBookings key={item.ride.rideId} data={item} />
-        ))}
-      </div>
-    </>
-  );
-};
-
-export default RidesCompleted;

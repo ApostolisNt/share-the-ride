@@ -44,3 +44,38 @@ export const updateUser = mutation({
     return newUserId;
   },
 });
+
+export const getUserPreferences = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .first();
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return { allowed: user.allowed ?? [], notAllowed: user.notAllowed ?? [] };
+  },
+});
+
+export const updatePreferences = mutation({
+  args: {
+    userId: v.string(),
+    allowed: v.array(v.string()),
+    notAllowed: v.array(v.string()),
+  },
+  handler: async (ctx, { userId, allowed, notAllowed }) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("byUserId", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await ctx.db.patch(user._id, { allowed, notAllowed });
+    return { success: true };
+  },
+});

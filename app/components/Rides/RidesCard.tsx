@@ -21,15 +21,6 @@ import { api } from "convex/_generated/api";
 
 // import UsersDummy from "app/dummyUsers.json";
 
-type Icons = {
-  drink: string;
-  music: string;
-  pets: string;
-  smoke: string;
-  twoPersons: string;
-  threePersons: string;
-};
-
 const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
   const locale = useLocale();
@@ -52,8 +43,8 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
     parseInt(timeSlice, 10) >= 0 && parseInt(timeSlice, 10) < 12 ? "AM" : "PM";
 
   const { allowedIcons, notAllowedIcons } = TravelTypes({
-    allowed: allowed as Array<keyof Icons>,
-    notAllowed: notAllowed as Array<keyof Icons>,
+    allowed,
+    notAllowed,
   });
 
   const handleSubmit = () => {

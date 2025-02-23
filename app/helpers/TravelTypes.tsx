@@ -7,8 +7,8 @@ import threePersons from "@assets/travelIcons/three-people.png";
 import { StaticImageData } from "next/image";
 
 export type TravelTypesProps = {
-  allowed?: Array<keyof Icons>;
-  notAllowed?: Array<keyof Icons>;
+  allowed?: string[];
+  notAllowed?: string[];
 };
 
 type IconInfo = {
@@ -35,15 +35,15 @@ export const TravelTypes = ({ allowed, notAllowed }: TravelTypesProps) => {
     threePersons: { img: threePersons, alt: "three persons" },
   };
 
-  const mapIcons = (types: Array<keyof Icons>) =>
-    types.map((type) => ({
+  // Filter out any values not in allIcons
+  const filterValidKeys = (types: string[]): (keyof Icons)[] =>
+    types.filter((type): type is keyof Icons => type in allIcons);
+
+  const mapIcons = (types: string[]) =>
+    filterValidKeys(types).map((type) => ({
       ...allIcons[type],
       key: type,
     }));
-
-  if (!allowed && !notAllowed) {
-    return { allowedIcons: [], notAllowedIcons: [] };
-  }
 
   const allowedIcons = mapIcons(allowed ?? []);
   const notAllowedIcons = mapIcons(notAllowed ?? []);
