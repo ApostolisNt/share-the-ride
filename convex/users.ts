@@ -4,7 +4,6 @@ import { v } from "convex/values";
 export const getUserById = query({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
-    // Query by the business key "userId"
     const user = await ctx.db
       .query("users")
       .filter((q) => q.eq(q.field("userId"), userId))

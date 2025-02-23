@@ -1,12 +1,12 @@
 // RidesCompleted.tsx
 import { RIDE_STATUS } from "app/consts/general";
 import { RideWithBookingsAndPoints } from "app/types/types";
-import { api } from "convex/_generated/api";
-import { useQuery } from "convex/react";
 
-const RidesCompleted = () => {
-  const completedRides = useQuery(api.rides.getCompletedRidesWithData);
+type RidesCompletedProps = {
+  completedRides: RideWithBookingsAndPoints[] | undefined;
+};
 
+const RidesCompleted = ({ completedRides }: RidesCompletedProps) => {
   if (completedRides === undefined) {
     return <p>Loading completed rides...</p>;
   }

@@ -11,13 +11,15 @@ import {
   UserId,
 } from "app/types/types";
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
 
-const RidesRequests = () => {
-  // Use the query that returns active rides with their bookings.
-  const activeRides = useQuery(api.rides.getActiveRidesWithBookings);
+type RidesRequestsProps = {
+  activeRides: RideWithBookings[] | undefined;
+};
+
+const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
   const updateRideStatusMutation = useMutation(api.rides.updateRideStatus);
   const updateBookingStatusMutation = useMutation(
     api.bookings.updateBookingStatus,

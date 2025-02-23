@@ -3,39 +3,19 @@ import Image from "next/image";
 import { User } from "app/types/types";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
-import drink from "@assets/travelIcons/drink.png";
-import music from "@assets/travelIcons/music.png";
-import pets from "@assets/travelIcons/pet.png";
-import smoke from "@assets/travelIcons/smoke.png";
-import twoPersons from "@assets/travelIcons/two-people.png";
-import threePersons from "@assets/travelIcons/three-people.png";
-import EditTravelPreferences from "@components/EditTravelPreferences/EditTravelPreferences";
+import { IconKey, getTravelIcons } from "app/helpers/TravelTypes";
+import EditTravelPreferences from "./EditTravelPreferences";
 
-type IconKey =
-  | "drink"
-  | "music"
-  | "pets"
-  | "smoke"
-  | "twoPersons"
-  | "threePersons";
-
-// Map icon key to image data (for view mode)
-const iconMapping: Record<IconKey, { img: any; alt: string }> = {
-  drink: { img: drink, alt: "Drink" },
-  music: { img: music, alt: "Music" },
-  pets: { img: pets, alt: "Pets" },
-  smoke: { img: smoke, alt: "Smoking" },
-  twoPersons: { img: twoPersons, alt: "Two Persons" },
-  threePersons: { img: threePersons, alt: "Three Persons" },
+type ProfileProps = {
+  user: User | undefined | null;
 };
 
-const Profile = ({ user }: { user: User }) => {
+const Profile = ({ user }: ProfileProps) => {
   const [editMode, setEditMode] = useState(false);
   const updatePreferencesMutation = useMutation(api.users.updatePreferences);
 
   if (!user) return null;
 
-  // Extract initial preferences from the user record.
   const initialAllowed = (user.allowed || []) as IconKey[];
   const initialNotAllowed = (user.notAllowed || []) as IconKey[];
 
@@ -46,7 +26,6 @@ const Profile = ({ user }: { user: User }) => {
     allowed: IconKey[];
     notAllowed: IconKey[];
   }) => {
-    // Update preferences in the database.
     await updatePreferencesMutation({
       userId: user.userId,
       allowed,
@@ -55,10 +34,16 @@ const Profile = ({ user }: { user: User }) => {
     setEditMode(false);
   };
 
+  const { allowedIcons, notAllowedIcons } = getTravelIcons({
+    allowed: initialAllowed,
+    notAllowed: initialNotAllowed,
+  });
+
   return (
-    <div className="mx-auto w-full md:max-w-5xl">
+    <div className="mx-auto w-full p-6 md:max-w-7xl">
+      <h1 className="mb-8 text-3xl font-bold text-gray-800">Profile</h1>
       <div className="grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-2">
-        {/* Personal Info & Vehicle Info */}
+        {/* Personal & Vehicle Info */}
         <div className="space-y-8">
           {/* Personal Info Card */}
           <div className="shadow rounded-lg bg-white p-6">
@@ -116,21 +101,21 @@ const Profile = ({ user }: { user: User }) => {
                   Allowed Preferences
                 </h3>
                 <div className="flex flex-wrap gap-4">
-                  {initialAllowed.length > 0 ? (
-                    initialAllowed.map((pref, index) => (
+                  {allowedIcons.length > 0 ? (
+                    allowedIcons.map((icon) => (
                       <div
-                        key={index}
+                        key={icon.key}
                         className="flex flex-col items-center rounded-lg border-green-500 bg-green-200 p-2"
                       >
                         <Image
-                          src={iconMapping[pref].img}
-                          alt={iconMapping[pref].alt}
-                          className="w-8 object-contain"
+                          src={icon.img}
+                          alt={icon.alt}
                           width={40}
                           height={40}
+                          className="w-8 object-contain"
                         />
                         <span className="mt-1 text-sm capitalize text-black">
-                          {pref}
+                          {icon.key}
                         </span>
                       </div>
                     ))
@@ -144,21 +129,21 @@ const Profile = ({ user }: { user: User }) => {
                   Not Allowed Preferences
                 </h3>
                 <div className="flex flex-wrap gap-4">
-                  {initialNotAllowed.length > 0 ? (
-                    initialNotAllowed.map((pref, index) => (
+                  {notAllowedIcons.length > 0 ? (
+                    notAllowedIcons.map((icon) => (
                       <div
-                        key={index}
+                        key={icon.key}
                         className="flex flex-col items-center rounded-lg border-red-500 bg-red-200 p-2"
                       >
                         <Image
-                          src={iconMapping[pref].img}
-                          alt={iconMapping[pref].alt}
-                          className="w-8 object-contain"
+                          src={icon.img}
+                          alt={icon.alt}
                           width={40}
                           height={40}
+                          className="w-8 object-contain"
                         />
                         <span className="mt-1 text-sm capitalize text-black">
-                          {pref}
+                          {icon.key}
                         </span>
                       </div>
                     ))

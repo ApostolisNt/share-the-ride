@@ -7,7 +7,6 @@ import profileDefault from "@assets/profile-default.png";
 import { formatDate } from "app/helpers/FormatDate";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import { TravelTypes } from "app/helpers/TravelTypes";
 
 // Components
 import LoaderLine from "@components/LoaderLine/LoaderLine";
@@ -18,6 +17,7 @@ import { RatingStar } from "@assets/RatingStar"; // adjust the path as needed
 import { Doc } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import { getTravelIcons } from "app/helpers/TravelTypes";
 
 // import UsersDummy from "app/dummyUsers.json";
 
@@ -42,7 +42,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const timeType =
     parseInt(timeSlice, 10) >= 0 && parseInt(timeSlice, 10) < 12 ? "AM" : "PM";
 
-  const { allowedIcons, notAllowedIcons } = TravelTypes({
+  const { allowedIcons, notAllowedIcons } = getTravelIcons({
     allowed,
     notAllowed,
   });
@@ -58,10 +58,10 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
     <div
       onClick={handleSubmit}
       className={`
-        transition-transform hover:shadow-lg relative mx-auto my-8 cursor-pointer rounded-2xl bg-white 
-        px-8 py-4 shadow-card duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover
+        transition-transform hover:shadow-lg relative mx-auto my-4 w-[95%] cursor-pointer rounded-2xl bg-white 
+        px-4 py-4 shadow-card duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover md:my-8
         ${rideExpired ? "pointer-events-none" : ""}
-        w-[98%] md:w-4/5 lg:w-full
+        w-full
       `}
     >
       {rideExpired && (
@@ -76,9 +76,9 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
       )}
       <div className={`${rideExpired ? "opacity-50" : ""}`}>
         {/* User Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <Image src={profileDefault} alt="profile" />
-          <h3 className="text-[1.3rem] font-medium">{name}</h3>
+          <h3 className="text-lg font-medium md:text-xl">{name}</h3>
           <div className="flex items-center gap-[0.3rem]">
             <p className="text-base font-medium">{rating}</p>
             {/* Render a single star with fill based on the rating */}
@@ -105,12 +105,13 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
         </div>
 
         {/* Extra Details Section */}
-        <div className="flex items-center justify-around">
+        <div className="flex items-center justify-center">
           <p className="text-base font-medium">{vehicleBrand}</p>
           <div className="flex flex-row items-center gap-[0.8rem]">
             {/* Allowed Icons */}
             {allowedIcons.map((icon, index) => (
               <Image
+                className="w-6 object-contain"
                 key={index}
                 src={icon.img}
                 alt={`${icon.alt} allowed`}
@@ -124,10 +125,10 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
                 className="relative inline-block after:absolute after:left-0 after:top-1/2 after:h-[2px] after:w-full after:-translate-y-1/2 after:rotate-45 after:bg-black after:opacity-50 after:content-['']"
               >
                 <Image
+                  className="w-6 object-contain opacity-50"
                   src={icon.img}
                   alt={`${icon.alt} not allowed`}
                   title={`${icon.alt} not allowed`}
-                  className="opacity-50"
                 />
               </div>
             ))}
