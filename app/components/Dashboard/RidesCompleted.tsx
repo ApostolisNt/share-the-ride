@@ -18,16 +18,11 @@ const RidesCompleted = ({ completedRides }: RidesCompletedProps) => {
   }
 
   return (
-    <>
-      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
-        Completed Rides
-      </h2>
-      <div className="grid auto-rows-fr grid-cols-1 justify-items-center gap-2 lg:grid-cols-2">
-        {completedRides.map((item: RideWithBookingsAndPoints) => (
-          <RideWithBookings key={item.ride.rideId} data={item} />
-        ))}
-      </div>
-    </>
+    <div className="grid auto-rows-fr grid-cols-1 justify-items-center gap-2 lg:grid-cols-2">
+      {completedRides.map((item: RideWithBookingsAndPoints) => (
+        <RideWithBookings key={item.ride.rideId} data={item} />
+      ))}
+    </div>
   );
 };
 

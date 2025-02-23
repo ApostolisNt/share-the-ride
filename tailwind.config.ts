@@ -20,8 +20,10 @@ const config: Config = {
       card: "0px 1px 8px 0px hsla(0, 0%, 0%, 0.2)",
       cardHover: "0px 4px 16px 0px hsla(0, 0%, 0%, 0.2)",
     },
-    transitionProperty: {
-      "shadow-transform": "box-shadow, transform",
+    extend: {
+      transitionProperty: {
+        "shadow-transform": "box-shadow, transform",
+      },
     },
   },
   plugins: [],

@@ -91,9 +91,6 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
         />
       )}
 
-      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
-        Ride Requests
-      </h2>
       {activeRides.length > 0 ? (
         activeRides.map((item: RideWithBookings) => (
           <div
@@ -123,7 +120,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                   </span>
                 </p>
               </div>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
                 <button
                   onClick={() =>
                     handleUpdateRideStatus(
@@ -131,7 +128,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       RIDE_STATUS.COMPLETED,
                     )
                   }
-                  className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
+                  className="transition-colors w-full rounded border border-green-500 bg-transparent px-4 py-2 text-sm text-green-500 duration-200 hover:bg-green-500 hover:text-white sm:w-auto md:text-base"
                 >
                   Complete Ride
                 </button>
@@ -142,7 +139,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       RIDE_STATUS.INACTIVE,
                     )
                   }
-                  className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
+                  className="transition-colors w-full rounded border border-red-500 bg-transparent px-4 py-2 text-sm text-red-500 duration-200 hover:bg-red-500 hover:text-white sm:w-auto md:text-base"
                 >
                   Close Ride
                 </button>
