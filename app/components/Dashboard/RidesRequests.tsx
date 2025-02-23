@@ -185,7 +185,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                                 BOOKING_STATUS.ACCEPTED,
                               )
                             }
-                            className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
+                            className="rounded border border-green-500 bg-transparent px-4 py-1 text-sm text-green-500 hover:bg-green-500 hover:text-white md:text-base"
                           >
                             Accept
                           </button>
@@ -197,7 +197,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                                 BOOKING_STATUS.REJECTED,
                               )
                             }
-                            className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
+                            className="rounded border border-red-500 bg-transparent px-4 py-1 text-sm text-red-500 hover:bg-red-500 hover:text-white md:text-base"
                           >
                             Reject
                           </button>

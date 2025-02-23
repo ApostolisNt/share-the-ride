@@ -7,27 +7,32 @@ import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { MoveLeft } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
 type DashboardProps = {
-  id: string;
   currentView: string;
 };
 
-const Dashboard = ({ id, currentView }: DashboardProps) => {
-  const user = useQuery(api.users.getUserById, { userId: id });
-  const completedRides = useQuery(api.rides.getCompletedRidesWithData);
-  const activeRides = useQuery(api.rides.getActiveRidesWithBookings);
+const Dashboard = ({ currentView }: DashboardProps) => {
+  const { user } = useUser();
+  const userData = useQuery(api.users.getUserById, { userId: user?.id ?? "" });
+  const completedRides = useQuery(api.rides.getCompletedRidesWithData, {
+    userId: user?.id ?? "",
+  });
+  const activeRides = useQuery(api.rides.getActiveRidesWithBookings, {
+    userId: user?.id ?? "",
+  });
 
   const renderComponent = () => {
     switch (currentView) {
       case "profile":
-        return <Profile user={user} />;
+        return <Profile user={userData} />;
       case "rides-completed":
         return <RidesCompleted completedRides={completedRides} />;
       case "rides-requests":
         return <RidesRequests activeRides={activeRides} />;
       default:
-        return <Profile user={user} />;
+        return <Profile user={userData} />;
     }
   };
 
@@ -44,7 +49,7 @@ const Dashboard = ({ id, currentView }: DashboardProps) => {
   return (
     <div className="my-12 flex w-full flex-col items-center">
       <h1 className="mb-8 text-2xl font-semibold">
-        Welcome <span className="text-blue-400">{user?.name}!</span>
+        Welcome <span className="text-blue-400">{userData?.name}!</span>
       </h1>
       <div className="flex w-full flex-col items-center px-1">
         {/* Back to Profile link */}
@@ -90,7 +95,7 @@ const Dashboard = ({ id, currentView }: DashboardProps) => {
           </Link>
           <div className="flex min-h-[5rem] w-full flex-col items-center rounded-md border-2 border-blue-600 bg-blue-100 px-4 py-6 text-center text-sm font-semibold md:text-sm">
             <span className="text-4xl font-bold text-blue-400">
-              {user?.points ?? 0}
+              {userData?.points ?? 0}
             </span>
             <span className="text-sm font-bold text-blue-500">Points</span>
           </div>

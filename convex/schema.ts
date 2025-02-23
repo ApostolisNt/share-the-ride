@@ -29,7 +29,8 @@ export default defineSchema({
     .index("byFrom", ["from"])
     .index("byTo", ["to"])
     .index("byDate", ["date"])
-    .index("byStatus", ["status"]),
+    .index("byStatus", ["status"])
+    .index("byOwner", ["ownerUserId"]),
 
   bookings: defineTable({
     bookingId: v.string(),

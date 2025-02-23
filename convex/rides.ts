@@ -105,8 +105,8 @@ export const getUserSingleRide = query({
 
 /** Get rides that are either completed or inactive. */
 export const getCompletedRidesWithData = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
     // 1. Fetch rides with "completed" and "inactive" statuses.
     const completedRides = await ctx.db
       .query("rides")
@@ -120,7 +120,12 @@ export const getCompletedRidesWithData = query({
     // Merge the two result sets (keyed by rideId to avoid duplicates).
     const ridesMap = new Map();
     completedRides.concat(inactiveRides).forEach((ride) => {
-      ridesMap.set(ride.rideId, ride);
+      {
+        if (ride.ownerUserId !== userId) {
+          return;
+        }
+        ridesMap.set(ride.rideId, ride);
+      }
     });
     const rides = Array.from(ridesMap.values());
     if (rides.length === 0) return [];
@@ -192,27 +197,17 @@ export const getCompletedRidesWithData = query({
   },
 });
 
-/** Get active rides (without bookings). */
-// export const getActiveRides = query({
-//   args: {},
-//   handler: async (ctx) => {
-//     return await ctx.db
-//       .query("rides")
-//       .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
-//       .collect();
-//   },
-// });
-
 /** Get active rides and attach enriched bookings to each ride.
  *  (Each ride will have a `bookings` field containing booking data enriched with user info.)
  */
 export const getActiveRidesWithBookings = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
     // Get all active rides.
     const rides = await ctx.db
       .query("rides")
-      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.ACTIVE))
+      .filter((q) => q.eq(q.field("ownerUserId"), userId))
+      .filter((q) => q.eq(q.field("status"), RIDE_STATUS.ACTIVE))
       .collect();
     if (rides.length === 0) return [];
 

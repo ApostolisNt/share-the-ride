@@ -5,7 +5,7 @@
     { "title": "Create Ride", "link": "create-ride", "auth": true },
     {
       "title": "Dashboard",
-      "link": "dashboard/user_2sJ7Os2KmZoK7Mvc6Vcp9QRfkpy?view=profile",
+      "link": "dashboard?view=profile",
       "auth": true
     }
   ]
