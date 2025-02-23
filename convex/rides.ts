@@ -1,7 +1,7 @@
 import { RideWithBookings } from "app/types/types";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { RIDE_STATUS } from "app/consts/general";
+import { BOOKING_STATUS, RIDE_STATUS } from "app/consts/general";
 import { RideStatusEnum } from "./schema";
 
 export const get = query({
@@ -33,7 +33,7 @@ export const get = query({
 
 export const createRide = mutation({
   args: {
-    rideId: v.string(), // Business key for the ride (e.g., a UUID)
+    rideId: v.string(),
     ownerUserId: v.string(),
     from: v.string(),
     to: v.string(),
@@ -59,7 +59,6 @@ export const createRide = mutation({
       status,
     },
   ) => {
-    // Insert a new ride record into the rides table using business keys.
     await ctx.db.insert("rides", {
       rideId,
       ownerUserId,
@@ -143,7 +142,11 @@ export const getCompletedRidesWithData = query({
 
     // 5. Enrich bookings with user info.
     let enrichedBookings = [];
-    if (bookings.length > 0) {
+    const hasAcceptedRides = bookings.some(
+      (booking) => booking.status === BOOKING_STATUS.ACCEPTED,
+    );
+
+    if (bookings.length > 0 && hasAcceptedRides) {
       const userIds = Array.from(new Set(bookings.map((b) => b.userId)));
       const users = await ctx.db
         .query("users")
@@ -278,7 +281,11 @@ export const updateRideStatus = mutation({
         .filter((q) => q.eq(q.field("rideId"), rideId))
         .collect();
 
-      if (bookings.length > 0) {
+      const hasAcceptedRides = bookings.some(
+        (booking) => booking.status === BOOKING_STATUS.ACCEPTED,
+      );
+
+      if (bookings.length > 0 && hasAcceptedRides) {
         // TODO: Award points to the ride owner based on bookings and distance between 2 cities.
         // Temporary points calculation based on bookings and ride price.
         const numberOfBookingsAndPrice = bookings.length * ride.price;

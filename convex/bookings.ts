@@ -139,7 +139,20 @@ export const updateBookingStatus = mutation({
       return { success: false };
     }
 
-    await ctx.db.patch(booking._id, { status });
+    if (status === BOOKING_STATUS.ACCEPTED) {
+      const ride = await ctx.db
+        .query("rides")
+        .filter((q) => q.eq(q.field("rideId"), rideId))
+        .first();
+      if (!ride) {
+        console.log(`Ride not found for rideId ${rideId}`);
+        return { success: false };
+      }
+
+      await ctx.db.patch(ride._id, {
+        availableSeats: ride.availableSeats - booking.seatsRequested,
+      });
+    }
 
     if (status === BOOKING_STATUS.REJECTED) {
       // Trigger cashback logic here.
@@ -149,6 +162,7 @@ export const updateBookingStatus = mutation({
       // For example: update the user's wallet balance or call an external refund API.
     }
 
+    await ctx.db.patch(booking._id, { status });
     return { success: true };
   },
 });

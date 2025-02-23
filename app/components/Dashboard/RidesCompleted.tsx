@@ -49,7 +49,7 @@ const RideWithBookings = ({ data }: RideProps) => {
         Travel Buddies
       </h4>
       {bookings?.length > 0 ? (
-        <ul className="pl-2 font-medium text-gray-600">
+        <ul className="pl-2 text-sm font-medium text-gray-600">
           {bookings?.map((booking) => (
             <li key={booking.userId} className="text-sm md:text-base">
               {booking.userName} - {booking.userEmail}
@@ -57,7 +57,7 @@ const RideWithBookings = ({ data }: RideProps) => {
           ))}
         </ul>
       ) : (
-        <p className="text-gray-500">No bookings for this ride.</p>
+        <p className="text-sm text-gray-500">No bookings for this ride.</p>
       )}
     </div>
   );

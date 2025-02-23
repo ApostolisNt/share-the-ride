@@ -8,10 +8,8 @@ import clsx from "clsx";
 import { Icons, TravelTypes } from "app/helpers/TravelTypes";
 import { Image } from "./../Global/Image";
 import BookNowButton from "./BookNowButton";
-import PopupModal from "@components/PopupModal/PopupModal";
-import { useState } from "react";
 import { Ride, User } from "app/types/types";
-import { MODAL_TYPE } from "app/consts/general";
+
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -43,11 +41,6 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     notAllowed: notAllowed as (keyof Icons)[] | undefined,
   });
 
-  const [showModal, setShowModal] = useState(false);
-
-  const handleBookingSuccess = () => {
-    setShowModal(true);
-  };
   return (
     <>
       <div
@@ -117,19 +110,8 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
             ))}
           </div>
         </div>
-        <BookNowButton
-          rideId={RideUniqueId}
-          clientId={UserUniqueId}
-          onBookingSuccess={handleBookingSuccess}
-        />
+        <BookNowButton rideId={RideUniqueId} clientId={UserUniqueId} />
       </div>
-      {showModal && (
-        <PopupModal
-          message="Booking was successful!"
-          type={MODAL_TYPE.SUCCESS}
-          onClose={() => setShowModal(false)}
-        />
-      )}
     </>
   );
 };

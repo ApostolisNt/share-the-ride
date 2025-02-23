@@ -8,14 +8,9 @@ import { MODAL_TYPE } from "app/consts/general";
 type BookNowButtonProps = {
   rideId: RideId;
   clientId: UserId;
-  onBookingSuccess: () => void;
 };
 
-const BookNowButton = ({
-  rideId,
-  clientId,
-  onBookingSuccess,
-}: BookNowButtonProps) => {
+const BookNowButton = ({ rideId, clientId }: BookNowButtonProps) => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -32,7 +27,6 @@ const BookNowButton = ({
       setModalType(MODAL_TYPE.SUCCESS);
       setModalMessage("Booking successful!");
       setShowModal(true);
-      onBookingSuccess();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error.message === "Client already booked this ride") {

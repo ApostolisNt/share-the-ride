@@ -206,7 +206,11 @@ const RidesRequests = () => {
                       ) : (
                         <button
                           disabled
-                          className="cursor-not-allowed rounded border border-gray-500 bg-gray-300 px-4 py-1 text-gray-700"
+                          className={`cursor-not-allowed rounded border px-4 py-1 ${
+                            booking.status === BOOKING_STATUS.ACCEPTED
+                              ? "bg-green-100 text-green-600"
+                              : "bg-red-100 text-red-600"
+                          }`}
                         >
                           {booking.status === BOOKING_STATUS.ACCEPTED
                             ? BOOKING_STATUS.ACCEPTED

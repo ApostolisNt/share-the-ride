@@ -1,6 +1,6 @@
-import { Doc } from "convex/_generated/dataModel";
+import { User } from "app/types/types";
 
-const Profile = ({ user }: { user: Doc<"users"> }) => {
+const Profile = ({ user }: { user: User }) => {
   return (
     <>
       <h1 className="mb-6 text-2xl font-semibold text-gray-800">Profile</h1>
