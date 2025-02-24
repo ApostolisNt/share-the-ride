@@ -58,8 +58,10 @@ const BookNowButton = ({ rideId, clientId }: BookNowButtonProps) => {
       <div className="flex w-full flex-col items-center justify-center gap-1">
         <button
           onClick={handleBooking}
-          className="mt-4 rounded bg-blue-600 px-4 py-2 text-white"
           disabled={loading}
+          className={`mt-4 rounded px-4 py-2 font-semibold transition-colors duration-300 ease-in-out 
+    ${loading ? "cursor-not-allowed bg-blue-400" : "bg-blue-600 hover:bg-blue-700"} 
+    text-white`}
         >
           {loading ? "Booking..." : "Book Now"}
         </button>
