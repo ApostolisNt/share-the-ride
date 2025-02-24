@@ -41,7 +41,6 @@ const Profile = ({ user }: ProfileProps) => {
 
   return (
     <div className="mx-auto w-full p-6 md:max-w-7xl">
-      <h1 className="mb-8 text-3xl font-bold text-gray-800">Profile</h1>
       <div className="grid grid-cols-1 justify-items-center gap-8 sm:grid-cols-2">
         {/* Personal & Vehicle Info */}
         <div className="space-y-8">

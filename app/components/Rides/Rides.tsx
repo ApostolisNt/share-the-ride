@@ -20,7 +20,7 @@ const Rides = ({ results }: ResultsProps) => {
 
   return (
     <section className="rides_section">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-3 md:grid-cols-2">
         {rides && rides.length > 0 ? (
           rides?.map((ride) => <RidesCard key={ride.rideId} ride={ride} />)
         ) : (

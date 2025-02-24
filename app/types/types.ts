@@ -1,5 +1,6 @@
 import { GreekCitiesKeys } from "app/consts/cities";
 import { Doc } from "convex/_generated/dataModel";
+import { z } from "zod";
 
 export type SearchParamsType = {
   from: GreekCitiesKeys;
@@ -10,6 +11,22 @@ export type SearchParamsType = {
 // Rides
 export type Ride = Doc<"rides">;
 export type RideId = Ride["rideId"];
+export type CreateRideSchema = Omit<Ride, "rideId">;
+
+// Validate Form
+export const rideFormSchema = z.object({
+  ownerUserId: z.string(),
+  from: z.string().nonempty("From is required."),
+  to: z.string().nonempty("To is required."),
+  date: z.string().min(1, { message: "Date is required." }),
+  time: z.string().min(1, { message: "Time is required." }),
+  availableSeats: z
+    .number()
+    .min(1, { message: "At least one seat is required." }),
+  price: z.number().min(1, { message: "Price must be greater than 0." }),
+  description: z.string().min(1, { message: "Description is required." }),
+  status: z.enum(["active", "inactive", "completed"]),
+});
 
 // Rides Status
 export type RideStatusEnum = "active" | "inactive" | "completed";

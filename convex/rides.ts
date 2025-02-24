@@ -33,7 +33,6 @@ export const get = query({
 
 export const createRide = mutation({
   args: {
-    rideId: v.string(),
     ownerUserId: v.string(),
     from: v.string(),
     to: v.string(),
@@ -47,7 +46,6 @@ export const createRide = mutation({
   handler: async (
     ctx,
     {
-      rideId,
       ownerUserId,
       from,
       to,
@@ -60,7 +58,7 @@ export const createRide = mutation({
     },
   ) => {
     await ctx.db.insert("rides", {
-      rideId,
+      rideId: crypto.randomUUID(),
       ownerUserId,
       from,
       to,

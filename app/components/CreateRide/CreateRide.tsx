@@ -1,142 +1,64 @@
 "use client";
 
-import "./CreateRide.scss";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { RIDE_STATUS } from "app/consts/general";
+import { useState } from "react";
+import CreateRideForm from "./CreateRideForm";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { useParams, useRouter } from "next/navigation";
+import { CreateRideSchema } from "app/types/types";
+import PopupModal from "@components/PopupModal/PopupModal";
+import { ModalType } from "app/types/types";
+import { useUser } from "@clerk/nextjs";
 
 const CreateRide = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(rideFormSchema),
-    defaultValues: {
-      ownerUserId: "",
-      from: "",
-      to: "",
-      date: "",
-      time: "",
-      availableSeats: 0,
-      ridePrice: 0,
-      description: "",
-      rideStatus: RIDE_STATUS.ACTIVE,
-    },
-  });
+  const { user } = useUser();
+  const router = useRouter();
+  const { locale } = useParams();
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<ModalType>("info");
 
-  // Generate today's date in YYYY-MM-DD format
-  const today = new Date().toISOString().split("T")[0];
+  const createRideMutation = useMutation(api.rides.createRide);
 
-  const onSubmit = async (data: any) => {
-    console.log(data);
+  const showPopup = (message: string, type: ModalType) => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+  };
 
-    // try {
-    //   const res = await fetch("http://localhost:3000/api/rides", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
+  const onSubmit = async (data: CreateRideSchema) => {
+    data.ownerUserId = user?.id || "";
 
-    //   if (!res.ok) {
-    //     const errorData = await res.json();
-    //     console.log(errorData.message || "Something went wrong!");
-    //   }
-
-    //   router.push(`/${locale}/rides`);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      await createRideMutation(data);
+      showPopup("Ride created successfully!", "success");
+      setTimeout(() => {
+        router.push(`/${locale}/rides`);
+      }, 1000);
+    } catch (error: unknown) {
+      console.error("Error in createRideMutation:", error);
+      showPopup("An error occurred while creating the ride", "error");
+    }
   };
 
   return (
-    <div className="mx-auto my-8 flex w-full flex-col items-center">
-      <h3 className="text-base font-semibold uppercase">Create a ride</h3>
-      <form
-        className="my-8 flex w-[45%] flex-col gap-4 lg:w-2/3 sm:w-[95%]"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <div className="field-split">
-          <div>
-            <label htmlFor="from">From</label>
-            <input
-              {...register("from")}
-              placeholder="From"
-              className="input w-full"
-            />
-            {errors.from && <p>{errors.from.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="to">To</label>
-            <input
-              {...register("to")}
-              placeholder="To"
-              className="input w-full"
-            />
-            {errors.to && <p>{errors.to.message}</p>}
-          </div>
-        </div>
-
-        <div className="field-split">
-          <div>
-            <label htmlFor="date">Date</label>
-            <input
-              {...register("date")}
-              type="date"
-              min={today}
-              className="input w-full"
-            />
-            {errors.date && <p>{errors.date.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="time">Time</label>
-            <input {...register("time")} type="time" className="input w-full" />
-            {errors.time && <p>{errors.time.message}</p>}
-          </div>
-        </div>
-
-        <div className="field-split">
-          <div>
-            <label htmlFor="availableSeats">Seats</label>
-            <input
-              {...register("availableSeats", { valueAsNumber: true })}
-              type="number"
-              placeholder="availableSeats"
-              className="input w-full"
-            />
-            {errors.availableSeats && <p>{errors.availableSeats.message}</p>}
-          </div>
-          <div>
-            <label htmlFor="ridePrice">Price</label>
-            <input
-              {...register("ridePrice", { valueAsNumber: true })}
-              type="number"
-              placeholder="Price"
-              className="input w-full"
-            />
-            {errors.ridePrice && <p>{errors.ridePrice.message}</p>}
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          <label htmlFor="description">Description</label>
-          <textarea
-            {...register("description")}
-            placeholder="Description"
-            className="input"
-          />
-        </div>
-        {errors.description && <p>{errors.description.message}</p>}
-
-        <button
-          type="submit"
-          className="btn transition-colors mx-auto w-1/4 rounded-sm border-2 border-slate-400 px-4 py-2 text-slate-600 duration-300 ease-in-out hover:bg-slate-400 hover:text-white"
-        >
-          Share the ride
-        </button>
-      </form>
+    <div className="mx-auto my-8 flex w-full flex-col items-center px-4">
+      <div className="shadow w-full max-w-3xl rounded-lg bg-white p-8">
+        <h3 className="mb-2 text-center text-2xl font-bold uppercase text-gray-800">
+          Create a Ride
+        </h3>
+        <p className="mb-6 text-center text-xl italic text-blue-600">
+          {"Your journey begins with a single ride."}
+        </p>
+        <CreateRideForm onSubmitForm={onSubmit} />
+      </div>
+      {showModal && (
+        <PopupModal
+          message={modalMessage}
+          type={modalType}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 };

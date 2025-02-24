@@ -36,12 +36,12 @@ const Dashboard = ({ currentView }: DashboardProps) => {
     }
   };
 
-  const activeClasses: { [key in "green" | "orange"]: string } = {
+  const activeClasses: { [key in "green" | "violet"]: string } = {
     green: "border-green-600 bg-green-200",
-    orange: "border-orange-600 bg-orange-200",
+    violet: "border-violet-600 bg-violet-200",
   };
 
-  const isActive = (view: string, color: "green" | "orange") =>
+  const isActive = (view: string, color: "green" | "violet") =>
     currentView === view ? activeClasses[color] : "border-gray-300 bg-gray-100";
 
   const isProfile = currentView === "profile";
@@ -83,13 +83,13 @@ const Dashboard = ({ currentView }: DashboardProps) => {
             href="?view=rides-requests"
             className={`flex min-h-[5rem] w-full flex-col items-center justify-center rounded-md border-2 px-4 py-6 text-center text-sm font-semibold md:text-base ${isActive(
               "rides-requests",
-              "orange",
+              "violet",
             )}`}
           >
-            <span className="text-4xl font-bold text-orange-400">
+            <span className="text-4xl font-bold text-violet-400">
               {activeRides?.length ?? 0}
             </span>
-            <span className="text-sm font-bold text-orange-500">
+            <span className="text-sm font-bold text-violet-500">
               Requested Rides
             </span>
           </Link>
