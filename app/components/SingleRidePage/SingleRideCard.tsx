@@ -10,7 +10,9 @@ import BookNowButton from "./BookNowButton";
 import { Image } from "./../Global/Image";
 import { RatingStar } from "@assets/RatingStar";
 import { CalendarRange } from "lucide-react";
-import { availableSeatsStyle } from "app/consts/general";
+import { availableSeatsStyle, RIDE_STATUS } from "app/consts/general";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -27,6 +29,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
       price,
       availableSeats,
       seats,
+      ownerUserId,
     },
   } = singleData;
   const {
@@ -40,6 +43,9 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     rating,
     aboutMe,
   } = singleData.user;
+  const completedRides = useQuery(api.rides.getLatestCompletedRides, {
+    userId: ownerUserId,
+  });
   const { yearsOfExperience, language } = driverInfo ?? {};
   const { allowedIcons, notAllowedIcons } = getTravelIcons({
     allowed,
@@ -54,9 +60,9 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
         "w-full max-w-6xl bg-white",
       )}
     >
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 pb-8 md:grid-cols-2">
         {/* Left Column: User Profile & Hot Ride Info */}
-        <div className="order-2 flex flex-col gap-4 bg-gray-50 p-4 md:order-1">
+        <div className="order-2 flex flex-col gap-4 rounded-lg border bg-gray-50 p-4 md:order-1">
           {/* Top Row: Driver Profile */}
           <div className="flex items-center justify-between rounded-lg p-4">
             <Image
@@ -159,6 +165,43 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
               <BookNowButton rideId={RideUniqueId} clientId={UserUniqueId} />
             </div>
           </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="pb-4 text-lg font-semibold text-gray-500">
+          Latest Rides from {name}
+        </h2>
+        <div className="grid auto-rows-fr grid-cols-1 justify-items-center gap-2 lg:grid-cols-2">
+          {completedRides?.map((item: Ride) => (
+            <div
+              className="shadow-lg w-full rounded-lg border border-gray-200 bg-white p-6"
+              key={item.rideId}
+            >
+              <div className="mb-4 flex flex-wrap-reverse items-center justify-between gap-2">
+                <h3 className="text-base font-bold text-gray-700 md:text-lg">
+                  <span className="uppercase">{item.from}</span> -{" "}
+                  <span className="uppercase">{item.to}</span>
+                  <div>
+                    <span className="text-sm uppercase text-gray-600">
+                      {item.date}
+                    </span>
+                  </div>
+                </h3>
+                <div className="flex flex-row gap-2 sm:flex-col">
+                  <span
+                    className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
+                      item.status === RIDE_STATUS.COMPLETED
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

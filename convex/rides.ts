@@ -196,6 +196,23 @@ export const getCompletedRidesWithData = query({
   },
 });
 
+export const getLatestCompletedRides = query({
+  args: { userId: v.string() },
+  handler: async (ctx, { userId }) => {
+    const rides = await ctx.db
+      .query("rides")
+      .withIndex("byStatus", (q) => q.eq("status", RIDE_STATUS.COMPLETED))
+      .filter((q) => q.eq(q.field("ownerUserId"), userId))
+      .collect();
+
+    rides.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+    );
+
+    return rides.slice(0, 2);
+  },
+});
+
 /** Get active rides and attach enriched bookings to each ride.
  *  (Each ride will have a `bookings` field containing booking data enriched with user info.)
  */
