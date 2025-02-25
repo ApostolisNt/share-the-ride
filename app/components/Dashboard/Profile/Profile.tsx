@@ -45,17 +45,17 @@ const Profile = ({ user }: ProfileProps) => {
         {/* Personal & Vehicle Info */}
         <div className="space-y-8">
           {/* Personal Info Card */}
-          <div className="shadow rounded-lg bg-white p-6">
+          <div className="shadow space-y-2 rounded-lg bg-white p-6">
             <h2 className="mb-4 text-2xl font-semibold text-gray-700">
               Personal Info
             </h2>
-            <p className="mb-2 text-gray-700">
+            <p className="text-gray-700">
               <span className="font-semibold">Name:</span> {user.name}
             </p>
-            <p className="mb-2 text-gray-700">
+            <p className="text-gray-700">
               <span className="font-semibold">Email:</span> {user.email}
             </p>
-            <p className="mb-2 text-gray-700">
+            <p className="text-gray-700">
               <span className="font-semibold">Rating:</span>{" "}
               {user.rating ? (user.rating / 5).toFixed(1) : "No rating yet"}
             </p>
@@ -63,17 +63,21 @@ const Profile = ({ user }: ProfileProps) => {
               <span className="font-semibold">Languages:</span>{" "}
               {user.driverInfo?.language || "N/A"}
             </p>
+            <p className="text-gray-700">
+              <span className="font-semibold">About Me:</span>{" "}
+              {user.aboutMe || "N/A"}
+            </p>
           </div>
           {/* Vehicle Info Card */}
-          <div className="shadow rounded-lg bg-white p-6">
+          <div className="shadow space-y-2 rounded-lg bg-white p-6">
             <h2 className="mb-4 text-2xl font-semibold text-gray-700">
               Vehicle Info
             </h2>
-            <p className="mb-2 text-gray-700">
+            <p className="text-gray-700">
               <span className="font-semibold">Brand:</span>{" "}
               {user.vehicleBrand || "N/A"}
             </p>
-            <p className="mb-2 text-gray-700">
+            <p className="text-gray-700">
               <span className="font-semibold">Years of Experience:</span>{" "}
               {user.driverInfo?.yearsOfExperience
                 ? `${user.driverInfo.yearsOfExperience} years`

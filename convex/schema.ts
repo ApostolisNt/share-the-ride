@@ -22,6 +22,7 @@ export default defineSchema({
     date: v.string(),
     time: v.string(),
     price: v.number(),
+    seats: v.number(),
     availableSeats: v.number(),
     description: v.string(),
     status: RideStatusEnum,
@@ -66,6 +67,7 @@ export default defineSchema({
     allowed: v.optional(v.array(v.string())),
     notAllowed: v.optional(v.array(v.string())),
     points: v.optional(v.number()),
+    aboutMe: v.optional(v.string()),
   })
     .index("byEmail", ["email"])
     .index("byUserId", ["userId"]),

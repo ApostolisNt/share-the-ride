@@ -32,10 +32,14 @@ const Navigation = () => {
           <Fragment key={index}>
             {item.auth ? (
               <SignedIn>
-                <MenuItem key={index} item={item} />
+                <MenuItem
+                  key={index}
+                  item={item}
+                  setIsMenuOpen={setIsMenuOpen}
+                />
               </SignedIn>
             ) : (
-              <MenuItem key={index} item={item} />
+              <MenuItem key={index} item={item} setIsMenuOpen={setIsMenuOpen} />
             )}
           </Fragment>
         ))}
@@ -45,7 +49,7 @@ const Navigation = () => {
         <SignedOut>
           <SignInButton mode="modal">
             <button
-              className="transition-colors rounded-md border-2 px-4 py-2
+              className="rounded-md border-2 px-4 py-2 transition-colors
  hover:border-black"
             >
               Sign in

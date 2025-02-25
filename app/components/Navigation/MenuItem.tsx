@@ -9,15 +9,17 @@ type MenuItemProps = {
     title: string;
     auth?: boolean;
   };
+  setIsMenuOpen: (value: boolean) => void;
 };
 
-const MenuItem = ({ item }: MenuItemProps) => {
+const MenuItem = ({ item, setIsMenuOpen }: MenuItemProps) => {
   const locale = useLocale() as SupportedLangCodes;
 
   return (
     <Link
       href={cleanUrlSlash(`/${locale}/${item.link}`)}
       className={`navigation_link`}
+      onClick={() => setIsMenuOpen(false)}
     >
       {item.title}
     </Link>

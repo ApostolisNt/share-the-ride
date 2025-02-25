@@ -15,3 +15,9 @@ export const MODAL_TYPE = {
   ERROR: "error",
   INFO: "info",
 } as const;
+
+export const availableSeatsStyle = (availableSeats: number, seats: number) => {
+  if (availableSeats === 0) return "text-green-500";
+  if (availableSeats === seats) return "text-red-500";
+  if (availableSeats <= seats - 1) return "text-yellow-500";
+};

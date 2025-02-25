@@ -68,6 +68,7 @@ export const createRide = mutation({
       availableSeats,
       description,
       status,
+      seats: availableSeats,
     });
     return { success: true };
   },

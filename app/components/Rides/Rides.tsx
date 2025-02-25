@@ -1,10 +1,6 @@
 "use client";
 
-// import RidesDummy from "app/dummyRides.json"
-
 import { SearchParamsType } from "app/types/types";
-// import RidesCard from "./RidesCard";
-// import FilterRides from "./FilterRides";
 import Loading from "app/[locale]/(pages)/rides/loading";
 
 import { useQuery } from "convex/react";

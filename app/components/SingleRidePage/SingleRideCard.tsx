@@ -9,6 +9,8 @@ import { getTravelIcons } from "app/helpers/TravelTypes";
 import BookNowButton from "./BookNowButton";
 import { Image } from "./../Global/Image";
 import { RatingStar } from "@assets/RatingStar";
+import { CalendarRange } from "lucide-react";
+import { availableSeatsStyle } from "app/consts/general";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -16,7 +18,16 @@ type SingleRideCardProps = {
 
 const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
   const {
-    ride: { rideId: RideUniqueId, date, from, to, description, price },
+    ride: {
+      rideId: RideUniqueId,
+      date,
+      from,
+      to,
+      description,
+      price,
+      availableSeats,
+      seats,
+    },
   } = singleData;
   const {
     vehicleBrand,
@@ -27,12 +38,14 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     name,
     email,
     rating,
+    aboutMe,
   } = singleData.user;
   const { yearsOfExperience, language } = driverInfo ?? {};
   const { allowedIcons, notAllowedIcons } = getTravelIcons({
     allowed,
     notAllowed,
   });
+  const availableSeatsClass = availableSeatsStyle(availableSeats, seats);
 
   return (
     <div
@@ -43,7 +56,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     >
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* Left Column: User Profile & Hot Ride Info */}
-        <div className="order-2 flex flex-col gap-4 bg-gray-50 p-4 lg:order-1">
+        <div className="order-2 flex flex-col gap-4 bg-gray-50 p-4 md:order-1">
           {/* Top Row: Driver Profile */}
           <div className="flex items-center justify-between rounded-lg p-4">
             <Image
@@ -62,17 +75,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
           <div className="flex flex-col gap-4">
             <div className="rounded-lg">
               <p className="text-base font-bold text-black">{name}</p>
-              <p className="text-bold text-sm">
-                {`Hello, I'm a dedicated and friendly driver with a passion for
-                safe and enjoyable journeys. With years of experience behind the
-                wheel, I strive to create a comfortable and welcoming
-                environment for every passenger. I believe that every ride is an
-                opportunity to connect with people and share a positive
-                experience on the road. I am constantly refining my skills and
-                staying up-to-date with the latest safety standards to ensure
-                you have the best ride possible. I look forward to meeting you
-                and making your journey memorable!`}
-              </p>
+              <p className="text-bold text-sm">{aboutMe}</p>
             </div>
             <div className="flex flex-col gap-2 rounded-lg">
               <span className="text-sm ">Allowed</span>
@@ -131,7 +134,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
 
         {/* Right Column: Ride Details */}
 
-        <div className="order-1 flex flex-col gap-4 bg-gray-50 lg:order-2">
+        <div className="order-1 flex flex-col gap-4 bg-gray-50 md:order-2">
           {/* Top Row: City Image */}
           <div className="flex h-56 w-full justify-center rounded-md bg-red-500"></div>
           {/* Bottom Row: Ride Summary & Book Button */}
@@ -144,9 +147,17 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
                 <p className="text-sm font-semibold uppercase">{to}</p>
               </div>
               <p className="text-sm">Price: {price.toFixed(2)} € / person</p>
-              <p className="text-xs">{description}</p>
+              <div className="flex w-full flex-row items-center gap-1">
+                <CalendarRange className="w-5" color="black" />
+                <p className={`text-lg font-semibold ${availableSeatsClass}`}>
+                  {availableSeats}/{seats}
+                </p>
+              </div>
             </div>
-            <BookNowButton rideId={RideUniqueId} clientId={UserUniqueId} />
+            <div className="flex w-full flex-col items-center gap-2">
+              <p className="text-xs">{description}</p>
+              <BookNowButton rideId={RideUniqueId} clientId={UserUniqueId} />
+            </div>
           </div>
         </div>
       </div>

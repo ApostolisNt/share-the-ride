@@ -38,6 +38,18 @@ export const updateUser = mutation({
       email,
       stripeConnectedId: undefined,
       role: "passenger",
+      vehicleBrand: "No Vehicle Brand",
+      rating: 0,
+      allowed: [],
+      notAllowed: [],
+      points: 0,
+      aboutMe:
+        "Hello, I'm a dedicated and friendly driver with a passion for safe and enjoyable journeys. With years of experience behind the wheel, I strive to create a comfortable and welcoming environment for every passenger. I believe that every ride is an opportunity to connect with people and share a positive experience on the road. I am constantly refining my skills and staying up-to-date with the latest safety standards to ensure you have the best ride possible. I look forward to meeting you and making your journey memorable!",
+      driverInfo: {
+        language: "Greek",
+        drivingLicense: "",
+        yearsOfExperience: 0,
+      },
     });
 
     return newUserId;

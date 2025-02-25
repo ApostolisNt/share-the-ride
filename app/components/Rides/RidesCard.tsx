@@ -18,17 +18,14 @@ import { Doc } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { getTravelIcons } from "app/helpers/TravelTypes";
-
-// import UsersDummy from "app/dummyUsers.json";
+import { CalendarRange } from "lucide-react";
+import { availableSeatsStyle } from "app/consts/general";
 
 const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
   const locale = useLocale();
-  const { from, to, date, time, price } = ride;
+  const { from, to, date, time, price, availableSeats, seats } = ride;
   const user = useQuery(api.users.getUserById, { userId: ride.ownerUserId });
-
-  // Dummy lookup
-  // const user = UsersDummy.find((user) => user._id === ride.rideOwnerId);
 
   const {
     allowed = [],
@@ -54,12 +51,14 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const rideExpired = date < currentDate;
 
+  const availableSeatsClass = availableSeatsStyle(availableSeats, seats);
+
   return (
     <div
       onClick={handleSubmit}
       className={`
-        transition-transform hover:shadow-lg relative mx-auto my-4 w-[95%] cursor-pointer rounded-2xl bg-white 
-        px-4 py-4 shadow-card duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover md:my-8
+        hover:shadow-lg relative mx-auto my-4 w-[95%] cursor-pointer rounded-2xl bg-white px-4 
+        py-4 shadow-card transition-transform duration-200 ease-out hover:-translate-y-2 hover:shadow-cardHover md:my-8
         ${rideExpired ? "pointer-events-none" : ""}
         w-full
       `}
@@ -90,24 +89,36 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
         </div>
 
         {/* Details Section */}
-        <div className="flex flex-col justify-center gap-2 py-4">
-          <div className="flex flex-row gap-4">
-            <p className="text-[1.1rem] font-medium">{formatDate(date)}</p>
-            <p className="text-[1.1rem] font-medium">
-              {time} {timeType}
-            </p>
+        <div className="flex flex-col justify-between gap-2 py-4">
+          <div className="flex w-full flex-row gap-4">
+            <div className="flex w-full flex-row items-center gap-4">
+              <p className="text-base font-medium md:text-lg">
+                {formatDate(date)}
+              </p>
+              <p className="text-base font-medium md:text-lg">
+                {time} {timeType}
+              </p>
+            </div>
+            <div className="flex w-full flex-row items-center justify-end gap-1">
+              <CalendarRange className="w-5" color="black" />
+              <p className={`text-lg font-semibold ${availableSeatsClass}`}>
+                {availableSeats}/{seats}
+              </p>
+            </div>
           </div>
           <div className="flex flex-row items-center gap-4">
-            <p className="text-[1.1rem] font-medium capitalize">{from}</p>
+            <p className="text-base font-medium capitalize md:text-lg">
+              {from}
+            </p>
             <LoaderLine />
-            <p className="text-[1.1rem] font-medium capitalize">{to}</p>
+            <p className="text-base font-medium capitalize md:text-lg">{to}</p>
           </div>
         </div>
 
         {/* Extra Details Section */}
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-around">
           <p className="text-base font-medium">{vehicleBrand}</p>
-          <div className="flex flex-row items-center gap-[0.8rem]">
+          <div className="flex flex-row items-center gap-2">
             {/* Allowed Icons */}
             {allowedIcons.map((icon, index) => (
               <Image
