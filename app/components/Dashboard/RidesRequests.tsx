@@ -98,7 +98,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
             key={item.ride.rideId}
             className="shadow-md mb-6 rounded-lg border p-4"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
               <div>
                 <h3 className="text-lg font-semibold">
                   <span className="uppercase">{item.ride.from}</span> -{" "}
@@ -121,7 +121,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                   </span>
                 </p>
               </div>
-              <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
+              <div className="flex items-center justify-center gap-2 sm:flex-col sm:items-start">
                 <button
                   onClick={() =>
                     handleUpdateRideStatus(
@@ -129,7 +129,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       RIDE_STATUS.COMPLETED,
                     )
                   }
-                  className="w-full rounded border border-green-500 bg-transparent px-4 py-2 text-sm text-green-500 transition-colors duration-200 hover:bg-green-500 hover:text-white sm:w-auto md:text-base"
+                  className="w-full rounded border border-green-500 bg-transparent px-2 py-1 text-sm text-green-500 transition-colors duration-200 hover:bg-green-500 hover:text-white sm:w-auto"
                 >
                   Complete Ride
                 </button>
@@ -140,7 +140,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       RIDE_STATUS.INACTIVE,
                     )
                   }
-                  className="w-full rounded border border-red-500 bg-transparent px-4 py-2 text-sm text-red-500 transition-colors duration-200 hover:bg-red-500 hover:text-white sm:w-auto md:text-base"
+                  className="w-full rounded border border-red-500 bg-transparent px-2 py-1 text-sm text-red-500 transition-colors duration-200 hover:bg-red-500 hover:text-white sm:w-auto"
                 >
                   Close Ride
                 </button>
@@ -151,9 +151,9 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
             {item.bookings && item.bookings.length > 0 ? (
               <ul className="space-y-4">
                 {item.bookings.map((booking) => (
-                  <li
+                  <div
                     key={booking.userId}
-                    className={`mb-2 flex items-center justify-between border-b pb-2 ${
+                    className={`mb-2 flex flex-col items-center justify-between gap-2 border-b pb-2 sm:flex-row ${
                       booking.status === BOOKING_STATUS.REJECTED ||
                       booking.status === BOOKING_STATUS.ACCEPTED
                         ? "opacity-50"
@@ -169,8 +169,10 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                         className="h-12 w-12 rounded-full object-cover"
                       />
                       <div>
-                        <p>Client Name: {booking.userName}</p>
-                        <p>Email: {booking.userEmail}</p>
+                        <p className="text-base">
+                          Client Name: {booking.userName}
+                        </p>
+                        <p className="text-base">Email: {booking.userEmail}</p>
                         <p
                           className={`text-${
                             booking.status === BOOKING_STATUS.ACCEPTED
@@ -178,7 +180,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                               : booking.status === BOOKING_STATUS.REJECTED
                                 ? "red"
                                 : "yellow"
-                          }-500`}
+                          }-500 text-sm capitalize`}
                         >
                           Status: {booking.status}
                         </p>
@@ -195,7 +197,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                                 BOOKING_STATUS.ACCEPTED,
                               )
                             }
-                            className="rounded border border-green-500 bg-transparent px-4 py-1 text-sm text-green-500 hover:bg-green-500 hover:text-white md:text-base"
+                            className="rounded border border-green-500 bg-transparent px-2 py-1 text-sm text-green-500 hover:bg-green-500 hover:text-white"
                           >
                             Accept
                           </button>
@@ -207,7 +209,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                                 BOOKING_STATUS.REJECTED,
                               )
                             }
-                            className="rounded border border-red-500 bg-transparent px-4 py-1 text-sm text-red-500 hover:bg-red-500 hover:text-white md:text-base"
+                            className="rounded border border-red-500 bg-transparent px-2 py-1 text-sm text-red-500 hover:bg-red-500 hover:text-white"
                           >
                             Reject
                           </button>
@@ -215,7 +217,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       ) : (
                         <button
                           disabled
-                          className={`cursor-not-allowed rounded border px-4 py-1 ${
+                          className={`cursor-not-allowed rounded border px-2 py-1 text-sm capitalize ${
                             booking.status === BOOKING_STATUS.ACCEPTED
                               ? "bg-green-100 text-green-600"
                               : "bg-red-100 text-red-600"
@@ -227,7 +229,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                         </button>
                       )}
                     </div>
-                  </li>
+                  </div>
                 ))}
               </ul>
             ) : (
