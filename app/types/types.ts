@@ -45,11 +45,15 @@ export type ModalType = "success" | "error" | "info";
 
 export type RideWithBookings = {
   ride: Ride;
-  bookings: Array<Booking & { userName: string; userEmail: string }>;
+  bookings: Array<
+    Booking & { userName: string; userEmail: string; profileImage?: string }
+  >;
 };
 
 export type RideWithBookingsAndPoints = {
   ride: Ride;
-  bookings: Array<Booking & { userName: string; userEmail: string }>;
+  bookings: Array<
+    Booking & { userName: string; userEmail: string; profileImage?: string }
+  >;
   pointsEarned: { points: number };
 };

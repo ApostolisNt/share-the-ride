@@ -29,10 +29,10 @@ const BookNowButton = ({ rideId, clientId }: BookNowButtonProps) => {
       setShowModal(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (error.message === "Client already booked this ride") {
+      if (error.message.includes("Client already booked this ride")) {
         setModalType(MODAL_TYPE.ERROR);
         setModalMessage("You have already booked this ride!");
-      } else if (error.message === "Ride fully booked") {
+      } else if (error.message.includes("Ride fully booked")) {
         setModalType(MODAL_TYPE.ERROR);
         setModalMessage("Ride fully booked!");
       } else {

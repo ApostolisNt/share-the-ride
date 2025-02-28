@@ -1,6 +1,5 @@
-import { SupportedLangCodes } from "data/translations/translations";
-import { useLocale } from "next-intl";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { cleanUrlSlash } from "utils/general";
 
 type MenuItemProps = {
@@ -13,7 +12,7 @@ type MenuItemProps = {
 };
 
 const MenuItem = ({ item, setIsMenuOpen }: MenuItemProps) => {
-  const locale = useLocale() as SupportedLangCodes;
+  const { locale } = useParams();
 
   return (
     <Link

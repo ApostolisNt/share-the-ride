@@ -1,12 +1,8 @@
 "use client";
 
-// Assets
-import profileDefault from "@assets/profile-default.png";
-
 // Utils
 import { formatDate } from "app/helpers/FormatDate";
-import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useParams, useRouter } from "next/navigation";
 
 // Components
 import LoaderLine from "@components/LoaderLine/LoaderLine";
@@ -20,12 +16,15 @@ import { api } from "convex/_generated/api";
 import { getTravelIcons } from "app/helpers/TravelTypes";
 import { CalendarRange } from "lucide-react";
 import { availableSeatsStyle } from "app/consts/general";
+import profileDefault from "@assets/profile-default.png";
 
 const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
-  const locale = useLocale();
+  const { locale } = useParams();
   const { from, to, date, time, price, availableSeats, seats } = ride;
-  const user = useQuery(api.users.getUserById, { userId: ride.ownerUserId });
+  const userData = useQuery(api.users.getUserById, {
+    userId: ride.ownerUserId,
+  });
 
   const {
     allowed = [],
@@ -33,7 +32,8 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
     rating = 0,
     vehicleBrand = "",
     name = "",
-  } = user ?? {};
+    profileImage,
+  } = userData ?? {};
 
   const timeSlice = time.slice(0, 2);
   const timeType =
@@ -76,7 +76,13 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
       <div className={`${rideExpired ? "opacity-50" : ""}`}>
         {/* User Section */}
         <div className="flex flex-wrap items-center gap-4">
-          <Image src={profileDefault} alt="profile" />
+          <Image
+            src={profileImage ?? profileDefault}
+            width={80}
+            height={80}
+            alt="profile"
+            className="h-20 w-20 rounded-full object-cover"
+          />
           <h3 className="text-lg font-medium md:text-xl">{name}</h3>
           <div className="flex items-center gap-[0.3rem]">
             <p className="text-base font-medium">{rating}</p>

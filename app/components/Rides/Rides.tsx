@@ -12,7 +12,7 @@ export type ResultsProps = {
 };
 
 const Rides = ({ results }: ResultsProps) => {
-  const rides = useQuery(api.rides.get);
+  const rides = useQuery(api.rides.getRides);
 
   return (
     <section className="rides_section">

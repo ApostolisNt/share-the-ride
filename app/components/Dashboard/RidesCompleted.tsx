@@ -1,6 +1,7 @@
-// RidesCompleted.tsx
+import { Image } from "@components/Global/Image";
 import { RIDE_STATUS } from "app/consts/general";
 import { RideWithBookingsAndPoints } from "app/types/types";
+import profileDefault from "@assets/profile-default.png";
 
 type RidesCompletedProps = {
   completedRides: RideWithBookingsAndPoints[] | undefined;
@@ -74,10 +75,23 @@ const RideWithBookings = ({ data }: RideProps) => {
       </h4>
       {bookings?.length > 0 ? (
         <ul className="pl-2 text-sm font-medium text-gray-600">
-          {bookings?.map((booking) => (
-            <li key={booking.userId} className="text-sm md:text-base">
-              {booking.userName} - {booking.userEmail}
-            </li>
+          {bookings?.map((booking, index) => (
+            <div
+              className="my-2 flex flex-row items-center gap-2 text-left"
+              key={index}
+            >
+              <Image
+                src={booking.profileImage ?? profileDefault}
+                width={40}
+                height={40}
+                alt="Driver profile"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+              <div>
+                <p>Client Name: {booking.userName}</p>
+                <p>Email: {booking.userEmail}</p>
+              </div>
+            </div>
           ))}
         </ul>
       ) : (

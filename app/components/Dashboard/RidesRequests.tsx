@@ -1,4 +1,3 @@
-// RidesRequests.tsx
 "use client";
 
 import PopupModal from "@components/PopupModal/PopupModal";
@@ -14,6 +13,8 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
+import { Image } from "@components/Global/Image";
+import profileDefault from "@assets/profile-default.png";
 
 type RidesRequestsProps = {
   activeRides: RideWithBookings[] | undefined;
@@ -128,7 +129,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       RIDE_STATUS.COMPLETED,
                     )
                   }
-                  className="transition-colors w-full rounded border border-green-500 bg-transparent px-4 py-2 text-sm text-green-500 duration-200 hover:bg-green-500 hover:text-white sm:w-auto md:text-base"
+                  className="w-full rounded border border-green-500 bg-transparent px-4 py-2 text-sm text-green-500 transition-colors duration-200 hover:bg-green-500 hover:text-white sm:w-auto md:text-base"
                 >
                   Complete Ride
                 </button>
@@ -139,7 +140,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                       RIDE_STATUS.INACTIVE,
                     )
                   }
-                  className="transition-colors w-full rounded border border-red-500 bg-transparent px-4 py-2 text-sm text-red-500 duration-200 hover:bg-red-500 hover:text-white sm:w-auto md:text-base"
+                  className="w-full rounded border border-red-500 bg-transparent px-4 py-2 text-sm text-red-500 transition-colors duration-200 hover:bg-red-500 hover:text-white sm:w-auto md:text-base"
                 >
                   Close Ride
                 </button>
@@ -159,20 +160,29 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                         : ""
                     }`}
                   >
-                    <div className="text-left">
-                      <p>Client Name: {booking.userName}</p>
-                      <p>Email: {booking.userEmail}</p>
-                      <p
-                        className={`text-${
-                          booking.status === BOOKING_STATUS.ACCEPTED
-                            ? "green"
-                            : booking.status === BOOKING_STATUS.REJECTED
-                              ? "red"
-                              : "yellow"
-                        }-500`}
-                      >
-                        Status: {booking.status}
-                      </p>
+                    <div className="my-2 flex flex-row gap-2 text-left">
+                      <Image
+                        src={booking.profileImage ?? profileDefault}
+                        width={40}
+                        height={40}
+                        alt="Driver profile"
+                        className="h-12 w-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <p>Client Name: {booking.userName}</p>
+                        <p>Email: {booking.userEmail}</p>
+                        <p
+                          className={`text-${
+                            booking.status === BOOKING_STATUS.ACCEPTED
+                              ? "green"
+                              : booking.status === BOOKING_STATUS.REJECTED
+                                ? "red"
+                                : "yellow"
+                          }-500`}
+                        >
+                          Status: {booking.status}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2">
                       {booking.status === BOOKING_STATUS.PENDING ? (

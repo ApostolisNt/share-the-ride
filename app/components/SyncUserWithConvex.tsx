@@ -16,8 +16,11 @@ export const SyncUserWithConvex = () => {
       try {
         await updateUser({
           userId: user.id,
-          name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
+          name:
+            user.username ??
+            `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
           email: user.emailAddresses[0].emailAddress ?? "",
+          profileImage: user?.imageUrl,
         });
       } catch (error) {
         console.error(`Error syncing user : ${error}`);

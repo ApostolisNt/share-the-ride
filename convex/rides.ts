@@ -1,10 +1,10 @@
 import { RideWithBookings } from "app/types/types";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { BOOKING_STATUS, RIDE_STATUS } from "app/consts/general";
 import { RideStatusEnum } from "./schema";
 
-export const get = query({
+export const getRides = query({
   args: {},
   handler: async (ctx) => {
     const activeRides = await ctx.db
@@ -166,6 +166,7 @@ export const getCompletedRidesWithData = query({
         ...booking,
         userName: userMap.get(booking.userId)?.name || "Unknown",
         userEmail: userMap.get(booking.userId)?.email || "Unknown",
+        profileImage: userMap.get(booking.userId)?.profileImage || "",
       }));
     }
 
@@ -248,6 +249,7 @@ export const getActiveRidesWithBookings = query({
       ...booking,
       userName: userMap.get(booking.userId)?.name || "Unknown",
       userEmail: userMap.get(booking.userId)?.email || "Unknown",
+      profileImage: userMap.get(booking.userId)?.profileImage || "",
     }));
 
     // Group bookings by rideId.
@@ -332,5 +334,22 @@ export const updateRideStatus = mutation({
     // Finally, update the ride status
     await ctx.db.patch(ride._id, { status });
     return { success: true };
+  },
+});
+
+export const deactivateExpiredRides = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const now = new Date();
+    const activeRides = await ctx.db
+      .query("rides")
+      .filter((q) => q.eq(q.field("status"), RIDE_STATUS.ACTIVE))
+      .collect();
+
+    for (const ride of activeRides) {
+      if (new Date(ride.date).getTime() < now.getTime()) {
+        await ctx.db.patch(ride._id, { status: RIDE_STATUS.INACTIVE });
+      }
+    }
   },
 });

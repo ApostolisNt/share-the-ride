@@ -1,9 +1,8 @@
 "use client";
 import { useState, FormEvent } from "react";
 import "./SearchForm.scss";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { formatDate } from "app/helpers/FormatDate";
-import { useLocale } from "next-intl";
 import { z } from "zod";
 
 // Components
@@ -20,7 +19,7 @@ const searchFormSchema = z.object({
 
 const SearchForm = () => {
   const router = useRouter();
-  const locale = useLocale();
+  const { locale } = useParams();
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [date, setDate] = useState("");

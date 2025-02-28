@@ -42,6 +42,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     email,
     rating,
     aboutMe,
+    profileImage,
   } = singleData.user;
   const completedRides = useQuery(api.rides.getLatestCompletedRides, {
     userId: ownerUserId,
@@ -66,7 +67,9 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
           {/* Top Row: Driver Profile */}
           <div className="flex items-center justify-between rounded-lg p-4">
             <Image
-              src={profileDefault}
+              src={profileImage ?? profileDefault}
+              width={80}
+              height={80}
               alt="Driver profile"
               className="h-20 w-20 rounded-full object-cover"
             />
@@ -145,7 +148,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
           <div className="flex h-56 w-full justify-center rounded-md bg-red-500"></div>
           {/* Bottom Row: Ride Summary & Book Button */}
           <div className="shadow-sm flex w-full flex-col gap-4 rounded-lg border p-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex w-full flex-col gap-3">
+            <div className="flex h-full w-full flex-col gap-3">
               <h2 className="text-lg font-semibold text-gray-500">{date}</h2>
               <div className="flex items-center gap-2">
                 <p className="text-sm font-semibold uppercase">{from}</p>
@@ -154,14 +157,14 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
               </div>
               <p className="text-sm">Price: {price.toFixed(2)} € / person</p>
               <div className="flex w-full flex-row items-center gap-1">
-                <CalendarRange className="w-5" color="black" />
-                <p className={`text-lg font-semibold ${availableSeatsClass}`}>
+                <CalendarRange className="w-4" color="black" />
+                <p className={`text-base font-semibold ${availableSeatsClass}`}>
                   {availableSeats}/{seats}
                 </p>
               </div>
             </div>
-            <div className="flex w-full flex-col items-center gap-2">
-              <p className="text-xs">{description}</p>
+            <div className="flex h-full w-full flex-col items-center justify-between gap-2">
+              <p className="text-center text-xs">{description}</p>
               <BookNowButton rideId={RideUniqueId} clientId={UserUniqueId} />
             </div>
           </div>
@@ -169,7 +172,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
       </div>
 
       <div>
-        <h2 className="pb-4 text-lg font-semibold text-gray-500">
+        <h2 className="pb-4 text-lg font-bold text-gray-600">
           Latest Rides from {name}
         </h2>
         <div className="grid auto-rows-fr grid-cols-1 justify-items-center gap-2 lg:grid-cols-2">

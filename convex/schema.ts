@@ -53,6 +53,7 @@ export default defineSchema({
     userId: v.string(),
     name: v.string(),
     email: v.string(),
+    profileImage: v.optional(v.string()),
     role: v.optional(v.union(v.literal("driver"), v.literal("passenger"))),
     stripeConnectedId: v.optional(v.string()),
     rating: v.optional(v.number()),

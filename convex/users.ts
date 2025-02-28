@@ -17,8 +17,9 @@ export const updateUser = mutation({
     userId: v.string(),
     name: v.string(),
     email: v.string(),
+    profileImage: v.string(),
   },
-  handler: async (ctx, { userId, name, email }) => {
+  handler: async (ctx, { userId, name, email, profileImage }) => {
     // Check if user exists using the business key "userId"
     const existingUser = await ctx.db
       .query("users")
@@ -27,7 +28,7 @@ export const updateUser = mutation({
 
     if (existingUser) {
       // Update existing user.
-      await ctx.db.patch(existingUser._id, { name, email });
+      await ctx.db.patch(existingUser._id, { name, email, profileImage });
       return existingUser._id;
     }
 
@@ -36,6 +37,7 @@ export const updateUser = mutation({
       userId,
       name,
       email,
+      profileImage,
       stripeConnectedId: undefined,
       role: "passenger",
       vehicleBrand: "No Vehicle Brand",
