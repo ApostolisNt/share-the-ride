@@ -56,7 +56,6 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     notAllowed,
   });
   const availableSeatsClass = availableSeatsStyle(availableSeats, seats);
-  const hasCoords = !!startLocationCoords && !!endLocationCoords;
 
   return (
     <div
@@ -149,13 +148,11 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
 
         <div className="order-1 flex flex-col gap-4 bg-gray-50 md:order-2">
           {/* Top Row: City Image */}
-          {hasCoords && (
-            <LeafletMap
-              hasCoords={hasCoords}
-              startLocationCoords={startLocationCoords}
-              endLocationCoords={endLocationCoords}
-            />
-          )}
+          <LeafletMap
+            startLocationCoords={startLocationCoords}
+            endLocationCoords={endLocationCoords}
+          />
+
           {/* Bottom Row: Ride Summary & Book Button */}
           <div className="shadow-sm flex w-full flex-col gap-4 rounded-lg border p-6 md:flex-row md:items-center md:justify-between">
             <div className="flex h-full w-full flex-col gap-3">

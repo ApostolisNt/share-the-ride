@@ -3,16 +3,16 @@ import { useLeafletMap } from "app/hooks/useLeafletMap";
 import React from "react";
 
 type LeafletMapProps = {
-  hasCoords: boolean;
-  startLocationCoords: number[];
-  endLocationCoords: number[];
+  startLocationCoords?: number[];
+  endLocationCoords?: number[];
 };
 
 const LeafletMap = ({
-  hasCoords,
   startLocationCoords,
   endLocationCoords,
 }: LeafletMapProps) => {
+  const hasCoords = !!startLocationCoords && !!endLocationCoords;
+
   useLeafletMap({
     mapContainerId: "ride-map",
     hasCoords,
