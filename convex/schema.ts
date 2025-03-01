@@ -19,6 +19,8 @@ export default defineSchema({
     ownerUserId: v.string(),
     from: v.string(),
     to: v.string(),
+    startLocationCoords: v.optional(v.array(v.number())),
+    endLocationCoords: v.optional(v.array(v.number())),
     date: v.string(),
     time: v.string(),
     price: v.number(),

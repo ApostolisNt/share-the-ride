@@ -18,6 +18,8 @@ export const rideFormSchema = z.object({
   ownerUserId: z.string(),
   from: z.string().nonempty("From is required."),
   to: z.string().nonempty("To is required."),
+  startLocationCoords: z.array(z.number()).optional(),
+  endLocationCoords: z.array(z.number()).optional(),
   date: z.string().min(1, { message: "Date is required." }),
   time: z.string().min(1, { message: "Time is required." }),
   availableSeats: z

@@ -3,7 +3,7 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateRideSchema, rideFormSchema } from "app/types/types";
-import { RIDE_STATUS } from "app/consts/general";
+import { DEFAULT_COORDS, RIDE_STATUS } from "app/consts/general";
 import CityAutocomplete from "./CityAutocomplete";
 import { greekCitiesEnum } from "app/consts/cities";
 
@@ -25,6 +25,8 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
       ownerUserId: "",
       from: "",
       to: "",
+      startLocationCoords: DEFAULT_COORDS.FROM,
+      endLocationCoords: DEFAULT_COORDS.TO,
       date: "",
       time: "",
       availableSeats: 0,
@@ -76,7 +78,7 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
               />
             )}
           />
-     
+
           {errors.from && (
             <p className="mt-1 text-xs text-red-500">{errors.from.message}</p>
           )}
@@ -98,7 +100,7 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
               />
             )}
           />
-  
+
           {errors.to && (
             <p className="mt-1 text-xs text-red-500">{errors.to.message}</p>
           )}

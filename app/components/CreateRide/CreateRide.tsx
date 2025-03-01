@@ -9,6 +9,7 @@ import { CreateRideSchema } from "app/types/types";
 import PopupModal from "@components/PopupModal/PopupModal";
 import { ModalType } from "app/types/types";
 import { useUser } from "@clerk/nextjs";
+import { greekCityCoordinates } from "app/consts/cities";
 
 const CreateRide = () => {
   const { user } = useUser();
@@ -28,6 +29,20 @@ const CreateRide = () => {
 
   const onSubmit = async (data: CreateRideSchema) => {
     data.ownerUserId = user?.id || "";
+
+    const startCityCoords =
+      greekCityCoordinates[data.from as keyof typeof greekCityCoordinates];
+    const endCityCoords =
+      greekCityCoordinates[data.to as keyof typeof greekCityCoordinates];
+
+    data.startLocationCoords = startCityCoords && [
+      startCityCoords.lat,
+      startCityCoords.lng,
+    ];
+    data.endLocationCoords = endCityCoords && [
+      endCityCoords.lat,
+      endCityCoords.lng,
+    ];
 
     try {
       await createRideMutation(data);

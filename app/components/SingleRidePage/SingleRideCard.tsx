@@ -13,6 +13,7 @@ import { CalendarRange } from "lucide-react";
 import { availableSeatsStyle, RIDE_STATUS } from "app/consts/general";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
+import LeafletMap from "./LeafletMap";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -30,6 +31,8 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
       availableSeats,
       seats,
       ownerUserId,
+      startLocationCoords,
+      endLocationCoords,
     },
   } = singleData;
   const {
@@ -53,6 +56,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     notAllowed,
   });
   const availableSeatsClass = availableSeatsStyle(availableSeats, seats);
+  const hasCoords = !!startLocationCoords && !!endLocationCoords;
 
   return (
     <div
@@ -145,7 +149,13 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
 
         <div className="order-1 flex flex-col gap-4 bg-gray-50 md:order-2">
           {/* Top Row: City Image */}
-          <div className="flex h-56 w-full justify-center rounded-md bg-red-500"></div>
+          {hasCoords && (
+            <LeafletMap
+              hasCoords={hasCoords}
+              startLocationCoords={startLocationCoords}
+              endLocationCoords={endLocationCoords}
+            />
+          )}
           {/* Bottom Row: Ride Summary & Book Button */}
           <div className="shadow-sm flex w-full flex-col gap-4 rounded-lg border p-6 md:flex-row md:items-center md:justify-between">
             <div className="flex h-full w-full flex-col gap-3">
