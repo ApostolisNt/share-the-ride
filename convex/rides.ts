@@ -1,7 +1,7 @@
 import { RideWithBookings } from "app/types/types";
 import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
-import { BOOKING_STATUS, RIDE_STATUS } from "app/consts/general";
+import { BOOKING_STATUS, CLOSURE_TYPE, RIDE_STATUS } from "app/consts/general";
 import { RideStatusEnum } from "./schema";
 
 export const getRides = query({
@@ -41,7 +41,7 @@ export const createRide = mutation({
     date: v.string(),
     time: v.string(),
     price: v.number(),
-    availableSeats: v.number(),
+    seats: v.number(),
     description: v.string(),
     status: RideStatusEnum,
   },
@@ -56,7 +56,7 @@ export const createRide = mutation({
       date,
       time,
       price,
-      availableSeats,
+      seats,
       description,
       status,
     },
@@ -71,10 +71,10 @@ export const createRide = mutation({
       date,
       time,
       price,
-      availableSeats,
+      seatsBooked: 0,
       description,
       status,
-      seats: availableSeats,
+      seats,
     });
     return { success: true };
   },
@@ -142,6 +142,7 @@ export const getCompletedRidesWithData = query({
     const bookings = await ctx.db
       .query("bookings")
       .filter((q) => q.or(...rideIds.map((id) => q.eq(q.field("rideId"), id))))
+      .filter((q) => q.eq(q.field("status"), BOOKING_STATUS.ACCEPTED))
       .collect();
 
     // 4. Fetch points transactions for these rides.
@@ -357,5 +358,70 @@ export const deactivateExpiredRides = internalMutation({
         await ctx.db.patch(ride._id, { status: RIDE_STATUS.INACTIVE });
       }
     }
+  },
+});
+
+export const closeRide = mutation({
+  args: {
+    rideId: v.string(),
+    closeReason: v.string(),
+  },
+  handler: async (ctx, { rideId, closeReason }) => {
+    const ride = await ctx.db
+      .query("rides")
+      .filter((q) => q.eq(q.field("rideId"), rideId))
+      .first();
+
+    if (!ride) {
+      throw new Error("Ride not found");
+    }
+
+    // Check if there are any accepted bookings.
+    const bookings = await ctx.db
+      .query("bookings")
+      .filter((q) => q.eq(q.field("rideId"), rideId))
+      .collect();
+
+    const hasAcceptedBookings = bookings.some(
+      (booking) => booking.status === "accepted",
+    );
+
+    // Is 2 days before the ride date
+    const twoDaysBeforeRide = new Date(ride.date);
+    twoDaysBeforeRide.setDate(twoDaysBeforeRide.getDate() - 2);
+
+    if (hasAcceptedBookings) {
+      // If there are accepted bookings, close the ride with a penalty.
+      // Update the ride document.
+      await ctx.db.patch(ride._id, {
+        status: RIDE_STATUS.INACTIVE,
+        closureType: CLOSURE_TYPE.CLOSED,
+        closeReason,
+        disputed: false,
+        penaltyAmount: 5,
+      });
+
+      // Query for the ride owner in the users table.
+      const owner = await ctx.db
+        .query("users")
+        .filter((q) => q.eq(q.field("userId"), ride.ownerUserId))
+        .first();
+
+      if (owner) {
+        const newPenaltyNumbers = (owner.penaltyNumbers || 0) + 1;
+        await ctx.db.patch(owner._id, { penaltyNumbers: newPenaltyNumbers });
+      }
+
+      return { success: true };
+    }
+
+    await ctx.db.patch(ride._id, {
+      status: RIDE_STATUS.INACTIVE,
+      closureType: CLOSURE_TYPE.CLOSED,
+      closeReason,
+      disputed: false,
+    });
+
+    return { success: true };
   },
 });

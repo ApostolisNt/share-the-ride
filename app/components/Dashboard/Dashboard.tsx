@@ -64,7 +64,7 @@ const Dashboard = ({ currentView }: DashboardProps) => {
           </div>
         )}
         {/* Tab Grid */}
-        <div className="mx-auto my-4 grid w-full max-w-3xl auto-cols-fr grid-cols-2 justify-items-center gap-4 md:grid-cols-3">
+        <div className="mx-auto my-4 grid w-full max-w-4xl auto-cols-fr grid-cols-2 justify-items-center gap-4 md:grid-cols-4">
           <Link
             href="?view=rides-completed"
             className={`flex min-h-[5rem] w-full flex-col items-center justify-center rounded-md border-2 px-4 py-6 text-center text-sm font-semibold md:text-base ${isActive(
@@ -98,6 +98,12 @@ const Dashboard = ({ currentView }: DashboardProps) => {
               {userData?.points ?? 0}
             </span>
             <span className="text-sm font-bold text-blue-500">Points</span>
+          </div>
+          <div className="flex min-h-[5rem] w-full flex-col items-center rounded-md border-2 border-red-600 bg-red-100 px-4 py-6 text-center text-sm font-semibold md:text-sm">
+            <span className="text-4xl font-bold text-red-400">
+              {userData?.penaltyNumbers ?? 0}
+            </span>
+            <span className="text-sm font-bold text-red-500">Penalties</span>
           </div>
         </div>
         {/* Content Area */}

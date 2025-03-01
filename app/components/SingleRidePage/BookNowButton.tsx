@@ -7,10 +7,10 @@ import { MODAL_TYPE } from "app/consts/general";
 
 type BookNowButtonProps = {
   rideId: RideId;
-  clientId: UserId;
+  passengerId: UserId;
 };
 
-const BookNowButton = ({ rideId, clientId }: BookNowButtonProps) => {
+const BookNowButton = ({ rideId, passengerId }: BookNowButtonProps) => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -22,14 +22,17 @@ const BookNowButton = ({ rideId, clientId }: BookNowButtonProps) => {
     setLoading(true);
 
     try {
-      await bookRideMutation({ rideId, clientUserId: clientId });
+      await bookRideMutation({ rideId, passengerUserId: passengerId });
 
       setModalType(MODAL_TYPE.SUCCESS);
       setModalMessage("Booking successful!");
       setShowModal(true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      if (error.message.includes("Client already booked this ride")) {
+      if (error.message.includes("User not authenticated")) {
+        setModalType(MODAL_TYPE.ERROR);
+        setModalMessage("You need to be logged in to book a ride.");
+      } else if (error.message.includes("Passenger already booked this ride")) {
         setModalType(MODAL_TYPE.ERROR);
         setModalMessage("You have already booked this ride!");
       } else if (error.message.includes("Ride fully booked")) {

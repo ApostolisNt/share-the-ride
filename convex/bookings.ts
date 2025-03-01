@@ -1,23 +1,26 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-// You can import your booking status constants or use literals directly.
 import { BOOKING_STATUS } from "app/consts/general";
 import { BookingStatusEnum } from "./schema";
 
 export const bookRide = mutation({
   args: {
-    rideId: v.string(), // now using business key
-    clientUserId: v.string(), // business key for the user
+    rideId: v.string(),
+    passengerUserId: v.string(),
   },
-  handler: async (ctx, { rideId, clientUserId }) => {
+  handler: async (ctx, { rideId, passengerUserId }) => {
+    if (!passengerUserId) {
+      throw new Error("User not authenticated");
+    }
     // Check if a booking already exists.
     const existingBooking = await ctx.db
       .query("bookings")
       .filter((q) => q.eq(q.field("rideId"), rideId))
-      .filter((q) => q.eq(q.field("userId"), clientUserId))
+      .filter((q) => q.eq(q.field("userId"), passengerUserId))
       .first();
+
     if (existingBooking) {
-      throw new Error("Client already booked this ride");
+      throw new Error("Passenger already booked this ride");
     }
 
     // Get the ride details using the business key.
@@ -37,7 +40,7 @@ export const bookRide = mutation({
       .filter((q) => q.eq(q.field("status"), "accepted"))
       .collect();
 
-    if (acceptedBookings.length >= ride.availableSeats) {
+    if (acceptedBookings.length >= ride.seats) {
       throw new Error("Ride fully booked");
     }
 
@@ -45,7 +48,7 @@ export const bookRide = mutation({
     await ctx.db.insert("bookings", {
       bookingId: crypto.randomUUID(), // Replace with your unique ID generator
       rideId,
-      userId: clientUserId,
+      userId: passengerUserId,
       seatsRequested: 1, // adjust as needed
       status: "pending",
       bookingDate: new Date().toISOString(),
@@ -149,8 +152,14 @@ export const updateBookingStatus = mutation({
         return { success: false };
       }
 
+      const newSeatsBooked = ride.seatsBooked + booking.seatsRequested;
+
+      if (newSeatsBooked > ride.seats) {
+        throw new Error("Not enough seats available");
+      }
+
       await ctx.db.patch(ride._id, {
-        availableSeats: ride.availableSeats - booking.seatsRequested,
+        seatsBooked: newSeatsBooked,
       });
     }
 

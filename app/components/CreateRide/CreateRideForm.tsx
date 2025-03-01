@@ -29,7 +29,7 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
       endLocationCoords: DEFAULT_COORDS.TO,
       date: "",
       time: "",
-      availableSeats: 0,
+      seats: 0,
       price: 0,
       description: "",
       status: RIDE_STATUS.ACTIVE,
@@ -37,15 +37,7 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
   });
 
   const [fromValue, toValue, dateValue, timeValue, seats, price, description] =
-    watch([
-      "from",
-      "to",
-      "date",
-      "time",
-      "availableSeats",
-      "price",
-      "description",
-    ]);
+    watch(["from", "to", "date", "time", "seats", "price", "description"]);
 
   // Check if all required fields have valid values.
   const isFormFilled =
@@ -145,15 +137,13 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
             Seats
           </label>
           <input
-            {...register("availableSeats", { valueAsNumber: true })}
+            {...register("seats", { valueAsNumber: true })}
             type="number"
             placeholder="Seats"
             className="input w-full rounded border border-gray-300 px-3 py-2 focus:ring-blue-300"
           />
-          {errors.availableSeats && (
-            <p className="mt-1 text-xs text-red-500">
-              {errors.availableSeats.message}
-            </p>
+          {errors.seats && (
+            <p className="mt-1 text-xs text-red-500">{errors.seats.message}</p>
           )}
         </div>
         <div>

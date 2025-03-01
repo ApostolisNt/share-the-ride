@@ -22,7 +22,7 @@ export const rideFormSchema = z.object({
   endLocationCoords: z.array(z.number()).optional(),
   date: z.string().min(1, { message: "Date is required." }),
   time: z.string().min(1, { message: "Time is required." }),
-  availableSeats: z
+  seats: z
     .number()
     .min(1, { message: "At least one seat is required." }),
   price: z.number().min(1, { message: "Price must be greater than 0." }),

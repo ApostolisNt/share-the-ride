@@ -15,6 +15,7 @@ import { api } from "convex/_generated/api";
 import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
 import { Image } from "@components/Global/Image";
 import profileDefault from "@assets/profile-default.png";
+import CloseRideModal from "@components/PopupModal/CloseRideModal";
 
 type RidesRequestsProps = {
   activeRides: RideWithBookings[] | undefined;
@@ -25,15 +26,24 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
   const updateBookingStatusMutation = useMutation(
     api.bookings.updateBookingStatus,
   );
+  const closeRideMutation = useMutation(api.rides.closeRide);
 
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState<ModalType>("info");
 
+  const [isCloseRideModalOpen, setIsCloseRideModalOpen] = useState(false);
+  const [selectedRideId, setSelectedRideId] = useState<RideId | null>(null);
+
   const showPopup = (message: string, type: ModalType) => {
     setModalMessage(message);
     setModalType(type);
     setShowModal(true);
+  };
+
+  const openCloseRideModal = (rideId: RideId) => {
+    setSelectedRideId(rideId);
+    setIsCloseRideModalOpen(true);
   };
 
   const handleBooking = async (
@@ -73,10 +83,18 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
     }
   };
 
-  const availableSeatsClass = (availableSeats: number) =>
-    availableSeats >= 1 && availableSeats <= 2
-      ? "text-yellow-500"
-      : "text-green-500";
+  const handleCloseRide = async (rideId: RideId, closeReason: string) => {
+    try {
+      await closeRideMutation({ rideId, closeReason });
+      showPopup("Ride closed!", "success");
+    } catch (error) {
+      console.error("Error in handleCloseRide:", error);
+      showPopup("An error occurred while closing the ride", MODAL_TYPE.ERROR);
+    }
+  };
+
+  const seatsBookedClass = (seatsBooked: number) =>
+    seatsBooked >= 1 && seatsBooked <= 2 ? "text-yellow-500" : "text-green-500";
 
   if (activeRides === undefined) {
     return <p>Loading ride requests...</p>;
@@ -84,11 +102,23 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
 
   return (
     <>
+      {/* General Success/Error Popup */}
       {showModal && (
         <PopupModal
           message={modalMessage}
           type={modalType}
           onClose={() => setShowModal(false)}
+        />
+      )}
+
+      {/* Close Ride Modal for entering the reason */}
+      {isCloseRideModalOpen && selectedRideId && (
+        <CloseRideModal
+          onClose={() => setIsCloseRideModalOpen(false)}
+          onSubmit={(reason: string) => {
+            handleCloseRide(selectedRideId, reason);
+            setIsCloseRideModalOpen(false);
+          }}
         />
       )}
 
@@ -107,10 +137,12 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                 <p className="font-semibold">
                   Available Seats:{" "}
                   <span
-                    className={availableSeatsClass(item.ride.availableSeats)}
+                    className={seatsBookedClass(
+                      item.ride.seats - item.ride.seatsBooked,
+                    )}
                   >
-                    {item.ride.availableSeats > 0
-                      ? item.ride.availableSeats
+                    {item.ride.seatsBooked < item.ride.seats
+                      ? item.ride.seatsBooked + "/" + item.ride.seats
                       : "Congrats! No seats available"}
                   </span>
                 </p>
@@ -134,12 +166,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                   Complete Ride
                 </button>
                 <button
-                  onClick={() =>
-                    handleUpdateRideStatus(
-                      item.ride.rideId,
-                      RIDE_STATUS.INACTIVE,
-                    )
-                  }
+                  onClick={() => openCloseRideModal(item.ride.rideId)}
                   className="w-full rounded border border-red-500 bg-transparent px-2 py-1 text-sm text-red-500 transition-colors duration-200 hover:bg-red-500 hover:text-white sm:w-auto"
                 >
                   Close Ride

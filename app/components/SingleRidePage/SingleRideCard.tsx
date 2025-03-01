@@ -10,16 +10,20 @@ import BookNowButton from "./BookNowButton";
 import { Image } from "./../Global/Image";
 import { RatingStar } from "@assets/RatingStar";
 import { CalendarRange } from "lucide-react";
-import { availableSeatsStyle, RIDE_STATUS } from "app/consts/general";
+import { seatsBookedStyle, RIDE_STATUS } from "app/consts/general";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import LeafletMap from "./LeafletMap";
+import { useUser } from "@clerk/nextjs";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
 };
 
 const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
+  const { user } = useUser();
+  const passengerId = user?.id ?? "";
+
   const {
     ride: {
       rideId: RideUniqueId,
@@ -28,7 +32,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
       to,
       description,
       price,
-      availableSeats,
+      seatsBooked,
       seats,
       ownerUserId,
       startLocationCoords,
@@ -38,7 +42,6 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
   const {
     vehicleBrand,
     driverInfo,
-    userId: UserUniqueId,
     allowed,
     notAllowed,
     name,
@@ -55,7 +58,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     allowed,
     notAllowed,
   });
-  const availableSeatsClass = availableSeatsStyle(availableSeats, seats);
+  const seatsBookedClass = seatsBookedStyle(seatsBooked, seats);
 
   return (
     <div
@@ -165,14 +168,14 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
               <p className="text-sm">Price: {price.toFixed(2)} € / person</p>
               <div className="flex w-full flex-row items-center gap-1">
                 <CalendarRange className="w-4" color="black" />
-                <p className={`text-base font-semibold ${availableSeatsClass}`}>
-                  {availableSeats}/{seats}
+                <p className={`text-base font-semibold ${seatsBookedClass}`}>
+                  {seatsBooked}/{seats}
                 </p>
               </div>
             </div>
             <div className="flex h-full w-full flex-col items-center justify-between gap-2">
               <p className="text-center text-xs">{description}</p>
-              <BookNowButton rideId={RideUniqueId} clientId={UserUniqueId} />
+              <BookNowButton rideId={RideUniqueId} passengerId={passengerId} />
             </div>
           </div>
         </div>

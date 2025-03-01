@@ -13,6 +13,17 @@ export const BookingStatusEnum = v.union(
   v.literal("rejected"),
 );
 
+export const closureTypeEnum = v.union(
+  v.literal("closed"),
+  v.literal("completed"),
+);
+
+export const ReportStatusEnum = v.union(
+  v.literal("pending"),
+  v.literal("resolved"),
+  v.literal("rejected"),
+);
+
 export default defineSchema({
   rides: defineTable({
     rideId: v.string(),
@@ -25,9 +36,13 @@ export default defineSchema({
     time: v.string(),
     price: v.number(),
     seats: v.number(),
-    availableSeats: v.number(),
+    seatsBooked: v.number(),
     description: v.string(),
     status: RideStatusEnum,
+    closureType: v.optional(closureTypeEnum),
+    closeReason: v.optional(v.string()),
+    disputed: v.optional(v.boolean()),
+    penaltyAmount: v.optional(v.number()),
   })
     .index("byFrom", ["from"])
     .index("byTo", ["to"])
@@ -71,6 +86,7 @@ export default defineSchema({
     notAllowed: v.optional(v.array(v.string())),
     points: v.optional(v.number()),
     aboutMe: v.optional(v.string()),
+    penaltyNumbers: v.optional(v.number()),
   })
     .index("byEmail", ["email"])
     .index("byUserId", ["userId"]),
@@ -83,4 +99,16 @@ export default defineSchema({
     transactionDate: v.string(),
     description: v.string(),
   }).index("byUser", ["userId"]),
+
+  reportedIssues: defineTable({
+    reportId: v.string(),
+    rideId: v.string(),
+    reporterUserId: v.string(),
+    reporterRole: v.union(v.literal("driver"), v.literal("passenger")),
+    description: v.string(),
+    issueType: v.string(),
+    status: ReportStatusEnum,
+  })
+    .index("byRide", ["rideId"])
+    .index("byReporter", ["reporterUserId"]),
 });

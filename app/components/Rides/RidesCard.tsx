@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 // Components
 import LoaderLine from "@components/LoaderLine/LoaderLine";
 import { Image } from "@components/Global/Image";
-import { RatingStar } from "@assets/RatingStar"; // adjust the path as needed
+import { RatingStar } from "@assets/RatingStar";
 
 // Types
 import { Doc } from "convex/_generated/dataModel";
@@ -15,13 +15,13 @@ import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { getTravelIcons } from "app/helpers/TravelTypes";
 import { CalendarRange } from "lucide-react";
-import { availableSeatsStyle } from "app/consts/general";
+import { seatsBookedStyle } from "app/consts/general";
 import profileDefault from "@assets/profile-default.png";
 
 const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
   const { locale } = useParams();
-  const { from, to, date, time, price, availableSeats, seats } = ride;
+  const { from, to, date, time, price, seatsBooked, seats } = ride;
   const userData = useQuery(api.users.getUserById, {
     userId: ride.ownerUserId,
   });
@@ -51,7 +51,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const currentDate = new Date().toISOString().slice(0, 10);
   const rideExpired = date < currentDate;
 
-  const availableSeatsClass = availableSeatsStyle(availableSeats, seats);
+  const seatsBookedClass = seatsBookedStyle(seatsBooked, seats);
 
   return (
     <div
@@ -107,8 +107,8 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
             </div>
             <div className="flex w-full flex-row items-center justify-end gap-1">
               <CalendarRange className="w-5" color="black" />
-              <p className={`text-lg font-semibold ${availableSeatsClass}`}>
-                {availableSeats}/{seats}
+              <p className={`text-lg font-semibold ${seatsBookedClass}`}>
+                {seatsBooked}/{seats}
               </p>
             </div>
           </div>
