@@ -1,4 +1,4 @@
-import { RideWithBookings } from "app/types/types";
+import { EnrichedBooking, RideWithBookings } from "app/types/types";
 import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { BOOKING_STATUS, CLOSURE_TYPE, RIDE_STATUS } from "app/consts/general";
@@ -152,7 +152,7 @@ export const getCompletedRidesWithData = query({
       .collect();
 
     // 5. Enrich bookings with user info.
-    let enrichedBookings = [];
+    let enrichedBookings: EnrichedBooking[] = [];
     const hasAcceptedRides = bookings.some(
       (booking) => booking.status === BOOKING_STATUS.ACCEPTED,
     );
@@ -423,5 +423,84 @@ export const closeRide = mutation({
     });
 
     return { success: true };
+  },
+});
+
+export const getFilteredRides = query({
+  args: {
+    from: v.optional(v.string()),
+    to: v.optional(v.string()),
+    date: v.optional(v.string()),
+    priceMin: v.optional(v.number()),
+    priceMax: v.optional(v.number()),
+    allowed: v.optional(v.array(v.string())),
+    petFriendly: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    let ridesQuery = ctx.db
+      .query("rides")
+      .filter((q) => q.eq(q.field("status"), RIDE_STATUS.ACTIVE));
+
+    if (args.from) {
+      ridesQuery = ridesQuery.filter((q) => q.eq(q.field("from"), args.from));
+    }
+    if (args.to) {
+      ridesQuery = ridesQuery.filter((q) => q.eq(q.field("to"), args.to));
+    }
+    if (args.date) {
+      ridesQuery = ridesQuery.filter((q) => q.eq(q.field("date"), args.date));
+    }
+    if (args.priceMin !== undefined) {
+      const minPrice = args.priceMin;
+      ridesQuery = ridesQuery.filter((q) => q.gte(q.field("price"), minPrice));
+    }
+    if (args.priceMax !== undefined) {
+      const maxPrice = args.priceMax;
+      ridesQuery = ridesQuery.filter((q) => q.lte(q.field("price"), maxPrice));
+    }
+
+    const rides = await ridesQuery.collect();
+
+    let filteredRides = rides;
+    if (args.allowed || args.petFriendly !== undefined) {
+      // Get all owner user IDs from the rides.
+      const ownerIds = Array.from(
+        new Set(rides.map((ride) => ride.ownerUserId)),
+      );
+      const users = await ctx.db
+        .query("users")
+        .filter((q) =>
+          q.or(...ownerIds.map((id) => q.eq(q.field("userId"), id))),
+        )
+        .collect();
+
+      const userMap = new Map();
+      for (const user of users) {
+        userMap.set(user.userId, user);
+      }
+
+      filteredRides = rides.filter((ride) => {
+        const user = userMap.get(ride.ownerUserId);
+        if (!user) return false;
+
+        if (args.allowed) {
+          if (
+            !user.allowed ||
+            !args.allowed.every((icon) => user.allowed.includes(icon))
+          ) {
+            return false;
+          }
+        }
+        if (args.petFriendly !== undefined) {
+          if (user.isPetFriendly !== args.petFriendly) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    }
+
+    return filteredRides;
   },
 });

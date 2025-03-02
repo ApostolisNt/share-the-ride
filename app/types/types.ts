@@ -1,4 +1,5 @@
 import { GreekCitiesKeys } from "app/consts/cities";
+import { IconKey } from "app/helpers/TravelTypes";
 import { Doc } from "convex/_generated/dataModel";
 import { z } from "zod";
 
@@ -6,6 +7,16 @@ export type SearchParamsType = {
   from: GreekCitiesKeys;
   to: GreekCitiesKeys;
   date: string;
+};
+
+export type FilterRidesType = {
+  from?: GreekCitiesKeys;
+  to?: GreekCitiesKeys;
+  date?: string;
+  priceMin?: number;
+  priceMax?: number;
+  allowed?: IconKey[] | string[];
+  petFriendly?: boolean;
 };
 
 // Rides
@@ -22,9 +33,7 @@ export const rideFormSchema = z.object({
   endLocationCoords: z.array(z.number()).optional(),
   date: z.string().min(1, { message: "Date is required." }),
   time: z.string().min(1, { message: "Time is required." }),
-  seats: z
-    .number()
-    .min(1, { message: "At least one seat is required." }),
+  seats: z.number().min(1, { message: "At least one seat is required." }),
   price: z.number().min(1, { message: "Price must be greater than 0." }),
   description: z.string().min(1, { message: "Description is required." }),
   status: z.enum(["active", "inactive", "completed"]),
@@ -40,6 +49,11 @@ export type UserId = User["userId"];
 // Bookings
 export type Booking = Doc<"bookings">;
 export type BookingId = Booking["bookingId"];
+export type EnrichedBooking = Booking & {
+  userName: string;
+  userEmail: string;
+  profileImage?: string;
+};
 
 // Booking Status
 export type BookingStatusEnum = "pending" | "accepted" | "rejected";
@@ -47,15 +61,11 @@ export type ModalType = "success" | "error" | "info";
 
 export type RideWithBookings = {
   ride: Ride;
-  bookings: Array<
-    Booking & { userName: string; userEmail: string; profileImage?: string }
-  >;
+  bookings: EnrichedBooking[];
 };
 
 export type RideWithBookingsAndPoints = {
   ride: Ride;
-  bookings: Array<
-    Booking & { userName: string; userEmail: string; profileImage?: string }
-  >;
+  bookings: EnrichedBooking[];
   pointsEarned: { points: number };
 };

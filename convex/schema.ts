@@ -87,6 +87,7 @@ export default defineSchema({
     points: v.optional(v.number()),
     aboutMe: v.optional(v.string()),
     penaltyNumbers: v.optional(v.number()),
+    isPetFriendly: v.boolean(),
   })
     .index("byEmail", ["email"])
     .index("byUserId", ["userId"]),

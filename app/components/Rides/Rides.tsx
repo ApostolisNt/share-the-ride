@@ -1,24 +1,41 @@
 "use client";
 
-import { SearchParamsType } from "app/types/types";
+import { FilterRidesType } from "app/types/types";
 import Loading from "app/[locale]/(pages)/rides/loading";
-
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import RidesCard from "./RidesCard";
 
 export type ResultsProps = {
-  results: SearchParamsType;
+  results: FilterRidesType;
 };
 
 const Rides = ({ results }: ResultsProps) => {
-  const rides = useQuery(api.rides.getRides);
+  const formattedResults: FilterRidesType = {
+    ...results,
+    petFriendly:
+      typeof results.petFriendly === "string"
+        ? results.petFriendly === "true"
+        : results.petFriendly,
+    priceMin:
+      results.priceMin !== undefined ? Number(results.priceMin) : undefined,
+    priceMax:
+      results.priceMax !== undefined ? Number(results.priceMax) : undefined,
+    allowed:
+      results.allowed === undefined
+        ? undefined
+        : typeof results.allowed === "string"
+          ? (results.allowed as string).split(",")
+          : results.allowed,
+  };
+
+  const rides = useQuery(api.rides.getFilteredRides, formattedResults);
 
   return (
-    <section className="rides_section">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-3 md:grid-cols-2">
+    <section className="col-span-3">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-3 md:w-full md:grid-cols-2 xl:max-w-full">
         {rides && rides.length > 0 ? (
-          rides?.map((ride) => <RidesCard key={ride.rideId} ride={ride} />)
+          rides.map((ride) => <RidesCard key={ride.rideId} ride={ride} />)
         ) : (
           <Loading height={44} items={4} />
         )}
