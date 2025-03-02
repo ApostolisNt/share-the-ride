@@ -1,66 +1,47 @@
 import PopupModal from "@components/PopupModal/PopupModal";
 import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { ModalType, RideId, UserId } from "app/types/types";
+import { MODAL_TYPE } from "app/consts/general";
 
 type BookNowButtonProps = {
-  rideId: string;
-  clientId: string;
-  onBookingSuccess: () => void;
+  rideId: RideId;
+  passengerId: UserId;
 };
 
-const BookNowButton = ({
-  rideId,
-  clientId,
-  onBookingSuccess,
-}: BookNowButtonProps) => {
+const BookNowButton = ({ rideId, passengerId }: BookNowButtonProps) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState<"success" | "error" | "info">(
-    "info",
-  );
+  const [modalType, setModalType] = useState<ModalType>(MODAL_TYPE.INFO);
+
+  const bookRideMutation = useMutation(api.bookings.bookRide);
 
   const handleBooking = async () => {
     setLoading(true);
-    setError(null);
-
-    const bookingInfo = {
-      rideId,
-      clientId,
-    };
 
     try {
-      const res = await fetch(`/api/rides/bookRide`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bookingInfo),
-      });
+      await bookRideMutation({ rideId, passengerUserId: passengerId });
 
-      const resData = await res.json();
-
-      if (resData.message === "Client already booked this ride") {
-        setModalType("error");
-        setModalMessage("You have already booked this ride!");
-        setShowModal(true);
-        return;
-      }
-
-      if (resData.message === "Ride fully booked") {
-        setModalType("error");
-        setModalMessage("Ride fully booked!");
-        setShowModal(true);
-        return;
-      }
-
-      setModalType("success");
+      setModalType(MODAL_TYPE.SUCCESS);
       setModalMessage("Booking successful!");
       setShowModal(true);
-      onBookingSuccess();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      setModalType("error");
-      setModalMessage("Failed to book the ride.");
+      if (error.message.includes("User not authenticated")) {
+        setModalType(MODAL_TYPE.ERROR);
+        setModalMessage("You need to be logged in to book a ride.");
+      } else if (error.message.includes("Passenger already booked this ride")) {
+        setModalType(MODAL_TYPE.ERROR);
+        setModalMessage("You have already booked this ride!");
+      } else if (error.message.includes("Ride fully booked")) {
+        setModalType(MODAL_TYPE.ERROR);
+        setModalMessage("Ride fully booked!");
+      } else {
+        setModalType(MODAL_TYPE.ERROR);
+        setModalMessage("Failed to book the ride.");
+      }
       setShowModal(true);
       console.error(error);
     } finally {
@@ -80,8 +61,10 @@ const BookNowButton = ({
       <div className="flex w-full flex-col items-center justify-center gap-1">
         <button
           onClick={handleBooking}
-          className="mt-4 rounded bg-blue-600 px-4 py-2 text-white"
           disabled={loading}
+          className={`mt-4 rounded px-4 py-2 font-semibold transition-colors duration-300 ease-in-out 
+    ${loading ? "cursor-not-allowed bg-blue-400" : "bg-blue-600 hover:bg-blue-700"} 
+    text-white`}
         >
           {loading ? "Booking..." : "Book Now"}
         </button>

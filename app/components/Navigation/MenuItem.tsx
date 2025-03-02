@@ -1,24 +1,24 @@
-import { SupportedLangCodes } from "data/translations/translations";
-import { useLocale } from "next-intl";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { cleanUrlSlash } from "utils/general";
 
 type MenuItemProps = {
   item: {
     link: string;
     title: string;
-    class?: string;
+    auth?: boolean;
   };
+  setIsMenuOpen: (value: boolean) => void;
 };
 
-const MenuItem = ({ item }: MenuItemProps) => {
-  const locale = useLocale() as SupportedLangCodes;
-  const login = item.class ? ` ${item.class}` : "";
+const MenuItem = ({ item, setIsMenuOpen }: MenuItemProps) => {
+  const { locale } = useParams();
 
   return (
     <Link
       href={cleanUrlSlash(`/${locale}/${item.link}`)}
-      className={`navigation_link${login}`}
+      className={`navigation_link`}
+      onClick={() => setIsMenuOpen(false)}
     >
       {item.title}
     </Link>

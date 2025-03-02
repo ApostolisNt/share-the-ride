@@ -7,7 +7,8 @@ export type searchParamsProps = {
   searchParams: SearchParamsType;
 };
 
-export default function AllRidesPage({ searchParams }: searchParamsProps) {
+export default async function AllRidesPage(props: searchParamsProps) {
+  const searchParams = await props.searchParams;
   return (
     <>
       <Suspense fallback={<Loading height={96} items={4} />}>

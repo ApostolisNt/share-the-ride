@@ -1,13 +1,12 @@
 {
   "links": [
     { "title": "Home", "link": "" },
-    { "title": "About", "link": "#about" },
+    { "title": "Rides", "link": "rides" },
+    { "title": "Create Ride", "link": "create-ride", "auth": true },
     {
       "title": "Dashboard",
-      "link": "dashboard/6607d863f3a807a516b397d8?view=profile"
-    },
-    { "title": "Rides", "link": "rides" },
-    { "title": "Create Ride", "link": "create-ride" },
-    { "title": "Login / Sign Up", "link": "login", "class": "login" }
+      "link": "dashboard?view=profile",
+      "auth": true
+    }
   ]
 }

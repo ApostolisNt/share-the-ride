@@ -1,9 +1,11 @@
+import { MODAL_TYPE } from "app/consts/general";
+import { ModalType } from "app/types/types";
 import { useEffect } from "react";
 import { MdClose } from "react-icons/md";
 
 type PopupModalProps = {
   message: string;
-  type: "success" | "error" | "info";
+  type: ModalType;
   onClose: () => void;
 };
 
@@ -17,11 +19,11 @@ const PopupModal = ({ message, type, onClose }: PopupModalProps) => {
 
   const getEmoji = () => {
     switch (type) {
-      case "success":
+      case MODAL_TYPE.SUCCESS:
         return "🎉"; // Celebration emoji
-      case "error":
+      case MODAL_TYPE.ERROR:
         return "❌"; // Cross mark emoji
-      case "info":
+      case MODAL_TYPE.INFO:
         return "ℹ️"; // Information emoji
       default:
         return "";
@@ -29,7 +31,7 @@ const PopupModal = ({ message, type, onClose }: PopupModalProps) => {
   };
 
   return (
-    <section className="fixed inset-0 z-[100] flex items-center justify-center bg-black/20">
+    <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20">
       <section className="shadow-xl relative mx-4 w-full max-w-md rounded-lg bg-white p-6 text-center">
         <button
           className="absolute right-4 top-4 text-2xl text-gray-500 hover:text-gray-800"

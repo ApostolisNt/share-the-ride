@@ -1,16 +1,19 @@
 import SingleRidePage from "@components/SingleRidePage/SingleRidePage";
+import { RideId } from "app/types/types";
 
 type ParamProps = {
-  params: {
-    id: string;
-  };
+  params: Promise<{
+    id: RideId;
+  }>;
 };
 
-export default function RidePage({ params }: ParamProps) {
+export default async function RidePage(props: ParamProps) {
+  const params = await props.params;
   const id = params.id;
+
   return (
     <div>
-      <SingleRidePage id={id} />
+      <SingleRidePage rideId={id} />
     </div>
   );
 }

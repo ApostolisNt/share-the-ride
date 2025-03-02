@@ -3,8 +3,9 @@
 import "./Navigation.scss";
 import navigationLinks from "./navigation.json";
 import MenuItem from "./MenuItem";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { usePathname } from "next/navigation";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 const Navigation = () => {
   const pathname = usePathname();
@@ -28,8 +29,33 @@ const Navigation = () => {
       </div>
       <div className={`navigation_link_wrapper ${isMenuOpen ? "open" : ""}`}>
         {navigationLinks.links.map((item, index) => (
-          <MenuItem key={index} item={item} />
+          <Fragment key={index}>
+            {item.auth ? (
+              <SignedIn>
+                <MenuItem
+                  key={index}
+                  item={item}
+                  setIsMenuOpen={setIsMenuOpen}
+                />
+              </SignedIn>
+            ) : (
+              <MenuItem key={index} item={item} setIsMenuOpen={setIsMenuOpen} />
+            )}
+          </Fragment>
         ))}
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button
+              className="rounded-md border-2 px-4 py-2 transition-colors
+ hover:border-black"
+            >
+              Sign in
+            </button>
+          </SignInButton>
+        </SignedOut>
       </div>
     </section>
   );

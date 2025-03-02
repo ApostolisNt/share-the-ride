@@ -1,17 +1,18 @@
 "use client";
-import { GreekCitiesKeys } from "app/consts/cities";
-import React, { useState, KeyboardEvent, useEffect, useRef } from "react";
 
-interface AutocompleteInputProps {
+import React, { useState, useEffect, KeyboardEvent, useRef, FC } from "react";
+import { GreekCitiesKeys } from "app/consts/cities";
+
+export type CityAutocompleteProps = {
   label?: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
   cityList: GreekCitiesKeys[];
   required?: boolean;
-}
+};
 
-const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
+const CityAutocomplete: FC<CityAutocompleteProps> = ({
   label,
   placeholder,
   value,
@@ -20,7 +21,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   required = false,
 }) => {
   const [filteredCities, setFilteredCities] = useState<string[]>([]);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const dropdownRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
@@ -32,7 +33,6 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     const isExactMatch = cityList.some(
       (city) => city.toLowerCase() === value.toLowerCase(),
     );
-
     if (isExactMatch) {
       setFilteredCities([]);
     } else {
@@ -41,20 +41,13 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       );
       setFilteredCities(filtered);
     }
-
     setHighlightedIndex(-1);
   }, [value, cityList]);
 
-  /**
-   * Handle direct typing in the text input
-   */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
   };
 
-  /**
-   * Keyboard navigation for the suggestions
-   */
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!filteredCities.length) return;
 
@@ -83,9 +76,6 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     setHighlightedIndex(-1);
   };
 
-  /**
-   * Close the suggestions if focus leaves the input + dropdown
-   */
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (
       dropdownRef.current &&
@@ -96,9 +86,11 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   };
 
   return (
-    <div className="autocomplete_wrapper">
+    <div className="relative">
       {label && (
-        <label className="text-base font-semibold text-white">{label}</label>
+        <label className="mb-1 block text-sm font-medium text-gray-700">
+          {label}
+        </label>
       )}
       <input
         type="text"
@@ -108,15 +100,20 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
+        className="input w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
       />
-
       {filteredCities.length > 0 && (
-        <ul className="autocomplete_list" ref={dropdownRef}>
+        <ul
+          className="shadow absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded border border-gray-300 bg-white"
+          ref={dropdownRef}
+        >
           {filteredCities.map((city, index) => (
             <li
               key={city}
               onMouseDown={() => selectCity(city)}
-              className={index === highlightedIndex ? "bg-gray-200" : ""}
+              className={`cursor-pointer px-3 py-2 hover:bg-blue-100 ${
+                index === highlightedIndex ? "bg-gray-200" : ""
+              }`}
             >
               {city}
             </li>
@@ -127,4 +124,4 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   );
 };
 
-export default AutocompleteInput;
+export default CityAutocomplete;

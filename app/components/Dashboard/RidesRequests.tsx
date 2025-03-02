@@ -1,95 +1,108 @@
 "use client";
 
 import PopupModal from "@components/PopupModal/PopupModal";
-import { Ride } from "data/schemas/rides";
-import { useEffect, useState } from "react";
-import { z } from "zod";
+import {
+  BookingStatusEnum,
+  ModalType,
+  RideId,
+  RideStatusEnum,
+  RideWithBookings,
+  UserId,
+} from "app/types/types";
+import { useState } from "react";
+import { useMutation } from "convex/react";
+import { api } from "convex/_generated/api";
+import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
+import { Image } from "@components/Global/Image";
+import profileDefault from "@assets/profile-default.png";
+import CloseRideModal from "@components/PopupModal/CloseRideModal";
 
-export const bookingStatusEnum = z.enum(["pending", "accepted", "rejected"]);
-export const rideStatusEnum = z.enum(["active", "inactive", "completed"]);
-export type bookingStatusEnum = z.infer<typeof bookingStatusEnum>;
-export type rideStatusEnum = z.infer<typeof rideStatusEnum>;
+type RidesRequestsProps = {
+  activeRides: RideWithBookings[] | undefined;
+};
 
-const RidesRequests = () => {
-  const [pendingRides, setPendingRides] = useState<Ride[]>([]);
+const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
+  const updateRideStatusMutation = useMutation(api.rides.updateRideStatus);
+  const updateBookingStatusMutation = useMutation(
+    api.bookings.updateBookingStatus,
+  );
+  const closeRideMutation = useMutation(api.rides.closeRide);
+
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalType, setModalType] = useState<"success" | "error" | "info">(
-    "info",
-  );
+  const [modalType, setModalType] = useState<ModalType>("info");
 
-  useEffect(() => {
-    const fetchActiveRides = async () => {
-      const res = await fetch(
-        `http://localhost:3000/api/rides/rideStatus/active`,
-      );
-      const data = await res.json();
-      setPendingRides(data.rides || []);
-    };
+  const [isCloseRideModalOpen, setIsCloseRideModalOpen] = useState(false);
+  const [selectedRideId, setSelectedRideId] = useState<RideId | null>(null);
 
-    fetchActiveRides();
-  }, []);
-
-  const showPopup = (message: string, type: "success" | "error" | "info") => {
+  const showPopup = (message: string, type: ModalType) => {
     setModalMessage(message);
     setModalType(type);
     setShowModal(true);
   };
 
-  const acceptBooking = async (
-    rideId: string,
-    clientId: string,
-    bookStatus: bookingStatusEnum,
-  ): Promise<void> => {
-    const res = await fetch(`/api/rides/bookingStatus/${bookStatus}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ rideId, clientId }),
-    });
-
-    const data = await res.json();
-    if (res.status === 200) {
-      showPopup(`Booking ${bookStatus}!`, "success");
-      const updatedRes = await fetch(`/api/rides/rideStatus/active`);
-      const updatedData = await updatedRes.json();
-      setPendingRides(updatedData.rides || []);
-    } else {
-      showPopup(`Error: ${data.message}`, "error");
-    }
+  const openCloseRideModal = (rideId: RideId) => {
+    setSelectedRideId(rideId);
+    setIsCloseRideModalOpen(true);
   };
 
-  const updateRideStatus = async (
-    rideId: string,
-    newStatus: rideStatusEnum,
+  const handleBooking = async (
+    rideId: RideId,
+    clientId: UserId,
+    bookStatus: BookingStatusEnum,
   ) => {
-    const res = await fetch(`/api/rides/rideStatus/${newStatus}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ rideId }),
-    });
-
-    if (res.status === 200) {
-      showPopup(`Ride status updated to ${newStatus}`, "success");
-      const updatedRes = await fetch(`/api/rides/rideStatus/active`);
-      const updatedData = await updatedRes.json();
-      setPendingRides(updatedData.rides || []);
-    } else {
-      const data = await res.json();
-      showPopup(`Error: ${data.message}`, "error");
+    try {
+      await updateBookingStatusMutation({
+        rideId,
+        clientUserId: clientId,
+        status: bookStatus,
+      });
+      showPopup(`Booking ${bookStatus}!`, "success");
+    } catch (error) {
+      console.error("Error in handleBooking:", error);
+      showPopup(
+        "An error occurred while updating the booking status",
+        MODAL_TYPE.ERROR,
+      );
     }
   };
 
-  const availableSeatsClass = (availableSeats: number) => {
-    return availableSeats >= 1 && availableSeats <= 2
-      ? "text-yellow-500"
-      : "text-green-500";
+  const handleUpdateRideStatus = async (
+    rideId: RideId,
+    newStatus: RideStatusEnum,
+  ) => {
+    try {
+      await updateRideStatusMutation({ rideId, status: newStatus });
+      showPopup(`Ride status updated to ${newStatus}`, "success");
+    } catch (error) {
+      console.error("Error in handleUpdateRideStatus:", error);
+      showPopup(
+        "An error occurred while updating the ride status",
+        MODAL_TYPE.ERROR,
+      );
+    }
   };
+
+  const handleCloseRide = async (rideId: RideId, closeReason: string) => {
+    try {
+      await closeRideMutation({ rideId, closeReason });
+      showPopup("Ride closed!", "success");
+    } catch (error) {
+      console.error("Error in handleCloseRide:", error);
+      showPopup("An error occurred while closing the ride", MODAL_TYPE.ERROR);
+    }
+  };
+
+  const seatsBookedClass = (seatsBooked: number) =>
+    seatsBooked >= 1 && seatsBooked <= 2 ? "text-yellow-500" : "text-green-500";
+
+  if (activeRides === undefined) {
+    return <p>Loading ride requests...</p>;
+  }
+
   return (
     <>
+      {/* General Success/Error Popup */}
       {showModal && (
         <PopupModal
           message={modalMessage}
@@ -98,44 +111,63 @@ const RidesRequests = () => {
         />
       )}
 
-      <h2 className="mb-6 text-2xl font-semibold text-gray-800">
-        Ride Requests
-      </h2>
-      {pendingRides.length > 0 ? (
-        pendingRides.map((ride) => (
-          <div key={ride._id} className="shadow-md mb-6 rounded-lg border p-4">
-            <div className="flex items-center justify-between">
+      {/* Close Ride Modal for entering the reason */}
+      {isCloseRideModalOpen && selectedRideId && (
+        <CloseRideModal
+          onClose={() => setIsCloseRideModalOpen(false)}
+          onSubmit={(reason: string) => {
+            handleCloseRide(selectedRideId, reason);
+            setIsCloseRideModalOpen(false);
+          }}
+        />
+      )}
+
+      {activeRides.length > 0 ? (
+        activeRides.map((item: RideWithBookings) => (
+          <div
+            key={item.ride.rideId}
+            className="shadow-md mb-6 rounded-lg border p-4"
+          >
+            <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
               <div>
                 <h3 className="text-lg font-semibold">
-                  <span className="uppercase">{ride.from}</span> -{" "}
-                  <span className="uppercase">{ride.to}</span>
+                  <span className="uppercase">{item.ride.from}</span> -{" "}
+                  <span className="uppercase">{item.ride.to}</span>
                 </h3>
                 <p className="font-semibold">
                   Available Seats:{" "}
-                  <span className={availableSeatsClass(ride.availableSeats)}>
-                    {ride.availableSeats > 0
-                      ? ride.availableSeats
-                      : "Gongrats! No seats available"}
+                  <span
+                    className={seatsBookedClass(
+                      item.ride.seats - item.ride.seatsBooked,
+                    )}
+                  >
+                    {item.ride.seatsBooked < item.ride.seats
+                      ? item.ride.seatsBooked + "/" + item.ride.seats
+                      : "Congrats! No seats available"}
                   </span>
                 </p>
                 <p className="font-semibold">
-                  Ride Status: {""}
+                  Ride Status:{" "}
                   <span className="uppercase text-green-500">
-                    {ride.rideStatus}
+                    {item.ride.status}
                   </span>
                 </p>
               </div>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 sm:flex-col sm:items-start">
                 <button
-                  onClick={() => updateRideStatus(ride._id, "completed")}
-                  className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
+                  onClick={() =>
+                    handleUpdateRideStatus(
+                      item.ride.rideId,
+                      RIDE_STATUS.COMPLETED,
+                    )
+                  }
+                  className="w-full rounded border border-green-500 bg-transparent px-2 py-1 text-sm text-green-500 transition-colors duration-200 hover:bg-green-500 hover:text-white sm:w-auto"
                 >
                   Complete Ride
                 </button>
-
                 <button
-                  onClick={() => updateRideStatus(ride._id, "inactive")}
-                  className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
+                  onClick={() => openCloseRideModal(item.ride.rideId)}
+                  className="w-full rounded border border-red-500 bg-transparent px-2 py-1 text-sm text-red-500 transition-colors duration-200 hover:bg-red-500 hover:text-white sm:w-auto"
                 >
                   Close Ride
                 </button>
@@ -143,51 +175,68 @@ const RidesRequests = () => {
             </div>
 
             <h4 className="mt-2 font-medium">Bookings:</h4>
-            {ride.bookings && ride.bookings.length > 0 ? (
+            {item.bookings && item.bookings.length > 0 ? (
               <ul className="space-y-4">
-                {ride.bookings.map((booking) => (
-                  <li
-                    key={booking.clientId}
-                    className={`mb-2 flex items-center justify-between border-b pb-2 ${
-                      booking.status === "rejected" ||
-                      booking.status === "accepted"
+                {item.bookings.map((booking) => (
+                  <div
+                    key={booking.userId}
+                    className={`mb-2 flex flex-col items-center justify-between gap-2 border-b pb-2 sm:flex-row ${
+                      booking.status === BOOKING_STATUS.REJECTED ||
+                      booking.status === BOOKING_STATUS.ACCEPTED
                         ? "opacity-50"
                         : ""
                     }`}
                   >
-                    <div className="text-left">
-                      <p>Client Name: {booking.userName}</p>
-                      <p>Email: {booking.userEmail}</p>
-                      <p
-                        className={`text-${booking.status === "accepted" ? "green" : booking.status === "rejected" ? "red" : "yellow"}-500`}
-                      >
-                        Status: {booking.status}
-                      </p>
+                    <div className="my-2 flex flex-row gap-2 text-left">
+                      <Image
+                        src={booking.profileImage ?? profileDefault}
+                        width={40}
+                        height={40}
+                        alt="Driver profile"
+                        className="h-12 w-12 rounded-full object-cover"
+                      />
+                      <div>
+                        <p className="text-base">
+                          Client Name: {booking.userName}
+                        </p>
+                        <p className="text-base">Email: {booking.userEmail}</p>
+                        <p
+                          className={`text-${
+                            booking.status === BOOKING_STATUS.ACCEPTED
+                              ? "green"
+                              : booking.status === BOOKING_STATUS.REJECTED
+                                ? "red"
+                                : "yellow"
+                          }-500 text-sm capitalize`}
+                        >
+                          Status: {booking.status}
+                        </p>
+                      </div>
                     </div>
                     <div className="flex flex-wrap items-center justify-center gap-2">
-                      {booking.status === "pending" ? (
+                      {booking.status === BOOKING_STATUS.PENDING ? (
                         <>
                           <button
                             onClick={() =>
-                              acceptBooking(
-                                ride._id,
-                                booking.clientId,
-                                "accepted",
+                              handleBooking(
+                                item.ride.rideId,
+                                booking.userId,
+                                BOOKING_STATUS.ACCEPTED,
                               )
                             }
-                            className="rounded border border-green-500 bg-transparent px-4 py-1 text-green-500 hover:bg-green-500 hover:text-white"
+                            className="rounded border border-green-500 bg-transparent px-2 py-1 text-sm text-green-500 hover:bg-green-500 hover:text-white"
                           >
                             Accept
                           </button>
                           <button
                             onClick={() =>
-                              acceptBooking(
-                                ride._id,
-                                booking.clientId,
-                                "rejected",
+                              handleBooking(
+                                item.ride.rideId,
+                                booking.userId,
+                                BOOKING_STATUS.REJECTED,
                               )
                             }
-                            className="rounded border border-red-500 bg-transparent px-4 py-1 text-red-500 hover:bg-red-500 hover:text-white"
+                            className="rounded border border-red-500 bg-transparent px-2 py-1 text-sm text-red-500 hover:bg-red-500 hover:text-white"
                           >
                             Reject
                           </button>
@@ -195,15 +244,19 @@ const RidesRequests = () => {
                       ) : (
                         <button
                           disabled
-                          className="cursor-not-allowed rounded border border-gray-500 bg-gray-300 px-4 py-1 text-gray-700"
+                          className={`cursor-not-allowed rounded border px-2 py-1 text-sm capitalize ${
+                            booking.status === BOOKING_STATUS.ACCEPTED
+                              ? "bg-green-100 text-green-600"
+                              : "bg-red-100 text-red-600"
+                          }`}
                         >
-                          {booking.status === "accepted"
-                            ? "Accepted"
-                            : "Rejected"}
+                          {booking.status === BOOKING_STATUS.ACCEPTED
+                            ? BOOKING_STATUS.ACCEPTED
+                            : BOOKING_STATUS.REJECTED}
                         </button>
                       )}
                     </div>
-                  </li>
+                  </div>
                 ))}
               </ul>
             ) : (

@@ -1,128 +1,223 @@
 "use client";
 
-import LoaderLine from "@components/LoaderLine/LoaderLine";
-import "./SingleRideCard.scss";
-import profileDefault from "@assets/profile-default.png";
-import { MdLocalPhone, MdOutlineMail } from "react-icons/md";
+import React from "react";
 import clsx from "clsx";
-import { TravelTypes } from "app/helpers/TravelTypes";
-import { Image } from "./../Global/Image";
+import { MdOutlineMail } from "react-icons/md";
+import profileDefault from "@assets/profile-default.png";
+import { Ride, User } from "app/types/types";
+import { getTravelIcons } from "app/helpers/TravelTypes";
 import BookNowButton from "./BookNowButton";
-import PopupModal from "@components/PopupModal/PopupModal";
-import { useState } from "react";
+import { Image } from "./../Global/Image";
+import { RatingStar } from "@assets/RatingStar";
+import { CalendarRange } from "lucide-react";
+import { seatsBookedStyle, RIDE_STATUS } from "app/consts/general";
+import { useQuery } from "convex/react";
+import { api } from "convex/_generated/api";
+import LeafletMap from "./LeafletMap";
+import { useUser } from "@clerk/nextjs";
 
-const SingleRideCard = ({ singleData, rideId }: any) => {
+type SingleRideCardProps = {
+  singleData: { ride: Ride; user: User };
+};
+
+const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
+  const { user } = useUser();
+  const passengerId = user?.id ?? "";
+
   const {
-    _id,
-    from,
-    to,
-    date,
-    name,
-    ridePrice,
+    ride: {
+      rideId: RideUniqueId,
+      date,
+      from,
+      to,
+      description,
+      price,
+      seatsBooked,
+      seats,
+      ownerUserId,
+      startLocationCoords,
+      endLocationCoords,
+    },
+  } = singleData;
+  const {
+    vehicleBrand,
+    driverInfo,
     allowed,
     notAllowed,
-    vehicleBrand,
-    description,
-    contact,
-    driverInfo,
-  } = singleData;
-
-  const { yearsOfExperience, language } = driverInfo;
-  const { allowedIcons, notAllowedIcons } = TravelTypes({
+    name,
+    email,
+    rating,
+    aboutMe,
+    profileImage,
+  } = singleData.user;
+  const completedRides = useQuery(api.rides.getLatestCompletedRides, {
+    userId: ownerUserId,
+  });
+  const { yearsOfExperience, language } = driverInfo ?? {};
+  const { allowedIcons, notAllowedIcons } = getTravelIcons({
     allowed,
     notAllowed,
   });
+  const seatsBookedClass = seatsBookedStyle(seatsBooked, seats);
 
-  const [showModal, setShowModal] = useState(false);
-
-  const handleBookingSuccess = () => {
-    setShowModal(true);
-  };
   return (
-    <>
-      <div
-        className={clsx(
-          "single-ride-container mx-auto my-8 flex w-2/5 flex-col items-center rounded-lg p-4 lg:w-2/3 md:w-full",
-          "shadow-card transition-shadow-transform duration-200 ease-out hover:shadow-cardHover",
-        )}
-      >
-        <div>
-          <h2 className="text-2xl font-semibold">{date}</h2>
-        </div>
-        <div className="singleRide_destination flex items-center gap-4 text-base font-semibold uppercase">
-          <p>From: {from}</p>
-          <LoaderLine />
-          <p>To: {to}</p>
-        </div>
-        <div className="single-ride-description">
-          <p>{description}</p>
-        </div>
-        <div>
-          <p className="single-ride-price">
-            Per person: {ridePrice.toFixed(2)} €
-          </p>
-        </div>
-        <div className="single-ride-driver-info flex gap-8">
-          <p>Driver Experience: {yearsOfExperience} years</p>
-          <p>Languages: {language}</p>
-        </div>
-        <div className="single-ride-driver-profile flex w-full items-center justify-between">
-          <Image src={profileDefault} alt="profile" />
-          <div>
-            <h3 className="ml-4 text-base font-medium">{name}</h3>
-            <p className="ml-4 text-sm font-medium text-slate-500">
-              {vehicleBrand}
-            </p>
-          </div>
-          <div className="single-ride-contact flex flex-1 justify-end gap-4">
-            <a href={`tel:${contact.phone}`} target="_blank">
-              <MdLocalPhone size={26} />
-            </a>
-            <a href={`mailto:${contact.email}`} target="_blank">
-              <MdOutlineMail size={26} />
-            </a>
-          </div>
-        </div>
-        <div>
-          {/* allowed */}
-          <div className="flex flex-row gap-4">
-            {allowedIcons.map((icon, index) => (
-              <Image
-                className="w-8 object-contain"
-                key={index}
-                src={icon.img}
-                alt={`${icon.alt} allowed`}
-                title={`${icon.alt} allowed`}
-              />
-            ))}
-            {/* notAllowed */}
-            {notAllowedIcons.map((icon, index) => (
-              <div key={index} className="notAllowed relative inline-block">
-                <Image
-                  className="w-8 object-contain opacity-50"
-                  key={index}
-                  src={icon.img}
-                  alt={`${icon.alt} not allowed`}
-                  title={`${icon.alt} not allowed`}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <BookNowButton
-          rideId={rideId}
-          clientId={_id}
-          onBookingSuccess={handleBookingSuccess}
-        />
-      </div>
-      {showModal && (
-        <PopupModal
-          message="Booking was successful!"
-          type="success"
-          onClose={() => setShowModal(false)}
-        />
+    <div
+      className={clsx(
+        "shadow hover:shadow-lg mx-auto my-8 rounded-lg p-6 transition-transform duration-200 ease-out",
+        "w-full max-w-6xl bg-white",
       )}
-    </>
+    >
+      <div className="grid grid-cols-1 gap-4 pb-8 md:grid-cols-2">
+        {/* Left Column: User Profile & Hot Ride Info */}
+        <div className="order-2 flex flex-col gap-4 rounded-lg border bg-gray-50 p-4 md:order-1">
+          {/* Top Row: Driver Profile */}
+          <div className="flex items-center justify-between rounded-lg p-4">
+            <Image
+              src={profileImage ?? profileDefault}
+              width={80}
+              height={80}
+              alt="Driver profile"
+              className="h-20 w-20 rounded-full object-cover"
+            />
+            <div className="flex items-center gap-2">
+              <RatingStar rating={rating ?? 0} />
+              <span className="text-base font-semibold text-gray-500">
+                {rating?.toFixed(1) ?? 0}
+              </span>
+            </div>
+          </div>
+          {/* Bottom Row: Driver Info */}
+          <div className="flex flex-col gap-4">
+            <div className="rounded-lg">
+              <p className="text-base font-bold text-black">{name}</p>
+              <p className="text-bold text-sm">{aboutMe}</p>
+            </div>
+            <div className="flex flex-col gap-2 rounded-lg">
+              <span className="text-sm ">Allowed</span>
+              <div className="flex gap-4">
+                {allowedIcons.map((icon, index) => (
+                  <Image
+                    key={index}
+                    src={icon.img}
+                    alt={`${icon.alt} allowed`}
+                    title={`${icon.alt} allowed`}
+                    className="w-6 object-contain"
+                  />
+                ))}
+              </div>
+              <span className="text-sm ">Not Allowed</span>
+              <div className="flex gap-4">
+                {notAllowedIcons.map((icon, index) => (
+                  <div key={index} className="relative inline-block">
+                    <Image
+                      src={icon.img}
+                      alt={`${icon.alt} not allowed`}
+                      title={`${icon.alt} not allowed`}
+                      className="w-6 object-contain"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <p className="text-sm text-gray-700">
+                  Driver Experience: {yearsOfExperience}{" "}
+                  {yearsOfExperience === 1 ? "year" : "years"}
+                </p>
+                <p className="text-sm text-gray-700">Languages: {language}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm text-gray-700">
+                Vehicle Brand:{" "}
+                <span className="font-semibold">{vehicleBrand}</span>
+              </p>
+            </div>
+            <div className="flex justify-end">
+              <a
+                href={`mailto:${email}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MdOutlineMail
+                  size={28}
+                  className="text-gray-600 hover:text-blue-500"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Ride Details */}
+
+        <div className="order-1 flex flex-col gap-4 bg-gray-50 md:order-2">
+          {/* Top Row: City Image */}
+          <LeafletMap
+            startLocationCoords={startLocationCoords}
+            endLocationCoords={endLocationCoords}
+          />
+
+          {/* Bottom Row: Ride Summary & Book Button */}
+          <div className="shadow-sm flex w-full flex-col gap-4 rounded-lg border p-6 md:flex-row md:items-center md:justify-between">
+            <div className="flex h-full w-full flex-col gap-3">
+              <h2 className="text-lg font-semibold text-gray-500">{date}</h2>
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold uppercase">{from}</p>
+                <span className="text-sm">→</span>
+                <p className="text-sm font-semibold uppercase">{to}</p>
+              </div>
+              <p className="text-sm">Price: {price.toFixed(2)} € / person</p>
+              <div className="flex w-full flex-row items-center gap-1">
+                <CalendarRange className="w-4" color="black" />
+                <p className={`text-base font-semibold ${seatsBookedClass}`}>
+                  {seatsBooked}/{seats}
+                </p>
+              </div>
+            </div>
+            <div className="flex h-full w-full flex-col items-center justify-between gap-2">
+              <p className="text-center text-xs">{description}</p>
+              <BookNowButton rideId={RideUniqueId} passengerId={passengerId} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h2 className="pb-4 text-lg font-bold text-gray-600">
+          Latest Rides from {name}
+        </h2>
+        <div className="grid auto-rows-fr grid-cols-1 justify-items-center gap-2 lg:grid-cols-2">
+          {completedRides?.map((item: Ride) => (
+            <div
+              className="shadow-lg w-full rounded-lg border border-gray-200 bg-white p-6"
+              key={item.rideId}
+            >
+              <div className="mb-4 flex flex-wrap-reverse items-center justify-between gap-2">
+                <h3 className="text-base font-bold text-gray-700 md:text-lg">
+                  <span className="uppercase">{item.from}</span> -{" "}
+                  <span className="uppercase">{item.to}</span>
+                  <div>
+                    <span className="text-sm uppercase text-gray-600">
+                      {item.date}
+                    </span>
+                  </div>
+                </h3>
+                <div className="flex flex-row gap-2 sm:flex-col">
+                  <span
+                    className={`inline-block rounded-full px-3 py-1 text-sm font-semibold ${
+                      item.status === RIDE_STATUS.COMPLETED
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                  >
+                    {item.status}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

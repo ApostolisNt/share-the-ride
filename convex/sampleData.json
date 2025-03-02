@@ -1,0 +1,145 @@
+[
+  {
+    "from": "igoumenitsa",
+    "to": "thiva",
+    "date": "2025-02-09",
+    "time": "06:39",
+    "price": 25,
+    "availableSeats": 4,
+    "status": "active",
+    "description": "Mongo redirect",
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb"
+  },
+  {
+    "from": "thiva",
+    "to": "Ioannina",
+    "date": "2025-02-10",
+    "time": "19:45",
+    "price": 25,
+    "availableSeats": 1,
+    "status": "active",
+    "description": "Mongo redirect new",
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb"
+  },
+  {
+    "from": "Trikala",
+    "to": "Ioannina",
+    "date": "2025-02-19",
+    "time": "07:56",
+    "price": 30,
+    "availableSeats": 4,
+    "status": "active",
+    "description": "I love music and pets!",
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb"
+  },
+  {
+    "from": "Karditsa",
+    "to": "Igoumenitsa",
+    "date": "2025-02-24",
+    "time": "05:52",
+    "price": 35,
+    "availableSeats": 2,
+    "status": "active",
+    "description": "No smoke and pets",
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb"
+  },
+  {
+    "from": "athens",
+    "to": "karditsa",
+    "date": "2025-03-01",
+    "time": "15:00",
+    "price": 30,
+    "availableSeats": 1,
+    "status": "active",
+    "description": "Apo tin plateia estauromenou. Aigaleo",
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "inactive",
+    "from": "Athens",
+    "to": "Volos",
+    "date": "2025-03-06",
+    "time": "16:22",
+    "price": 25,
+    "availableSeats": 1,
+    "description": "verveerveverv"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "active",
+    "from": "igoumenitsa",
+    "to": "Athens",
+    "date": "2025-03-11",
+    "time": "14:46",
+    "price": 25,
+    "availableSeats": 1,
+    "description": "Apo tin plateia"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "inactive",
+    "from": "Trikala",
+    "to": "Volos",
+    "date": "2025-03-16",
+    "time": "15:49",
+    "price": 20,
+    "availableSeats": 2,
+    "description": "ewfewfwefwfewfwe"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "active",
+    "from": "igoumenitsa",
+    "to": "Trikaka",
+    "date": "2025-03-21",
+    "time": "16:42",
+    "price": 25,
+    "availableSeats": 1,
+    "description": "cdsdcsdcsdcsdcds"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "active",
+    "from": "Trikala",
+    "to": "Thessaloniki",
+    "date": "2025-03-26",
+    "time": "11:20",
+    "price": 25,
+    "availableSeats": 1,
+    "description": "cewcewcewcwecwecew"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "inactive",
+    "from": "igoumenitsa",
+    "to": "thiva",
+    "date": "2025-03-31",
+    "time": "20:39",
+    "price": 40,
+    "availableSeats": 2,
+    "description": "Testtttttttttt"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "active",
+    "from": "Athens",
+    "to": "Igoumenitsa",
+    "date": "2025-04-05",
+    "time": "02:53",
+    "price": 25,
+    "availableSeats": 1,
+    "description": "Den thelw skulia"
+  },
+  {
+    "rideOwnerId": "jh75y4m9qj0cmphecbqk2gx90n7a1jvb",
+    "status": "active",
+    "from": "Athens",
+    "to": "Thessaloniki",
+    "date": "2025-04-10",
+    "time": "14:00",
+    "price": 25,
+    "availableSeats": 0,
+    "description": "RGRGEREGRGEGERGE"
+  }
+]
