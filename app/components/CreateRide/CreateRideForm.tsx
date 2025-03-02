@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateRideSchema, rideFormSchema } from "app/types/types";
 import { DEFAULT_COORDS, RIDE_STATUS } from "app/consts/general";
 import CityAutocomplete from "./CityAutocomplete";
-import { greekCitiesEnum } from "app/consts/cities";
 
 type CreateRideFormProps = {
   onSubmitForm: (data: CreateRideSchema) => void;
@@ -65,7 +64,6 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
                 value={value}
                 onChange={onChange}
                 placeholder="Origin"
-                cityList={greekCitiesEnum.options}
                 required
               />
             )}
@@ -87,7 +85,6 @@ const CreateRideForm = ({ onSubmitForm }: CreateRideFormProps) => {
                 value={value}
                 onChange={onChange}
                 placeholder="Destination"
-                cityList={greekCitiesEnum.options}
                 required
               />
             )}

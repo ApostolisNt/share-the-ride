@@ -12,7 +12,7 @@ import { cleanUrlSlash } from "utils/general";
 const RideFilters = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { lang } = useParams();
+  const { locale } = useParams();
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const defaultQuery: FilterRidesType = {
@@ -74,7 +74,7 @@ const RideFilters = () => {
 
   const clearFilters = () => {
     setFilters(defaultQuery);
-    router.push(cleanUrlSlash(`${lang}/rides`));
+    router.push(cleanUrlSlash(`/${locale}/rides`));
   };
 
   // Build query string and navigate.

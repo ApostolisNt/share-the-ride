@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState, useEffect, KeyboardEvent, useRef, FC } from "react";
-import { GreekCitiesKeys } from "app/consts/cities";
+import { greekCitiesEnum, GreekCitiesKeys } from "app/consts/cities";
 
 export type CityAutocompleteProps = {
   label?: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
-  cityList: GreekCitiesKeys[];
   required?: boolean;
+  className?: string;
 };
 
 const CityAutocomplete: FC<CityAutocompleteProps> = ({
@@ -17,12 +17,13 @@ const CityAutocomplete: FC<CityAutocompleteProps> = ({
   placeholder,
   value,
   onChange,
-  cityList,
   required = false,
+  className,
 }) => {
   const [filteredCities, setFilteredCities] = useState<string[]>([]);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const dropdownRef = useRef<HTMLUListElement | null>(null);
+  const cityList = greekCitiesEnum.options as GreekCitiesKeys[];
 
   useEffect(() => {
     if (value.length < 2) {
@@ -100,7 +101,11 @@ const CityAutocomplete: FC<CityAutocompleteProps> = ({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
-        className="input w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        className={
+          className
+            ? className
+            : "input w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        }
       />
       {filteredCities.length > 0 && (
         <ul

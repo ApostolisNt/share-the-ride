@@ -4,9 +4,9 @@ import { Doc } from "convex/_generated/dataModel";
 import { z } from "zod";
 
 export type SearchParamsType = {
-  from: GreekCitiesKeys;
-  to: GreekCitiesKeys;
-  date: string;
+  from?: GreekCitiesKeys;
+  to?: GreekCitiesKeys;
+  date?: string;
 };
 
 export type FilterRidesType = {

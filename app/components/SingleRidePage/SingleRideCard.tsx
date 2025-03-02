@@ -49,6 +49,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     rating,
     aboutMe,
     profileImage,
+    isPetFriendly,
   } = singleData.user;
   const completedRides = useQuery(api.rides.getLatestCompletedRides, {
     userId: ownerUserId,
@@ -88,7 +89,12 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
           </div>
           {/* Bottom Row: Driver Info */}
           <div className="flex flex-col gap-4">
-            <div className="rounded-lg">
+            <div className="">
+              {isPetFriendly && (
+                <span className="mb-2 inline-block w-fit rounded-md border border-purple-500 bg-purple-200 px-2 text-xs text-purple-500">
+                  Pet Friendly
+                </span>
+              )}
               <p className="text-base font-bold text-black">{name}</p>
               <p className="text-bold text-sm">{aboutMe}</p>
             </div>
