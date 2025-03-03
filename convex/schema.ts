@@ -88,6 +88,12 @@ export default defineSchema({
     aboutMe: v.optional(v.string()),
     penaltyNumbers: v.optional(v.number()),
     isPetFriendly: v.boolean(),
+    bankInfo: v.optional(
+      v.object({
+        iban: v.string(),
+        bankName: v.string(),
+      }),
+    ),
   })
     .index("byEmail", ["email"])
     .index("byUserId", ["userId"]),

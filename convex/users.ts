@@ -52,6 +52,7 @@ export const updateUser = mutation({
         drivingLicense: "",
         yearsOfExperience: 0,
       },
+      isPetFriendly: false,
     });
 
     return newUserId;
@@ -68,15 +69,26 @@ export const getUserPreferences = query({
     if (!user) {
       throw new Error("User not found");
     }
-    return { allowed: user.allowed ?? [], notAllowed: user.notAllowed ?? [] };
+    return user;
   },
 });
 
 export const updatePreferences = mutation({
   args: {
     userId: v.string(),
+    aboutMe: v.string(),
+    driverInfo: v.object({
+      yearsOfExperience: v.optional(v.number()),
+      drivingLicense: v.optional(v.string()),
+      language: v.optional(v.string()),
+    }),
     allowed: v.array(v.string()),
     notAllowed: v.array(v.string()),
+    isPetFriendly: v.boolean(),
+    bankInfo: v.object({
+      iban: v.string(),
+      bankName: v.string(),
+    }),
   },
   handler: async (ctx, { userId, allowed, notAllowed }) => {
     const user = await ctx.db

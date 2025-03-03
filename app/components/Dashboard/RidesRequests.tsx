@@ -16,12 +16,17 @@ import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
 import { Image } from "@components/Global/Image";
 import profileDefault from "@assets/profile-default.png";
 import CloseRideModal from "@components/PopupModal/CloseRideModal";
+import Link from "next/link";
+import { EyeIcon } from "lucide-react";
+import { cleanUrlSlash } from "utils/general";
+import { useParams } from "next/navigation";
 
 type RidesRequestsProps = {
   activeRides: RideWithBookings[] | undefined;
 };
 
 const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
+  const { locale } = useParams();
   const updateRideStatusMutation = useMutation(api.rides.updateRideStatus);
   const updateBookingStatusMutation = useMutation(
     api.bookings.updateBookingStatus,
@@ -260,8 +265,17 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                 ))}
               </ul>
             ) : (
-              <p className="pt-2">No bookings for this ride yet</p>
+              <p className="pt-2 text-base text-gray-500">
+                No bookings for this ride yet
+              </p>
             )}
+            <div className="w-fit cursor-pointer justify-self-end rounded-md border-2 border-blue-500 bg-blue-200 p-1 text-blue-600 hover:bg-blue-500 hover:text-white">
+              <Link
+                href={cleanUrlSlash(`/${locale}/rides/${item.ride.rideId}`)}
+              >
+                <EyeIcon size={18} />
+              </Link>
+            </div>
           </div>
         ))
       ) : (

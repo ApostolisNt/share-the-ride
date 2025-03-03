@@ -19,17 +19,23 @@ const Profile = ({ user }: ProfileProps) => {
   const initialAllowed = (user.allowed || []) as IconKey[];
   const initialNotAllowed = (user.notAllowed || []) as IconKey[];
 
-  const handleSavePreferences = async ({
-    allowed,
-    notAllowed,
-  }: {
-    allowed: IconKey[];
-    notAllowed: IconKey[];
-  }) => {
+  const handleSaveProfile = async (updatedData: Partial<User>) => {
     await updatePreferencesMutation({
       userId: user.userId,
-      allowed,
-      notAllowed,
+      driverInfo: {
+        yearsOfExperience: user.driverInfo?.yearsOfExperience ?? 0,
+        drivingLicense: user.driverInfo?.drivingLicense ?? "",
+        language: user.driverInfo?.language ?? "",
+      },
+      allowed: user.allowed || [],
+      notAllowed: user.notAllowed || [],
+      aboutMe: user.aboutMe || "",
+      isPetFriendly: user.isPetFriendly || false,
+      bankInfo: {
+        bankName: user.bankInfo?.bankName || "",
+        iban: user.bankInfo?.iban || "",
+      },
+      ...updatedData,
     });
     setEditMode(false);
   };
@@ -67,6 +73,19 @@ const Profile = ({ user }: ProfileProps) => {
               <span className="font-semibold">About Me:</span>{" "}
               {user.aboutMe || "N/A"}
             </p>
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-gray-700">
+                Bank Information
+              </h3>
+              <p className="text-gray-700">
+                <span className="font-semibold">Bank Name:</span>{" "}
+                {user.bankInfo?.bankName || "N/A"}
+              </p>
+              <p className="text-gray-700">
+                <span className="font-semibold">Iban:</span>{" "}
+                {user.bankInfo?.bankName || "N/A"}
+              </p>
+            </div>
           </div>
           {/* Vehicle Info Card */}
           <div className="shadow space-y-2 rounded-lg bg-white p-6">
@@ -87,81 +106,84 @@ const Profile = ({ user }: ProfileProps) => {
               <span className="font-semibold">Driving License:</span>{" "}
               {user.driverInfo?.drivingLicense || "N/A"}
             </p>
+            <p className="text-gray-700">
+              <span className="font-semibold">Pet Friendly:</span>{" "}
+              {user.isPetFriendly ? "Yes" : "No"}
+            </p>
           </div>
         </div>
         {/* Travel Preferences */}
         <div>
-          {editMode ? (
+          <div className="mb-6">
+            <h3 className="mb-3 text-xl font-semibold text-gray-700">
+              Allowed Preferences
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              {allowedIcons.length > 0 ? (
+                allowedIcons.map((icon) => (
+                  <div
+                    key={icon.key}
+                    className="flex flex-col items-center rounded-lg border-green-500 bg-green-200 p-2"
+                  >
+                    <Image
+                      src={icon.img}
+                      alt={icon.alt}
+                      width={40}
+                      height={40}
+                      className="w-8 object-contain"
+                    />
+                    <span className="mt-1 text-sm capitalize text-black">
+                      {icon.key}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">No allowed preferences.</p>
+              )}
+            </div>
+          </div>
+          <div className="mb-6">
+            <h3 className="mb-3 text-xl font-semibold text-gray-700">
+              Not Allowed Preferences
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              {notAllowedIcons.length > 0 ? (
+                notAllowedIcons.map((icon) => (
+                  <div
+                    key={icon.key}
+                    className="flex flex-col items-center rounded-lg border-red-500 bg-red-200 p-2"
+                  >
+                    <Image
+                      src={icon.img}
+                      alt={icon.alt}
+                      width={40}
+                      height={40}
+                      className="w-8 object-contain"
+                    />
+                    <span className="mt-1 text-sm capitalize text-black">
+                      {icon.key}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">No restrictions.</p>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={() => setEditMode(true)}
+            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
+          >
+            Edit Preferences
+          </button>
+          {editMode && (
             <EditTravelPreferences
+              user={user}
               initialAllowed={initialAllowed}
               initialNotAllowed={initialNotAllowed}
-              onSave={handleSavePreferences}
+              onSave={handleSaveProfile}
+              onClose={() => setEditMode(false)}
             />
-          ) : (
-            <>
-              <div className="mb-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-700">
-                  Allowed Preferences
-                </h3>
-                <div className="flex flex-wrap gap-4">
-                  {allowedIcons.length > 0 ? (
-                    allowedIcons.map((icon) => (
-                      <div
-                        key={icon.key}
-                        className="flex flex-col items-center rounded-lg border-green-500 bg-green-200 p-2"
-                      >
-                        <Image
-                          src={icon.img}
-                          alt={icon.alt}
-                          width={40}
-                          height={40}
-                          className="w-8 object-contain"
-                        />
-                        <span className="mt-1 text-sm capitalize text-black">
-                          {icon.key}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-500">No allowed preferences.</p>
-                  )}
-                </div>
-              </div>
-              <div className="mb-6">
-                <h3 className="mb-3 text-xl font-semibold text-gray-700">
-                  Not Allowed Preferences
-                </h3>
-                <div className="flex flex-wrap gap-4">
-                  {notAllowedIcons.length > 0 ? (
-                    notAllowedIcons.map((icon) => (
-                      <div
-                        key={icon.key}
-                        className="flex flex-col items-center rounded-lg border-red-500 bg-red-200 p-2"
-                      >
-                        <Image
-                          src={icon.img}
-                          alt={icon.alt}
-                          width={40}
-                          height={40}
-                          className="w-8 object-contain"
-                        />
-                        <span className="mt-1 text-sm capitalize text-black">
-                          {icon.key}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-gray-500">No restrictions.</p>
-                  )}
-                </div>
-              </div>
-              <button
-                onClick={() => setEditMode(true)}
-                className="mt-4 rounded bg-blue-500 px-4 py-2 text-white"
-              >
-                Edit Preferences
-              </button>
-            </>
           )}
         </div>
       </div>
