@@ -38,7 +38,7 @@ const Rides = ({ results }: ResultsProps) => {
     {
       ...formattedResults,
     },
-    { initialNumItems: 1 },
+    { initialNumItems: 20 },
   );
 
   return (
@@ -52,7 +52,7 @@ const Rides = ({ results }: ResultsProps) => {
       </div>
 
       <button
-        onClick={() => loadMore(1)}
+        onClick={() => loadMore(20)}
         disabled={status !== "CanLoadMore"}
         className="mx-auto my-12 block w-fit rounded-md border-2 border-yellow-500 bg-yellow-100 px-2 py-1 font-semibold text-yellow-600 disabled:hidden"
       >
