@@ -269,11 +269,15 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                 No bookings for this ride yet
               </p>
             )}
-            <div className="w-fit cursor-pointer justify-self-end rounded-md border-2 border-blue-500 bg-blue-200 p-1 text-blue-600 hover:bg-blue-500 hover:text-white">
+            <div className="transition-transform-all group w-fit cursor-pointer justify-self-end rounded-md border-2 border-blue-500 bg-blue-200 p-1 text-blue-600 hover:bg-blue-500 hover:text-white">
               <Link
                 href={cleanUrlSlash(`/${locale}/rides/${item.ride.rideId}`)}
+                className="flex items-center justify-center gap-1"
               >
                 <EyeIcon size={18} />
+                <span className="hidden text-xs font-semibold uppercase group-hover:block">
+                  View Ride
+                </span>
               </Link>
             </div>
           </div>

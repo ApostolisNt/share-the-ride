@@ -40,7 +40,6 @@ export const updateUser = mutation({
       profileImage,
       stripeConnectedId: undefined,
       role: "passenger",
-      vehicleBrand: "No Vehicle Brand",
       rating: 0,
       allowed: [],
       notAllowed: [],
@@ -49,8 +48,9 @@ export const updateUser = mutation({
         "Hello, I'm a dedicated and friendly driver with a passion for safe and enjoyable journeys. With years of experience behind the wheel, I strive to create a comfortable and welcoming environment for every passenger. I believe that every ride is an opportunity to connect with people and share a positive experience on the road. I am constantly refining my skills and staying up-to-date with the latest safety standards to ensure you have the best ride possible. I look forward to meeting you and making your journey memorable!",
       driverInfo: {
         language: "Greek",
-        drivingLicense: "",
+        drivingLicense: "No Driving License",
         yearsOfExperience: 0,
+        vehicleBrand: "No Vehicle Brand",
       },
       isPetFriendly: false,
     });
@@ -81,6 +81,7 @@ export const updatePreferences = mutation({
       yearsOfExperience: v.optional(v.number()),
       drivingLicense: v.optional(v.string()),
       language: v.optional(v.string()),
+      vehicleBrand: v.optional(v.string()),
     }),
     allowed: v.array(v.string()),
     notAllowed: v.array(v.string()),
@@ -90,7 +91,18 @@ export const updatePreferences = mutation({
       bankName: v.string(),
     }),
   },
-  handler: async (ctx, { userId, allowed, notAllowed }) => {
+  handler: async (
+    ctx,
+    {
+      userId,
+      aboutMe,
+      driverInfo,
+      allowed,
+      notAllowed,
+      isPetFriendly,
+      bankInfo,
+    },
+  ) => {
     const user = await ctx.db
       .query("users")
       .withIndex("byUserId", (q) => q.eq("userId", userId))
@@ -100,7 +112,14 @@ export const updatePreferences = mutation({
       throw new Error("User not found");
     }
 
-    await ctx.db.patch(user._id, { allowed, notAllowed });
+    await ctx.db.patch(user._id, {
+      aboutMe,
+      driverInfo,
+      allowed,
+      notAllowed,
+      isPetFriendly,
+      bankInfo,
+    });
     return { success: true };
   },
 });

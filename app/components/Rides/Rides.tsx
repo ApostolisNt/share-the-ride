@@ -1,10 +1,10 @@
 "use client";
 
 import { FilterRidesType } from "app/types/types";
-import Loading from "app/[locale]/(pages)/rides/loading";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import RidesCard from "./RidesCard";
+import RideCardSkeleton from "@components/LoadingSkeletons/RidesSkeleton";
 
 export type ResultsProps = {
   results: FilterRidesType;
@@ -37,7 +37,7 @@ const Rides = ({ results }: ResultsProps) => {
         {rides && rides.length > 0 ? (
           rides.map((ride) => <RidesCard key={ride.rideId} ride={ride} />)
         ) : (
-          <Loading height={44} items={4} />
+          <RideCardSkeleton count={6} />
         )}
       </div>
     </section>

@@ -6,6 +6,7 @@ import { FilterRidesType } from "app/types/types";
 import { allIcons, IconKey } from "app/helpers/TravelTypes";
 import { PawPrint, RefreshCw } from "lucide-react";
 import CityAutocomplete from "@components/CreateRide/CityAutocomplete";
+import { petFriendlyStyle } from "app/consts/general";
 
 export type FilterFormProps = {
   filters: FilterRidesType;
@@ -18,7 +19,7 @@ export type FilterFormProps = {
   clearFilters: () => void;
 };
 
-const FilterForm: React.FC<FilterFormProps> = ({
+const FilterForm = ({
   filters,
   onInputChange,
   onPriceMinChange,
@@ -27,14 +28,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
   onTogglePetFriendly,
   onSubmit,
   clearFilters,
-}) => {
-  const petFriendlyStyle =
-    filters.petFriendly === undefined
-      ? "border-gray-300"
-      : filters.petFriendly
-        ? "border-green-500 bg-green-200"
-        : "border-red-500 bg-red-200";
-
+}: FilterFormProps) => {
   return (
     <form
       onSubmit={onSubmit}
@@ -76,6 +70,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
           type="date"
           className="w-full rounded-md border p-2"
         />
+          
       </div>
       <div className="flex gap-2">
         <input
@@ -128,7 +123,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
         <h3 className="mb-2 text-lg font-medium">Pet Friendly</h3>
         <div
           onClick={onTogglePetFriendly}
-          className={`flex w-fit cursor-pointer items-center gap-2 rounded-lg border-2 p-2 ${petFriendlyStyle}`}
+          className={`flex w-fit cursor-pointer items-center gap-2 rounded-lg border-2 p-2 ${petFriendlyStyle(filters.petFriendly)}`}
         >
           <PawPrint size={30} className="text-gray-600" />
         </div>

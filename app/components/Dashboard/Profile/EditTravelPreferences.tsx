@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { User } from "app/types/types";
 import { allIcons, IconKey } from "app/helpers/TravelTypes";
 import { Image } from "@components/Global/Image";
+import { PawPrint } from "lucide-react";
+import { petFriendlyStyle } from "app/consts/general";
 
 type EditProfileModalProps = {
   user: User;
@@ -22,19 +24,21 @@ const EditProfileModal = ({
   const [notAllowed, setNotAllowed] = useState<IconKey[]>(initialNotAllowed);
   const [aboutMe, setAboutMe] = useState(user.aboutMe || "");
   const [yearsOfExperience, setYearsOfExperience] = useState(
-    user.driverInfo?.yearsOfExperience || 0,
+    user.driverInfo?.yearsOfExperience,
   );
   const [drivingLicense, setDrivingLicense] = useState(
     user.driverInfo?.drivingLicense || "",
   );
   const [language, setLanguage] = useState(user.driverInfo?.language || "");
+  const [vehicleBrand, setVehicleBrand] = useState(
+    user.driverInfo?.vehicleBrand || "",
+  );
   const [isPetFriendly, setIsPetFriendly] = useState(
     user.isPetFriendly || false,
   );
   const [bankName, setBankName] = useState(user.bankInfo?.bankName || "");
   const [iban, setIban] = useState(user.bankInfo?.iban || "");
 
-  // Prevent background scrolling when modal is open
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
     return () => {
@@ -49,6 +53,7 @@ const EditProfileModal = ({
         yearsOfExperience,
         drivingLicense,
         language,
+        vehicleBrand,
       },
       isPetFriendly,
       bankInfo: {
@@ -79,6 +84,10 @@ const EditProfileModal = ({
     }
   };
 
+  const handleTogglePetFriendly = () => {
+    setIsPetFriendly((prev) => !prev);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="shadow-lg relative w-full max-w-lg rounded-lg bg-white">
@@ -91,75 +100,101 @@ const EditProfileModal = ({
           <label className="block">
             <span className="text-gray-700">About Me</span>
             <textarea
+              rows={3}
               value={aboutMe}
               onChange={(e) => setAboutMe(e.target.value)}
-              className="mt-1 w-full rounded border-gray-300 p-2"
+              className="mt-1 w-full rounded-sm border border-gray-300 p-2"
             />
           </label>
 
-          <label className="mt-4 block">
-            <span className="text-gray-700">Years of Experience</span>
-            <input
-              type="number"
-              value={yearsOfExperience}
-              onChange={(e) => setYearsOfExperience(Number(e.target.value))}
-              className="mt-1 w-full rounded border-gray-300 p-2"
-            />
-          </label>
+          {/* Driver Information Group */}
+          <div className="mt-6">
+            <h4 className="mb-2 text-lg font-medium text-gray-700">
+              Driver Information
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              <label className="block">
+                <span className="text-gray-700">Years of Experience</span>
+                <input
+                  type="number"
+                  value={yearsOfExperience}
+                  onChange={(e) => setYearsOfExperience(Number(e.target.value))}
+                  className="mt-1 w-full rounded-sm border border-gray-300 p-2"
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700">Driving License</span>
+                <input
+                  type="text"
+                  value={drivingLicense}
+                  onChange={(e) => setDrivingLicense(e.target.value)}
+                  className="mt-1 w-full rounded-sm border border-gray-300 p-2"
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700">Language</span>
+                <input
+                  type="text"
+                  value={language}
+                  onChange={(e) => setLanguage(e.target.value)}
+                  className="mt-1 w-full rounded-sm border border-gray-300 p-2"
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700">Vehicle Brand</span>
+                <input
+                  type="text"
+                  value={vehicleBrand}
+                  onChange={(e) => setVehicleBrand(e.target.value)}
+                  className="mt-1 w-full rounded-sm border border-gray-300 p-2"
+                />
+              </label>
+            </div>
+          </div>
 
-          <label className="mt-4 block">
-            <span className="text-gray-700">Driving License</span>
-            <input
-              type="text"
-              value={drivingLicense}
-              onChange={(e) => setDrivingLicense(e.target.value)}
-              className="mt-1 w-full rounded border-gray-300 p-2"
-            />
-          </label>
+          {/* Bank Information Group */}
+          <div className="mt-6">
+            <h4 className="mb-2 text-lg font-medium text-gray-700">
+              Bank Information
+            </h4>
+            <div className="grid grid-cols-2 gap-4">
+              <label className="block">
+                <span className="text-gray-700">Bank Name</span>
+                <input
+                  type="text"
+                  value={bankName}
+                  onChange={(e) => setBankName(e.target.value)}
+                  className="mt-1 w-full rounded-sm border border-gray-300 p-2"
+                />
+              </label>
+              <label className="block">
+                <span className="text-gray-700">IBAN</span>
+                <input
+                  type="text"
+                  value={iban}
+                  onChange={(e) => setIban(e.target.value)}
+                  className="mt-1 w-full rounded-sm border border-gray-300 p-2"
+                />
+              </label>
+            </div>
+          </div>
 
-          <label className="mt-4 block">
-            <span className="text-gray-700">Language</span>
-            <input
-              type="text"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-              className="mt-1 w-full rounded border-gray-300 p-2"
-            />
-          </label>
-
-          <label className="mt-4 block">
-            <span className="text-gray-700">Bank Name</span>
-            <input
-              type="text"
-              value={bankName}
-              onChange={(e) => setBankName(e.target.value)}
-              className="mt-1 w-full rounded border-gray-300 p-2"
-            />
-          </label>
-
-          <label className="mt-4 block">
-            <span className="text-gray-700">IBAN</span>
-            <input
-              type="text"
-              value={iban}
-              onChange={(e) => setIban(e.target.value)}
-              className="mt-1 w-full rounded border-gray-300 p-2"
-            />
-          </label>
-
-          <div className="mt-4 flex items-center">
-            <input
-              type="checkbox"
-              checked={isPetFriendly}
-              onChange={(e) => setIsPetFriendly(e.target.checked)}
-              className="mr-2"
-            />
-            <span className="text-gray-700">Pet Friendly</span>
+          {/* Pet Friendly Toggle */}
+          <div className="mt-6">
+            <h4 className="mb-2 text-lg font-medium text-gray-700">
+              Pet Friendly
+            </h4>
+            <div
+              onClick={handleTogglePetFriendly}
+              className={`flex w-fit cursor-pointer items-center gap-2 rounded-lg border-2 p-2 ${petFriendlyStyle(isPetFriendly)}`}
+            >
+              <PawPrint size={30} className="text-gray-600" />
+            </div>
           </div>
 
           {/* Preferences */}
           <div className="mt-6">
-            <h4 className="mb-2 font-medium text-gray-700">
+            <h4 className="mb-2 text-lg font-medium text-gray-700">
               Allowed Preferences
             </h4>
             <div className="flex flex-wrap gap-4">
@@ -172,7 +207,7 @@ const EditProfileModal = ({
                     className={`flex cursor-pointer flex-col items-center rounded-lg border-2 p-2 ${
                       allowed.includes(icon)
                         ? "border-green-500 bg-green-200"
-                        : "border-gray-300"
+                        : "border border-gray-300"
                     }`}
                   >
                     <Image
@@ -192,7 +227,7 @@ const EditProfileModal = ({
           </div>
 
           <div className="mt-6">
-            <h4 className="mb-2 font-medium text-gray-700">
+            <h4 className="mb-2 text-lg font-medium text-gray-700">
               Not Allowed Preferences
             </h4>
             <div className="flex flex-wrap gap-4">
@@ -205,7 +240,7 @@ const EditProfileModal = ({
                     className={`flex cursor-pointer flex-col items-center rounded-lg border-2 p-2 ${
                       notAllowed.includes(icon)
                         ? "border-red-500 bg-red-200"
-                        : "border-gray-300"
+                        : "border border-gray-300"
                     }`}
                   >
                     <Image

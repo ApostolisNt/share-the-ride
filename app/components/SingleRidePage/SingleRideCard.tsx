@@ -40,7 +40,6 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     },
   } = singleData;
   const {
-    vehicleBrand,
     driverInfo,
     allowed,
     notAllowed,
@@ -135,7 +134,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
             <div>
               <p className="text-sm text-gray-700">
                 Vehicle Brand:{" "}
-                <span className="font-semibold">{vehicleBrand}</span>
+                <span className="font-semibold">{driverInfo?.vehicleBrand}</span>
               </p>
             </div>
             <div className="flex justify-end">

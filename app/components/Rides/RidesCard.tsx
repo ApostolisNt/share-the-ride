@@ -30,7 +30,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
     allowed = [],
     notAllowed = [],
     rating = 0,
-    vehicleBrand = "",
+    driverInfo: { vehicleBrand } = {},
     name = "",
     profileImage,
     isPetFriendly,

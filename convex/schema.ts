@@ -74,12 +74,12 @@ export default defineSchema({
     role: v.optional(v.union(v.literal("driver"), v.literal("passenger"))),
     stripeConnectedId: v.optional(v.string()),
     rating: v.optional(v.number()),
-    vehicleBrand: v.optional(v.string()),
     driverInfo: v.optional(
       v.object({
         yearsOfExperience: v.optional(v.number()),
         drivingLicense: v.optional(v.string()),
         language: v.optional(v.string()),
+        vehicleBrand: v.optional(v.string()),
       }),
     ),
     allowed: v.optional(v.array(v.string())),

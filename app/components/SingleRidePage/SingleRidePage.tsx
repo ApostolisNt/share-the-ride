@@ -1,9 +1,9 @@
 "use client";
 import SingleRideCard from "./SingleRideCard";
-import Loading from "app/[locale]/(pages)/rides/loading";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import { RideId } from "app/types/types";
+import SingleRideCardSkeleton from "@components/LoadingSkeletons/SingleRideSkeleton";
 
 type SingleRidePageProps = {
   rideId: RideId;
@@ -19,7 +19,7 @@ const SingleRidePage = ({ rideId }: SingleRidePageProps) => {
       {userSingleRide ? (
         <SingleRideCard singleData={userSingleRide} />
       ) : (
-        <Loading height={96} items={1} />
+        <SingleRideCardSkeleton />
       )}
     </section>
   );

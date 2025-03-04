@@ -37,3 +37,12 @@ export const seatsBookedStyle = (seatsBooked: number, seats: number) => {
   if (seatsBooked === seats) return "text-red-500";
   if (seatsBooked <= seats - 1) return "text-yellow-500";
 };
+
+export const petFriendlyStyle = (item: boolean | undefined) => {
+  let style = "border-gray-300";
+  if (item === undefined) return style;
+
+  style = item ? "border-green-500 bg-green-200" : "border-red-500 bg-red-200";
+
+  return style;
+};
