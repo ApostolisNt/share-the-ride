@@ -3,6 +3,7 @@ import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { BOOKING_STATUS, CLOSURE_TYPE, RIDE_STATUS } from "app/consts/general";
 import { RideStatusEnum } from "./schema";
+import { paginationOptsValidator } from "convex/server";
 
 export const getRides = query({
   args: {},
@@ -435,6 +436,7 @@ export const getFilteredRides = query({
     priceMax: v.optional(v.number()),
     allowed: v.optional(v.array(v.string())),
     petFriendly: v.optional(v.boolean()),
+    paginationOpts: paginationOptsValidator,
   },
   handler: async (ctx, args) => {
     let ridesQuery = ctx.db
@@ -459,13 +461,14 @@ export const getFilteredRides = query({
       ridesQuery = ridesQuery.filter((q) => q.lte(q.field("price"), maxPrice));
     }
 
-    const rides = await ridesQuery.collect();
+    // Paginate using Convex's built-in paginate helper.
+    const pagination = await ridesQuery.paginate(args.paginationOpts);
+    const paginatedRides = pagination.page;
 
-    let filteredRides = rides;
+    let filteredRides = paginatedRides;
     if (args.allowed || args.petFriendly !== undefined) {
-      // Get all owner user IDs from the rides.
       const ownerIds = Array.from(
-        new Set(rides.map((ride) => ride.ownerUserId)),
+        new Set(paginatedRides.map((ride) => ride.ownerUserId)),
       );
       const users = await ctx.db
         .query("users")
@@ -479,10 +482,9 @@ export const getFilteredRides = query({
         userMap.set(user.userId, user);
       }
 
-      filteredRides = rides.filter((ride) => {
+      filteredRides = paginatedRides.filter((ride) => {
         const user = userMap.get(ride.ownerUserId);
         if (!user) return false;
-
         if (args.allowed) {
           if (
             !user.allowed ||
@@ -496,11 +498,14 @@ export const getFilteredRides = query({
             return false;
           }
         }
-
         return true;
       });
     }
 
-    return filteredRides;
+    return {
+      page: filteredRides,
+      isDone: pagination.isDone,
+      continueCursor: pagination.continueCursor,
+    };
   },
 });

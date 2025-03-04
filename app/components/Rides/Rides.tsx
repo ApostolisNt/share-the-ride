@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterRidesType } from "app/types/types";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import RidesCard from "./RidesCard";
 import RideCardSkeleton from "@components/LoadingSkeletons/RidesSkeleton";
@@ -29,7 +29,17 @@ const Rides = ({ results }: ResultsProps) => {
           : results.allowed,
   };
 
-  const rides = useQuery(api.rides.getFilteredRides, formattedResults);
+  const {
+    results: rides,
+    status,
+    loadMore,
+  } = usePaginatedQuery(
+    api.rides.getFilteredRides,
+    {
+      ...formattedResults,
+    },
+    { initialNumItems: 1 },
+  );
 
   return (
     <section className="col-span-3">
@@ -40,6 +50,14 @@ const Rides = ({ results }: ResultsProps) => {
           <RideCardSkeleton count={6} />
         )}
       </div>
+
+      <button
+        onClick={() => loadMore(1)}
+        disabled={status !== "CanLoadMore"}
+        className="mx-auto my-12 block w-fit rounded-md border-2 border-yellow-500 bg-yellow-100 px-2 py-1 font-semibold text-yellow-600 disabled:hidden"
+      >
+        Load More
+      </button>
     </section>
   );
 };
