@@ -162,6 +162,16 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
             ))}
           </div>
         </div>
+        {/* TODO: Create endpoint to retrieve booked ride */}
+        {/* <div className="mx-auto my-4 flex w-full max-w-sm items-center justify-evenly  gap-4 rounded-full bg-green-100 px-4 py-2">
+          <p className="flex items-center gap-1 text-xs font-normal sm:text-sm">
+            <Check className="h-4 w-4" />
+            You have book a ride!
+          </p>
+          <button className="rounded-full bg-green-500 px-3 py-1 text-xs font-normal text-white sm:text-sm">
+            View the ride
+          </button>
+        </div> */}
       </div>
     </div>
   );
