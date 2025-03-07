@@ -17,6 +17,7 @@ import { getTravelIcons } from "app/helpers/TravelTypes";
 import { CalendarRange } from "lucide-react";
 import { seatsBookedStyle } from "app/consts/general";
 import profileDefault from "@assets/profile-default.png";
+import { RideExpired } from "app/helpers/RideExpired";
 
 const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();
@@ -49,9 +50,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
     router.push(`/${locale}/rides/${ride.rideId}`);
   };
 
-  const currentDate = new Date().toISOString().slice(0, 10);
-  const rideExpired = date < currentDate;
-
+  const rideExpired = RideExpired(date);
   const seatsBookedClass = seatsBookedStyle(seatsBooked, seats);
 
   return (
@@ -64,17 +63,7 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
         w-full
       `}
     >
-      {rideExpired && (
-        <div
-          className="
-            absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transform rounded-md 
-            border-2 border-solid border-red-600 bg-white p-2 font-semibold uppercase text-red-600
-          "
-        >
-          This ride has expired
-        </div>
-      )}
-      <div className={`${rideExpired ? "opacity-50" : ""}`}>
+      <div className={`${rideExpired ? "opacity-70" : ""}`}>
         {/* User Section */}
         <div className="shadow flex items-center gap-4 rounded-lg bg-white">
           <div className="flex-shrink-0">
@@ -87,11 +76,20 @@ const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
             />
           </div>
           <div className="w-full">
-            {isPetFriendly && (
-              <span className="inline-block w-fit rounded-md border border-purple-500 bg-purple-200 px-2 text-xs text-purple-500 sm:text-sm">
-                Pet Friendly
-              </span>
-            )}
+            {/* Labels */}
+            <div className="flex flex-col gap-2 sm:flex-row">
+              {isPetFriendly && (
+                <span className="inline-block w-fit rounded-md border border-purple-500 bg-purple-200 px-2 text-xs text-purple-500 sm:text-sm">
+                  Pet Friendly
+                </span>
+              )}
+              {rideExpired && (
+                <span className="inline-block w-fit rounded-md border border-red-500 bg-red-200 px-2 text-xs text-red-500 sm:text-sm">
+                  Ride Has Expired
+                </span>
+              )}
+            </div>
+
             <div className="mt-1 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <h3 className="text-lg font-medium">{name}</h3>
               <div className="flex items-center gap-1">

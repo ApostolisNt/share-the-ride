@@ -15,6 +15,7 @@ import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import LeafletMap from "./LeafletMap";
 import { useUser } from "@clerk/nextjs";
+import { RideExpired } from "app/helpers/RideExpired";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };
@@ -59,6 +60,7 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
     notAllowed,
   });
   const seatsBookedClass = seatsBookedStyle(seatsBooked, seats);
+  const rideExpired = RideExpired(date);
 
   return (
     <div
@@ -134,7 +136,9 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
             <div>
               <p className="text-sm text-gray-700">
                 Vehicle Brand:{" "}
-                <span className="font-semibold">{driverInfo?.vehicleBrand}</span>
+                <span className="font-semibold">
+                  {driverInfo?.vehicleBrand}
+                </span>
               </p>
             </div>
             <div className="flex justify-end">
@@ -162,25 +166,39 @@ const SingleRideCard = ({ singleData }: SingleRideCardProps) => {
           />
 
           {/* Bottom Row: Ride Summary & Book Button */}
-          <div className="shadow-sm flex w-full flex-col gap-4 rounded-lg border p-6 md:flex-row md:items-center md:justify-between">
-            <div className="flex h-full w-full flex-col gap-3">
-              <h2 className="text-lg font-semibold text-gray-500">{date}</h2>
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold uppercase">{from}</p>
-                <span className="text-sm">→</span>
-                <p className="text-sm font-semibold uppercase">{to}</p>
+          <div className="shadow-sm flex w-full flex-col gap-4 rounded-lg border p-6">
+            {rideExpired && (
+              <span className="inline-block w-fit rounded-md border border-red-500 bg-red-200 px-2 text-xs text-red-500 sm:text-sm">
+                Ride Has Expired
+              </span>
+            )}
+            <div className="flex w-full flex-col gap-4 rounded-lg md:flex-row md:items-center md:justify-between">
+              <div className="flex h-full w-full flex-col gap-3">
+                <h2 className="text-lg font-semibold text-gray-500">{date}</h2>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-semibold uppercase">{from}</p>
+                  <span className="text-sm">→</span>
+                  <p className="text-sm font-semibold uppercase">{to}</p>
+                </div>
+                <p className="text-sm">Price: {price.toFixed(2)} € / person</p>
+                <div className="flex w-full flex-row items-center gap-1">
+                  <CalendarRange className="w-4" color="black" />
+                  <p className={`text-base font-semibold ${seatsBookedClass}`}>
+                    {seatsBooked}/{seats}
+                  </p>
+                </div>
               </div>
-              <p className="text-sm">Price: {price.toFixed(2)} € / person</p>
-              <div className="flex w-full flex-row items-center gap-1">
-                <CalendarRange className="w-4" color="black" />
-                <p className={`text-base font-semibold ${seatsBookedClass}`}>
-                  {seatsBooked}/{seats}
-                </p>
+              <div className="flex h-full w-full flex-col items-center justify-between gap-2">
+                <p className="text-center text-xs">{description}</p>
+                <div
+                  className={`${rideExpired ? "pointer-events-none opacity-50" : ""}`}
+                >
+                  <BookNowButton
+                    rideId={RideUniqueId}
+                    passengerId={passengerId}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex h-full w-full flex-col items-center justify-between gap-2">
-              <p className="text-center text-xs">{description}</p>
-              <BookNowButton rideId={RideUniqueId} passengerId={passengerId} />
             </div>
           </div>
         </div>
