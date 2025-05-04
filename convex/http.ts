@@ -82,6 +82,40 @@ const clerkWebhook = httpAction(async (ctx, request) => {
       return new Response(`Webhook failed: ${err}`, { status: 500 });
     }
   }
+
+  if (event.type === "user.updated") {
+    const {
+      id: userId,
+      email_addresses,
+      username,
+      first_name,
+      last_name,
+      image_url,
+    } = event.data;
+
+    const existing = await ctx.runQuery(api.users.getUserById, { userId });
+    if (!existing) {
+      return new Response("User not found", { status: 404 });
+    }
+
+    const email = email_addresses?.[0]?.email_address ?? "";
+    const name = username || `${first_name || ""} ${last_name || ""}`.trim();
+    const profileImage = image_url || "";
+
+    // Update the user in Convex
+    try {
+      await ctx.runMutation(api.users.updateUser, {
+        userId,
+        name,
+        email,
+        profileImage,
+      });
+    } catch (err) {
+      console.error("❌ Error processing user.updated webhook:", err);
+      return new Response(`Webhook failed: ${err}`, { status: 500 });
+    }
+  }
+
   return new Response("Webhook processed successfully", {
     status: 200,
   });
