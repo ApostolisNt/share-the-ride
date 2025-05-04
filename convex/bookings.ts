@@ -52,7 +52,7 @@ export const bookRide = mutation({
       seatsRequested: 1, // adjust as needed
       status: "pending",
       bookingDate: new Date().toISOString(),
-      paymentIntentId: undefined,
+      stripePurchaseId: undefined,
       amount: ride.price,
     });
 
@@ -96,7 +96,7 @@ export const getBookingByUser = query({
   handler: async (ctx, { userId }) => {
     const bookings = await ctx.db
       .query("bookings")
-      .withIndex("byUser", (q) => q.eq("userId", userId))
+      .withIndex("byUserId", (q) => q.eq("userId", userId))
       .collect();
     if (bookings.length === 0) return [];
 

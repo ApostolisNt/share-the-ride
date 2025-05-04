@@ -17,7 +17,7 @@ import { Image } from "@components/Global/Image";
 import profileDefault from "@assets/profile-default.png";
 import CloseRideModal from "@components/PopupModal/CloseRideModal";
 import Link from "next/link";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, Pencil } from "lucide-react";
 import { cleanUrlSlash } from "utils/general";
 import { useParams } from "next/navigation";
 
@@ -185,7 +185,7 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                 {item.bookings.map((booking) => (
                   <div
                     key={booking.userId}
-                    className={`mb-2 flex flex-col items-center justify-between gap-2 border-b pb-2 sm:flex-row ${
+                    className={`mb-2 flex flex-col justify-between gap-2 border-b pb-2 last:border-b-0 sm:flex-row md:items-center ${
                       booking.status === BOOKING_STATUS.REJECTED ||
                       booking.status === BOOKING_STATUS.ACCEPTED
                         ? "opacity-50"
@@ -269,13 +269,23 @@ const RidesRequests = ({ activeRides }: RidesRequestsProps) => {
                 No bookings for this ride yet
               </p>
             )}
-            <div className="transition-transform-all group w-fit cursor-pointer justify-self-end rounded-md border-2 border-blue-500 bg-blue-200 p-1 text-blue-600 hover:bg-blue-500 hover:text-white">
+            <div className="flex justify-end gap-2">
               <Link
                 href={cleanUrlSlash(`/${locale}/rides/${item.ride.rideId}`)}
-                className="flex items-center justify-center gap-1"
+                className="flex items-center gap-1 rounded-md border-2 border-blue-500 px-3 py-1 text-blue-600 transition hover:bg-blue-500 hover:text-white"
+              >
+                <Pencil size={18} />
+                <span className="hidden text-xs font-semibold uppercase md:inline">
+                  Edit Ride
+                </span>
+              </Link>
+
+              <Link
+                href={cleanUrlSlash(`/${locale}/rides/${item.ride.rideId}`)}
+                className="flex items-center gap-1 rounded-md border-2 border-gray-500 px-3 py-1 text-gray-600 transition hover:bg-gray-500 hover:text-white"
               >
                 <EyeIcon size={18} />
-                <span className="hidden text-xs font-semibold uppercase group-hover:block">
+                <span className="hidden text-xs font-semibold uppercase md:inline">
                   View Ride
                 </span>
               </Link>

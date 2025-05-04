@@ -1,44 +1,44 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
+// Query to fetch a user by their Clerk user ID
 export const getUserById = query({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
-    const user = await ctx.db
+    return await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("userId"), userId))
+      .withIndex("byUserId", (q) => q.eq("userId", userId))
       .first();
-    return user;
   },
 });
 
-export const updateUser = mutation({
+// Mutation to create a new user (idempotent)
+export const createUser = mutation({
   args: {
     userId: v.string(),
     name: v.string(),
     email: v.string(),
-    profileImage: v.string(),
+    profileImage: v.optional(v.string()),
+    stripeCustomerId: v.string(),
   },
-  handler: async (ctx, { userId, name, email, profileImage }) => {
-    // Check if user exists using the business key "userId"
-    const existingUser = await ctx.db
+  handler: async (
+    ctx,
+    { userId, name, email, profileImage, stripeCustomerId },
+  ) => {
+    // Idempotency guard: return existing record if present
+    const existing = await ctx.db
       .query("users")
       .withIndex("byUserId", (q) => q.eq("userId", userId))
       .first();
+    if (existing) return existing._id;
 
-    if (existingUser) {
-      // Update existing user.
-      await ctx.db.patch(existingUser._id, { name, email, profileImage });
-      return existingUser._id;
-    }
-
-    // Create a new user.
+    // Insert only the defined fields, omitting undefined
     const newUserId = await ctx.db.insert("users", {
       userId,
       name,
       email,
       profileImage,
-      stripeConnectedId: undefined,
+      stripeCustomerId,
       role: "passenger",
       rating: 0,
       allowed: [],
@@ -59,12 +59,36 @@ export const updateUser = mutation({
   },
 });
 
+// Mutation to update an existing user's basic info
+export const updateUser = mutation({
+  args: {
+    userId: v.string(),
+    name: v.string(),
+    email: v.string(),
+    profileImage: v.string(),
+  },
+  handler: async (ctx, { userId, name, email, profileImage }) => {
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("byUserId", (q) => q.eq("userId", userId))
+      .first();
+
+    if (!existing) {
+      throw new Error("User not found");
+    }
+
+    await ctx.db.patch(existing._id, { name, email, profileImage });
+    return existing._id;
+  },
+});
+
+// Query to get full user preferences
 export const getUserPreferences = query({
   args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
     const user = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("userId"), userId))
+      .withIndex("byUserId", (q) => q.eq("userId", userId))
       .first();
     if (!user) {
       throw new Error("User not found");
@@ -73,6 +97,7 @@ export const getUserPreferences = query({
   },
 });
 
+// Mutation to update user preferences/settings
 export const updatePreferences = mutation({
   args: {
     userId: v.string(),
@@ -103,16 +128,16 @@ export const updatePreferences = mutation({
       bankInfo,
     },
   ) => {
-    const user = await ctx.db
+    const existing = await ctx.db
       .query("users")
       .withIndex("byUserId", (q) => q.eq("userId", userId))
       .first();
 
-    if (!user) {
+    if (!existing) {
       throw new Error("User not found");
     }
 
-    await ctx.db.patch(user._id, {
+    await ctx.db.patch(existing._id, {
       aboutMe,
       driverInfo,
       allowed,

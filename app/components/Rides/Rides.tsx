@@ -33,31 +33,45 @@ const Rides = ({ results }: ResultsProps) => {
     results: rides,
     status,
     loadMore,
-  } = usePaginatedQuery(
-    api.rides.getFilteredRides,
-    {
-      ...formattedResults,
-    },
-    { initialNumItems: 20 },
-  );
+  } = usePaginatedQuery(api.rides.getFilteredRides, formattedResults, {
+    initialNumItems: 20,
+  });
+
+  if (status === "LoadingFirstPage") {
+    return (
+      <section className="col-span-3">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-3 md:w-full md:grid-cols-2 xl:max-w-full">
+          <RideCardSkeleton count={6} />
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="col-span-3">
       <div className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-3 md:w-full md:grid-cols-2 xl:max-w-full">
-        {rides && rides.length > 0 ? (
+        {rides.length > 0 ? (
           rides.map((ride) => <RidesCard key={ride.rideId} ride={ride} />)
         ) : (
-          <RideCardSkeleton count={6} />
+          <>
+            <p className="col-span-full flex flex-col items-center pt-8 text-center text-xl text-gray-400">
+              No rides found
+              <span className="text-base italic text-gray-400">
+                “Sometimes the best journeys start when no path is found.”
+              </span>
+            </p>
+          </>
         )}
       </div>
 
-      <button
-        onClick={() => loadMore(20)}
-        disabled={status !== "CanLoadMore"}
-        className="mx-auto my-12 block w-fit rounded-md border-2 border-yellow-500 bg-yellow-100 px-2 py-1 font-semibold text-yellow-600 disabled:hidden"
-      >
-        Load More
-      </button>
+      {status === "CanLoadMore" && (
+        <button
+          onClick={() => loadMore(20)}
+          className="mx-auto my-12 block w-fit rounded-md border-2 border-yellow-500 bg-yellow-100 px-2 py-1 font-semibold text-yellow-600"
+        >
+          Load More
+        </button>
+      )}
     </section>
   );
 };

@@ -1,3 +1,4 @@
+import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 
 export const replaceOldIds = mutation(async (ctx) => {
@@ -28,4 +29,28 @@ export const deleteAvailableSeatsColumn = mutation(async ({ db }) => {
   for (const ride of rides) {
     await db.patch(ride._id, { seatsBooked: 0 });
   }
+});
+
+
+export const updateOwnerId = mutation({
+  args: {
+    oldOwnerId: v.string(),
+    newOwnerId: v.string(),
+  },
+  handler: async (ctx, { oldOwnerId, newOwnerId }) => {
+    // Fetch all rides with the old owner
+    const rides = await ctx.db
+      .query("pointsTransactions")
+      .withIndex("byUserId", (q) => q.eq("userId", oldOwnerId))
+      .collect();
+
+    // Update each ride to the new owner
+    let updatedCount = 0;
+    for (const ride of rides) {
+      await ctx.db.patch(ride._id, { userId: newOwnerId });
+      updatedCount++;
+    }
+
+    return { updated: updatedCount };
+  },
 });

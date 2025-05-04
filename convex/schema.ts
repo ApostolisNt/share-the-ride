@@ -24,6 +24,18 @@ export const ReportStatusEnum = v.union(
   v.literal("rejected"),
 );
 
+export const SubscriptionStatusEnum = v.union(
+  v.literal("active"),
+  v.literal("past_due"),
+  v.literal("canceled"),
+);
+
+export const PlanTypeEnum = v.union(
+  v.literal("basic"),
+  v.literal("premium"),
+  v.literal("enterprise"),
+);
+
 export default defineSchema({
   rides: defineTable({
     rideId: v.string(),
@@ -57,11 +69,11 @@ export default defineSchema({
     seatsRequested: v.number(),
     status: BookingStatusEnum,
     bookingDate: v.string(),
-    paymentIntentId: v.optional(v.string()),
+    stripePurchaseId: v.optional(v.string()),
     amount: v.optional(v.number()),
   })
     .index("byRide", ["rideId"])
-    .index("byUser", ["userId"])
+    .index("byUserId", ["userId"])
     .index("byUserRide", ["userId", "rideId"])
     .index("byStatus", ["status"])
     .index("byBookingDate", ["bookingDate"]),
@@ -72,7 +84,8 @@ export default defineSchema({
     email: v.string(),
     profileImage: v.optional(v.string()),
     role: v.optional(v.union(v.literal("driver"), v.literal("passenger"))),
-    stripeConnectedId: v.optional(v.string()),
+    stripeCustomerId: v.optional(v.string()),
+    currentSubscription: v.optional(v.id("subscriptions")),
     rating: v.optional(v.number()),
     driverInfo: v.optional(
       v.object({
@@ -96,7 +109,8 @@ export default defineSchema({
     ),
   })
     .index("byEmail", ["email"])
-    .index("byUserId", ["userId"]),
+    .index("byUserId", ["userId"])
+    .index("byStripeCustomerId", ["stripeCustomerId"]),
 
   pointsTransactions: defineTable({
     transactionId: v.string(),
@@ -105,7 +119,7 @@ export default defineSchema({
     points: v.number(),
     transactionDate: v.string(),
     description: v.string(),
-  }).index("byUser", ["userId"]),
+  }).index("byUserId", ["userId"]),
 
   reportedIssues: defineTable({
     reportId: v.string(),
@@ -118,4 +132,13 @@ export default defineSchema({
   })
     .index("byRide", ["rideId"])
     .index("byReporter", ["reporterUserId"]),
+
+  subscriptions: defineTable({
+    userId: v.string(),
+    stripeSubscriptionId: PlanTypeEnum,
+    currentPeriodStart: v.number(),
+    currentPeriodEnd: v.number(),
+    status: SubscriptionStatusEnum,
+    cancelAtPeriodEnd: v.boolean(),
+  }).index("byStripeSubscriptionId", ["stripeSubscriptionId"]),
 });
