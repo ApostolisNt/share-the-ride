@@ -3,9 +3,9 @@
 import React from "react";
 import Image from "next/image";
 import { FilterRidesType } from "app/types/types";
-import { allIcons, IconKey } from "app/helpers/TravelTypes";
+import { allIcons, IconKey } from "app/helpers/travel-types";
 import { PawPrint, RefreshCw } from "lucide-react";
-import CityAutocomplete from "@components/CreateRide/CityAutocomplete";
+import CityAutocomplete from "@components/create-ride/city-autocompleted";
 import { petFriendlyStyle } from "app/consts/general";
 
 export type FilterFormProps = {

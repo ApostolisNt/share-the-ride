@@ -1,5 +1,5 @@
-import SingleRideCardSkeleton from "@components/LoadingSkeletons/SingleRideSkeleton";
-import SingleRidePage from "@components/SingleRidePage/SingleRidePage";
+import SingleRideCardSkeleton from "@components/loading-skeletons/single-ride-skeleton";
+import SingleRidePage from "@components/single-ride-page/SingleRidePage";
 import { RideId } from "app/types/types";
 import { Suspense } from "react";
 

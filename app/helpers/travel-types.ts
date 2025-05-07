@@ -1,9 +1,9 @@
-import drink from "@assets/travelIcons/drink.png";
-import music from "@assets/travelIcons/music.png";
-import pets from "@assets/travelIcons/pet.png";
-import smoke from "@assets/travelIcons/smoke.png";
-import twoPersons from "@assets/travelIcons/two-people.png";
-import threePersons from "@assets/travelIcons/three-people.png";
+import drink from "@assets/travel-icons/drink.png";
+import music from "@assets/travel-icons/music.png";
+import pets from "@assets/travel-icons/pet.png";
+import smoke from "@assets/travel-icons/smoke.png";
+import twoPersons from "@assets/travel-icons/two-people.png";
+import threePersons from "@assets/travel-icons/three-people.png";
 import { StaticImageData } from "next/image";
 
 export type IconKey =

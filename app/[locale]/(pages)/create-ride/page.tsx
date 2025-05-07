@@ -1,4 +1,4 @@
-import CreateRide from "@components/CreateRide/CreateRide";
+import CreateRide from "@components/create-ride/create-ride";
 import { SupportedLangCodes } from "data/translations/translations";
 
 type ConstructionProps = {

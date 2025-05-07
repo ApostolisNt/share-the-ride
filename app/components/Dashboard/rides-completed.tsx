@@ -1,4 +1,4 @@
-import { Image } from "@components/Global/Image";
+import { Image } from "@components/global/image";
 import { RIDE_STATUS } from "app/consts/general";
 import { RideWithBookingsAndPoints } from "app/types/types";
 import profileDefault from "@assets/profile-default.png";

@@ -1,5 +1,5 @@
 import heroImage from "@assets/hero-bg.jpg";
-import SearchForm from "@components/SearchForm/SearchForm";
+import SearchForm from "@components/search-form/SearchForm";
 import Image from "next/image";
 
 const HeroSection = () => {

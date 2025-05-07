@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import CreateRideForm from "./CreateRideForm";
+import CreateRideForm from "./create-ride-form";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { useParams, useRouter } from "next/navigation";
 import { CreateRideSchema } from "app/types/types";
-import PopupModal from "@components/PopupModal/PopupModal";
+import PopupModal from "@components/popup-modal/popup-modal";
 import { ModalType } from "app/types/types";
 import { useUser } from "@clerk/nextjs";
 import { greekCityCoordinates } from "app/consts/cities";

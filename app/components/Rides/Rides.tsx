@@ -3,8 +3,8 @@
 import { FilterRidesType } from "app/types/types";
 import { usePaginatedQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import RidesCard from "./RidesCard";
-import RideCardSkeleton from "@components/LoadingSkeletons/RidesSkeleton";
+import RidesCard from "./rides-card";
+import RideCardSkeleton from "@components/loading-skeletons/ride-card-skeleton";
 
 export type ResultsProps = {
   results: FilterRidesType;

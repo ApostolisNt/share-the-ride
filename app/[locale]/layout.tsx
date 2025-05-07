@@ -1,7 +1,7 @@
 import { ReactScan } from "@components/ReactScan";
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@components/Navigation/Navigation";
+import Navigation from "@components/navigation/navigation";
 import { ReactNode } from "react";
 import { unstable_setRequestLocale } from "next-intl/server";
 import { generateLanguageSlugs } from "utils/generateParams";

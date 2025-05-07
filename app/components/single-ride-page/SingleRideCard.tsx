@@ -5,9 +5,9 @@ import clsx from "clsx";
 import { MdOutlineMail } from "react-icons/md";
 import profileDefault from "@assets/profile-default.png";
 import { Ride, User } from "app/types/types";
-import { getTravelIcons } from "app/helpers/TravelTypes";
+import { getTravelIcons } from "app/helpers/travel-types";
 import BookNowButton from "./BookNowButton";
-import { Image } from "./../Global/Image";
+import { Image } from "../global/image";
 import { RatingStar } from "@assets/RatingStar";
 import { CalendarRange } from "lucide-react";
 import { seatsBookedStyle, RIDE_STATUS } from "app/consts/general";
@@ -15,7 +15,7 @@ import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
 import LeafletMap from "./LeafletMap";
 import { useUser } from "@clerk/nextjs";
-import { RideExpired } from "app/helpers/RideExpired";
+import { RideExpired } from "app/helpers/ride-expired";
 
 type SingleRideCardProps = {
   singleData: { ride: Ride; user: User };

@@ -1,8 +1,8 @@
-import Rides from "@components/Rides/Rides";
+import Rides from "@components/rides/rides";
 import { FilterRidesType } from "app/types/types";
 import { Suspense } from "react";
-import RideFilters from "@components/Rides/RideFilters";
-import RideCardSkeleton from "../../../components/LoadingSkeletons/RidesSkeleton";
+import RideFilters from "@components/rides/ride-filters";
+import RideCardSkeleton from "../../../components/loading-skeletons/ride-card-skeleton";
 
 export type searchParamsProps = {
   searchParams: FilterRidesType;

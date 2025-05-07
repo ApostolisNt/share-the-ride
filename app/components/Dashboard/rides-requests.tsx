@@ -1,6 +1,6 @@
 "use client";
 
-import PopupModal from "@components/PopupModal/PopupModal";
+import PopupModal from "@components/popup-modal/popup-modal";
 import {
   BookingStatusEnum,
   ModalType,
@@ -13,9 +13,9 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
 import { BOOKING_STATUS, MODAL_TYPE, RIDE_STATUS } from "app/consts/general";
-import { Image } from "@components/Global/Image";
+import { Image } from "@components/global/image";
 import profileDefault from "@assets/profile-default.png";
-import CloseRideModal from "@components/PopupModal/CloseRideModal";
+import CloseRideModal from "@components/popup-modal/close-ride-modal";
 import Link from "next/link";
 import { EyeIcon, Pencil } from "lucide-react";
 import { cleanUrlSlash } from "utils/general";

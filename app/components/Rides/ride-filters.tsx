@@ -4,9 +4,9 @@
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { FilterRidesType } from "app/types/types";
-import FilterForm from "./FilterForm";
+import FilterForm from "./filter-form";
 import { LucideFilter, X } from "lucide-react";
-import { IconKey } from "app/helpers/TravelTypes";
+import { IconKey } from "app/helpers/travel-types";
 import { cleanUrlSlash } from "utils/general";
 
 const RideFilters = () => {

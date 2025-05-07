@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "build/types/**/*.ts",
     "app/lib/mongodb.js",
-    "app/components/LoaderLine",
+    "app/components/loader-line",
     "app/api/[...rides]/[id]/route.js",
     "app/api/users/[id]/route.js",
     "app/api/auth/register/route.js",

@@ -1,4 +1,4 @@
-import PopupModal from "@components/PopupModal/PopupModal";
+import PopupModal from "@components/popup-modal/popup-modal";
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";

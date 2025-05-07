@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { User } from "app/types/types";
-import { allIcons, IconKey } from "app/helpers/TravelTypes";
-import { Image } from "@components/Global/Image";
+import { allIcons, IconKey } from "app/helpers/travel-types";
+import { Image } from "@components/global/image";
 import { PawPrint } from "lucide-react";
 import { petFriendlyStyle } from "app/consts/general";
 

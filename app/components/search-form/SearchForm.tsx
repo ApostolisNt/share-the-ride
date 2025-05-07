@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { SearchParamsType } from "app/types/types";
-import CityAutocomplete from "@components/CreateRide/CityAutocomplete";
+import CityAutocomplete from "@components/create-ride/city-autocompleted";
 import { cleanUrlSlash } from "utils/general";
 
 const SearchForm = () => {

@@ -1,8 +1,8 @@
 "use client";
 
-import "./Navigation.scss";
+import "./navigation.scss";
 import navigationLinks from "./navigation.json";
-import MenuItem from "./MenuItem";
+import MenuItem from "./menu-item";
 import { Fragment, useState } from "react";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";

@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateRideSchema, rideFormSchema } from "app/types/types";
 import { DEFAULT_COORDS, RIDE_STATUS } from "app/consts/general";
-import CityAutocomplete from "./CityAutocomplete";
+import CityAutocomplete from "./city-autocompleted";
 
 type CreateRideFormProps = {
   onSubmitForm: (data: CreateRideSchema) => void;

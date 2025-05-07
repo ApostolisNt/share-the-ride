@@ -1,8 +1,8 @@
 "use client";
 
-import Profile from "./Profile/Profile";
-import RidesRequests from "./RidesRequests";
-import RidesCompleted from "./RidesCompleted";
+import Profile from "./profile/profile";
+import RidesRequests from "./rides-requests";
+import RidesCompleted from "./rides-completed";
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";

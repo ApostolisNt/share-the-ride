@@ -3,8 +3,8 @@ import Image, { StaticImageData } from "next/image";
 import { User } from "app/types/types";
 import { useMutation } from "convex/react";
 import { api } from "convex/_generated/api";
-import { IconKey, getTravelIcons } from "app/helpers/TravelTypes";
-import EditTravelPreferences from "./EditTravelPreferences";
+import { IconKey, getTravelIcons } from "app/helpers/travel-types";
+import EditProfileModal from "./edit-travel-preferences";
 import { PawPrint } from "lucide-react";
 import { petFriendlyStyle } from "app/consts/general";
 
@@ -217,7 +217,7 @@ const Profile = ({ user }: ProfileProps) => {
             Edit Preferences
           </button>
           {editMode && (
-            <EditTravelPreferences
+            <EditProfileModal
               user={user}
               initialAllowed={initialAllowed}
               initialNotAllowed={initialNotAllowed}

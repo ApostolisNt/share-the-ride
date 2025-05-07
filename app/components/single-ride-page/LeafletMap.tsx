@@ -1,5 +1,5 @@
 import { DEFAULT_COORDS } from "app/consts/general";
-import { useLeafletMap } from "app/hooks/useLeafletMap";
+import { useLeafletMap } from "app/hooks/use-leaflet-map";
 import React from "react";
 
 type LeafletMapProps = {

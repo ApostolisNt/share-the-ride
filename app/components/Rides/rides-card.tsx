@@ -1,23 +1,23 @@
 "use client";
 
 // Utils
-import { formatDate } from "app/helpers/FormatDate";
+import { formatDate } from "app/helpers/format-date";
 import { useParams, useRouter } from "next/navigation";
 
 // Components
-import LoaderLine from "@components/LoaderLine/LoaderLine";
-import { Image } from "@components/Global/Image";
+import LoaderLine from "@components/loader-line/loader-line";
+import { Image } from "@components/global/image";
 import { RatingStar } from "@assets/RatingStar";
 
 // Types
 import { Doc } from "convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { api } from "convex/_generated/api";
-import { getTravelIcons } from "app/helpers/TravelTypes";
+import { getTravelIcons } from "app/helpers/travel-types";
 import { CalendarRange } from "lucide-react";
 import { seatsBookedStyle } from "app/consts/general";
 import profileDefault from "@assets/profile-default.png";
-import { RideExpired } from "app/helpers/RideExpired";
+import { RideExpired } from "app/helpers/ride-expired";
 
 const RidesCard = ({ ride }: { ride: Doc<"rides"> }) => {
   const router = useRouter();

@@ -1,5 +1,5 @@
 import { GreekCitiesKeys } from "app/consts/cities";
-import { IconKey } from "app/helpers/TravelTypes";
+import { IconKey } from "app/helpers/travel-types";
 import { Doc } from "convex/_generated/dataModel";
 import { z } from "zod";
 
