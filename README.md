@@ -4,7 +4,9 @@ A modern, full-stack ride-sharing web application built with cutting-edge techno
 
 ## 🚀 About The Project
 
-Share The Ride is a comprehensive ride-sharing platform that enables users to offer and book rides across Greek cities. The application features real-time booking management, user authentication, payment processing, and a comprehensive dashboard for ride management.
+Share The Ride is a comprehensive car pooling and ride-sharing platform that connects drivers and passengers for efficient, cost-effective, and eco-friendly transportation across Greek cities. By enabling users to share rides, the platform promotes sustainable travel, reduces traffic congestion, and builds community connections through shared journeys.
+
+The application facilitates seamless car pooling experiences with features like real-time booking management, user authentication, advanced filtering for compatible travel companions, and a comprehensive dashboard for managing both offered and requested rides. Whether you're a driver looking to share travel costs or a passenger seeking an affordable and social way to travel, Share The Ride makes car pooling simple and reliable.
 
 ## 🛠️ Technologies Used
 
@@ -21,7 +23,6 @@ Share The Ride is a comprehensive ride-sharing platform that enables users to of
 
 - **[Convex](https://www.convex.dev/)** - Real-time backend and database
 - **[Clerk](https://clerk.com/)** - Authentication and user management
-- **[Stripe](https://stripe.com/)** - Payment processing
 - **[Svix](https://www.svix.com/)** - Webhook management
 
 ### Mapping & Location
@@ -67,7 +68,7 @@ Share The Ride is a comprehensive ride-sharing platform that enables users to of
 - **Driver Dashboard**: Manage active rides, view booking requests, track completed rides
 - **Ride History**: Complete history of completed and inactive rides
 - **Points System**: Earn points based on successful ride completions
-- **Performance Metrics**: Track rides, bookings, and earnings
+- **Performance Metrics**: Track rides and bookings
 
 ### 🗺️ Interactive Maps
 
@@ -82,12 +83,6 @@ Share The Ride is a comprehensive ride-sharing platform that enables users to of
 - **Price Range**: Filter rides within budget constraints
 - **Travel Preferences**: Filter by smoking, pets, music, and passenger policies
 - **Pet-Friendly Options**: Dedicated pet-friendly ride filtering
-
-### 💰 Payment & Monetization
-
-- **Stripe Integration**: Secure payment processing
-- **Customer Management**: Automatic Stripe customer creation
-- **Payment Tracking**: Transaction history and billing management
 
 ### 🌍 Internationalization
 
@@ -139,7 +134,6 @@ Share The Ride is a comprehensive ride-sharing platform that enables users to of
 - npm or yarn
 - Convex account
 - Clerk account
-- Stripe account
 
 ### Installation
 
@@ -169,10 +163,6 @@ Share The Ride is a comprehensive ride-sharing platform that enables users to of
    CLERK_SECRET_KEY=your_clerk_secret
    CLERK_JWT_ISSUER_DOMAIN=your_clerk_domain
    CLERK_WEBHOOK_SECRET=your_webhook_secret
-
-   # Stripe
-   STRIPE_SECRET_KEY=your_stripe_secret
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_public_key
    ```
 
 4. **Setup Convex**
@@ -197,7 +187,7 @@ Share The Ride is a comprehensive ride-sharing platform that enables users to of
 - Create and manage ride offers
 - Set travel preferences and restrictions
 - Accept/reject passenger booking requests
-- Track ride history and earnings
+- Track ride history
 - Manage vehicle and driver information
 
 ### For Passengers
