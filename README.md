@@ -103,29 +103,6 @@ The application facilitates seamless car pooling experiences with features like 
 - **Image Optimization**: Next.js image optimization
 - **Bundle Analysis**: Performance monitoring and optimization
 
-## 🏗️ Project Structure
-
-```
-├── app/                    # Next.js App Router
-│   ├── [locale]/          # Internationalized routes
-│   ├── components/        # React components
-│   ├── consts/           # Application constants
-│   ├── helpers/          # Utility functions
-│   ├── hooks/            # Custom React hooks
-│   ├── lib/              # External library configurations
-│   └── types/            # TypeScript type definitions
-├── convex/               # Convex backend functions
-│   ├── bookings.ts       # Booking management
-│   ├── rides.ts          # Ride operations
-│   ├── users.ts          # User management
-│   ├── schema.ts         # Database schema
-│   └── http.ts           # Webhook handlers
-├── data/                 # Static data and configurations
-│   ├── schemas/          # Zod validation schemas
-│   └── translations/     # i18n translations
-└── public/              # Static assets
-```
-
 ## 🚦 Getting Started
 
 ### Prerequisites
